@@ -14,18 +14,19 @@ Populacao::Populacao(int qtdIndividuos, int qtdGenes, int qtdBits) {
 	for (int var = 0; var < qtdIndividuos; ++var) {
 		this->populacao.push_back(Individuo(qtdGenes, qtdBits));
 	}
+	this->qtdBits;
 }
 
 Populacao::~Populacao() {
 	// TODO Auto-generated destructor stub
 }
 
-void Populacao::Print_populacao() {
+void Populacao::print_populacao() {
 	for (int i = 0; i < this->populacao.size(); ++i)
 		cout << this->populacao[i].getCromossomo() << endl;
 }
 
-void Populacao::Print_individuo(int id) {
+void Populacao::print_individuo(int id) {
 	cout << this->populacao[id].getCromossomo() << endl;
 }
 
@@ -36,5 +37,28 @@ const vector<Individuo>& Populacao::getPopulacao() const {
 void Populacao::setPopulacao(const vector<Individuo>& populacao) {
 	this->populacao = populacao;
 }
+
+const Individuo Populacao::getIndividuo(int index) {
+	return this->populacao[index];
+}
+
+const Individuo Populacao::getBestIndividuo() {
+	*this->bestIndividuo = this->populacao[0];
+	for (int var = 0; var < this->populacao.size(); ++var) {
+		if (this->bestIndividuo->getFitness() < this->populacao[var].calculoFitness()) {
+			*this->bestIndividuo = this->populacao[var];
+		}
+	}
+	return *this->bestIndividuo;
+}
+/*
+const Individuo Populacao::crossover() {
+	static mt19937 mt(time(NULL));
+
+	static uniform_int_distribution<int> bit(0, this->qtdBits);
+	cout << bit(mt) << endl;
+
+
+}*/
 
 } /* namespace std */

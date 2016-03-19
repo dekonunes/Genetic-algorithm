@@ -12,9 +12,11 @@ using namespace std;
 
 int main() {
 	Populacao pop(10,1,10);
-	pop.Print_populacao();
-	pop.Print_individuo(0);
-
+	Individuo indv(5,10);
+	//Individuo bestIndividuo(5,100);
+	//pop.print_populacao();
+	cout << pop.getBestIndividuo().getFitness() << endl;
+	//cout << pop.crossover() << endl;
 
 
 	return 0;

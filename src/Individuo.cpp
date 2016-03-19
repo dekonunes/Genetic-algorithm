@@ -12,28 +12,17 @@ Individuo::Individuo(int qtdgenes, int qtdBits) {
 
 	this->qtdgenes = qtdgenes;
 	this->qtdBits = qtdBits;
-
-	double ran;
-	int bit;
+	this->fitness = 0;
 	string aux;
 	string cromossomo;
-	static MersenneTwister mt;
-	static bool mt_started;
 
-	if(!mt_started){	
-		mt.init_genrand(time(NULL));
-		mt_started = true;
-	}
+	static mt19937 mt(time(NULL));
 
+	static uniform_int_distribution<int> bit(0, 1);
+
+	//cout << bit(mt) << endl;
 	for (int i = 0; i < qtdBits; i++) {
-		ran = mt.random();
-		//cout << ran << endl;
-		if (ran < 0.5) {
-			bit = 0;
-		} else
-			bit = 1;
-		//cout << bit << endl;
-		aux = static_cast<ostringstream*>( &(ostringstream() << bit) )->str();
+		aux = static_cast<ostringstream*>(&(ostringstream() << bit(mt)))->str();
 		this->cromossomo = this->cromossomo + aux;
 
 	}
@@ -59,4 +48,21 @@ int Individuo::getQtdgenes() const {
 
 int Individuo::getQtdBits() const {
 	return qtdBits;
+}
+
+int Individuo::getFitness() const {
+	return fitness;
+}
+
+void Individuo::setFitness(int fitness) {
+	this->fitness = fitness;
+}
+
+int Individuo::calculoFitness() {
+	this->fitness = 0;
+	for (int var = 1; var < this->qtdBits; ++var) {
+		if (this->cromossomo[var] != this->cromossomo[var - 1])
+			this->fitness++;
+	}
+	return this->fitness;
 }

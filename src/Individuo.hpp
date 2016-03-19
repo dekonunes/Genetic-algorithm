@@ -15,6 +15,7 @@
 #include <sstream>
 #include <sys/types.h>
 #include <unistd.h>
+#include <random>
 
 using namespace std;
 
@@ -27,11 +28,15 @@ public:
 	void setCromossomo(const string& cromossomo);
 	int getQtdgenes() const;
 	int getQtdBits() const;
+	int getFitness() const;
+	void setFitness(int fitness);
+	int calculoFitness();
+
 private:
 	string cromossomo;
 	int qtdgenes;
 	int qtdBits;
-
+	int fitness;
 };
 
 #endif /* INDIVIDUO_HPP_ */
