@@ -58,7 +58,7 @@ const Individuo Populacao::crossover(Individuo individuo1,
 		Individuo individuo2) {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 100);
-	int var, a= bit(mt), chanceCrossover = 80;
+	int var, a = bit(mt), chanceCrossover = 80;
 	Individuo newIndividuo1(this->qtdGenes, this->qtdBits);
 	Individuo newIndividuo2(this->qtdGenes, this->qtdBits);
 	newIndividuo1 = individuo1;
@@ -71,20 +71,22 @@ const Individuo Populacao::crossover(Individuo individuo1,
 
 		static uniform_int_distribution<int> bit(0, this->qtdBits - 1);
 		a = bit(mt);
-		cout << bit(mt) << "  " << a << endl;
+		cout << a << endl;
 		for (var = 0; var < a; ++var) {
-			//cout <<  cromossomoInviduio1[var] << endl;
-
 			cromossomoNewInviduio1 = cromossomoNewInviduio1
 					+ cromossomoInviduio1[var];
-			//cout << "a" <<cromossomoNewInviduio1 << endl;
+			cromossomoNewInviduio2 = cromossomoNewInviduio2
+								+ cromossomoInviduio2[var];
+
 		}
-		cout << endl;
 		for (; var < this->qtdBits; ++var) {
 			cromossomoNewInviduio1 = cromossomoNewInviduio1
 					+ cromossomoInviduio2[var];
+			cromossomoNewInviduio2 = cromossomoNewInviduio2
+								+ cromossomoInviduio1[var];
 		}
 		newIndividuo1.setCromossomo(cromossomoNewInviduio1);
+		newIndividuo2.setCromossomo(cromossomoNewInviduio2);
 	}
 	return newIndividuo1;
 }
