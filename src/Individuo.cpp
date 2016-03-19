@@ -26,8 +26,6 @@ Individuo::Individuo(int qtdgenes, int qtdBits) {
 		this->cromossomo = this->cromossomo + aux;
 
 	}
-	//cout << this->cromossomo << endl;
-
 }
 
 Individuo::~Individuo() {

@@ -9,12 +9,14 @@
 
 namespace std {
 
-Populacao::Populacao(int qtdIndividuos, int qtdGenes, int qtdBits) {
+Populacao::Populacao(int qtdIndividuos, int qtdGenes, int qtdBits) :
+		bestIndividuo(qtdGenes, qtdBits) {
 	// TODO Auto-generated constructor stub
 	for (int var = 0; var < qtdIndividuos; ++var) {
 		this->populacao.push_back(Individuo(qtdGenes, qtdBits));
 	}
-	this->qtdBits;
+	this->qtdBits = qtdBits;
+	this->qtdGenes = qtdGenes;
 }
 
 Populacao::~Populacao() {
@@ -43,22 +45,48 @@ const Individuo Populacao::getIndividuo(int index) {
 }
 
 const Individuo Populacao::getBestIndividuo() {
-	*this->bestIndividuo = this->populacao[0];
 	for (int var = 0; var < this->populacao.size(); ++var) {
-		if (this->bestIndividuo->getFitness() < this->populacao[var].calculoFitness()) {
-			*this->bestIndividuo = this->populacao[var];
+		if (this->bestIndividuo.getFitness()
+				< this->populacao[var].calculoFitness()) {
+			this->bestIndividuo = this->populacao[var];
 		}
 	}
-	return *this->bestIndividuo;
+	return this->bestIndividuo;
 }
-/*
-const Individuo Populacao::crossover() {
+
+const Individuo Populacao::crossover(Individuo individuo1,
+		Individuo individuo2) {
 	static mt19937 mt(time(NULL));
+	static uniform_int_distribution<int> bit(0, 100);
+	int var, a= bit(mt), chanceCrossover = 80;
+	Individuo newIndividuo1(this->qtdGenes, this->qtdBits);
+	Individuo newIndividuo2(this->qtdGenes, this->qtdBits);
+	newIndividuo1 = individuo1;
+	newIndividuo2 = individuo2;
+	if (chanceCrossover > a) {
+		string cromossomoInviduio1 = individuo1.getCromossomo();
+		string cromossomoInviduio2 = individuo2.getCromossomo();
+		string cromossomoNewInviduio1;
+		string cromossomoNewInviduio2;
 
-	static uniform_int_distribution<int> bit(0, this->qtdBits);
-	cout << bit(mt) << endl;
+		static uniform_int_distribution<int> bit(0, this->qtdBits - 1);
+		a = bit(mt);
+		cout << bit(mt) << "  " << a << endl;
+		for (var = 0; var < a; ++var) {
+			//cout <<  cromossomoInviduio1[var] << endl;
 
-
-}*/
+			cromossomoNewInviduio1 = cromossomoNewInviduio1
+					+ cromossomoInviduio1[var];
+			//cout << "a" <<cromossomoNewInviduio1 << endl;
+		}
+		cout << endl;
+		for (; var < this->qtdBits; ++var) {
+			cromossomoNewInviduio1 = cromossomoNewInviduio1
+					+ cromossomoInviduio2[var];
+		}
+		newIndividuo1.setCromossomo(cromossomoNewInviduio1);
+	}
+	return newIndividuo1;
+}
 
 } /* namespace std */

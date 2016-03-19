@@ -9,6 +9,7 @@
 #define POPULACAO_HPP_
 #include "Individuo.hpp"
 #include <vector>
+#include <iostream>
 #include <random>
 
 namespace std {
@@ -23,13 +24,13 @@ public:
 	void print_individuo(int id);
 	const Individuo getIndividuo(int index);
 	const Individuo getBestIndividuo();
-	//const Individuo crossover();
+	const Individuo crossover(Individuo individuo1,Individuo individuo2);
 
 private:
 	vector<Individuo> populacao;
-	Individuo* bestIndividuo;
-	//static Individuo* newIndividuo;
+	Individuo bestIndividuo;
 	int qtdBits;
+	int qtdGenes;
 };
 
 } /* namespace std */

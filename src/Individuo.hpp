@@ -8,7 +8,6 @@
 #ifndef INDIVIDUO_HPP_
 #define INDIVIDUO_HPP_
 #include <iostream>
-#include "mt.h"
 #include <ctime>
 #include <cstring>
 #include <cstdlib>
