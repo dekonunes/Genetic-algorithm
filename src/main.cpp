@@ -15,14 +15,13 @@ int main() {
 	Individuo indv(5,10);
 	Individuo indv2(5,10);
 	int a;
-	//pop.print_populacao();
+	pop.print_populacao();
 	//cout << "oi" << endl;
-	//cout << pop.getBestIndividuo().getFitness() << endl;
+	pop.getBestIndividuo().getFitness();
 	indv.setCromossomo("1111111111");
 	indv2.setCromossomo("0000000000");
-	cout << indv.getCromossomo() << endl;
-	indv = pop.crossover(indv,indv2);
-	cout << indv.getCromossomo() << endl;
+	pop.crossoverRollet();
+
 
 	return 0;
 }

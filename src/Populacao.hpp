@@ -17,18 +17,22 @@ namespace std {
 class Populacao {
 public:
 	Populacao(int qtdIndividuos, int qtdGenes, int qtdBits);
+	Populacao();
 	virtual ~Populacao();
 	const vector<Individuo>& getPopulacao() const;
 	void setPopulacao(const vector<Individuo>& populacao);
 	void print_populacao();
 	void print_individuo(int id);
+	void insertIndividuo(Individuo newIndividuo);
 	const Individuo getIndividuo(int index);
 	const Individuo getBestIndividuo();
-	const Individuo crossover(Individuo individuo1,Individuo individuo2);
+	const vector<Individuo>& crossover(int,int) const;
+	const Populacao crossoverRollet();
 
 private:
 	vector<Individuo> populacao;
 	Individuo bestIndividuo;
+	int qtdIndividuos;
 	int qtdBits;
 	int qtdGenes;
 };
