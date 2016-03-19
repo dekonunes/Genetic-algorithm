@@ -1,21 +1,21 @@
-DEBUG=-g
+CC=g++
+OBJ=main.o Individuo.o Populacao.o
+LIBS=-lm -Wall
+CPP11=-std=c++11
 
 all: ga
 
+ga: $(OBJ) 
+	$(CC) main.o Individuo.o Populacao.o -o ga 
+	
 main.o: main.cpp
-	g++ $(DEBUG) -c -lm -Wall main.cpp -pthread -std=c++11
+	$(CC) $(CPP11) -c main.cpp 
 	
-ga: main.o mt.o Individuo.o populacao.o
-	g++ main.o mt.o Individuo.o populacao.o -o ga -lm
-	
-mt.o: mt.cc
-	g++ mt.cc -c -w -lm -Wall
+Individuo.o: Individuo.cpp
+	$(CC) $(CPP11) -c Individuo.cpp 
 
-individuo.o: Individuo.cpp
-	g++ -c Individuo.cpp
-
-populacao.o: Populacao.cpp
-	g++ -c Populacao.cpp
+Populacao.o: Populacao.cpp
+	$(CC) $(CPP11) -c Populacao.cpp 
 
 clean:
-	rm -rf *.gch *.out *.txt *o ga *~; clear;clear;
+	rm -rf *.gch *.out *.txt *o ga *~; clear;
