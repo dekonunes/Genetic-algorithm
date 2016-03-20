@@ -19,6 +19,7 @@ public:
 	Populacao(int qtdIndividuos, int qtdGenes, int qtdBits);
 	Populacao();
 	virtual ~Populacao();
+	void resetPopulacao();
 	const vector<Individuo>& getPopulacao() const;
 	void setPopulacao(const vector<Individuo>& populacao);
 	void print_populacao();
@@ -28,6 +29,7 @@ public:
 	const Individuo getBestIndividuo();
 	const vector<Individuo>& crossover(int,int) const;
 	const Populacao crossoverRollet();
+	int getQtdIndividuos() const;
 
 private:
 	vector<Individuo> populacao;

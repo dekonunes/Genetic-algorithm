@@ -28,6 +28,11 @@ Populacao::~Populacao() {
 	// TODO Auto-generated destructor stub
 }
 
+void Populacao::resetPopulacao() {
+	//this->~Populacao();
+	this->populacao.clear();
+}
+
 void Populacao::print_populacao() {
 	for (int i = 0; i < this->populacao.size(); ++i)
 		cout << this->populacao[i].getCromossomo() << endl;
@@ -63,22 +68,24 @@ const Individuo Populacao::getBestIndividuo() {
 	return this->bestIndividuo;
 }
 
-const vector<Individuo>& Populacao::crossover(int individuo1,int individuo2) const {
+const vector<Individuo>& Populacao::crossover(int individuo1,
+		int individuo2) const {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 100);
 	int var, a = bit(mt), chanceCrossover = 90;
-	vector<Individuo> newIndividuos;
+	static vector<Individuo> newIndividuosCrossover;
 	Individuo newIndividuo1(this->qtdGenes, this->qtdBits);
 	Individuo newIndividuo2(this->qtdGenes, this->qtdBits);
 	if (chanceCrossover > a) {
-		string cromossomoInviduio1 = this->populacao[individuo1].getCromossomo();
-		string cromossomoInviduio2 = this->populacao[individuo2].getCromossomo();
+		string cromossomoInviduio1 =
+				this->populacao[individuo1].getCromossomo();
+		string cromossomoInviduio2 =
+				this->populacao[individuo2].getCromossomo();
 		string cromossomoNewInviduio1;
 		string cromossomoNewInviduio2;
 
-		static uniform_int_distribution<int> bit(0, this->qtdBits - 1);
-		a = bit(mt);
-		cout << a << endl;
+		static uniform_int_distribution<int> numRandon(0, this->qtdBits - 1);
+		a = numRandon(mt);
 		for (var = 0; var < a; ++var) {
 			cromossomoNewInviduio1 = cromossomoNewInviduio1
 					+ cromossomoInviduio1[var];
@@ -95,46 +102,50 @@ const vector<Individuo>& Populacao::crossover(int individuo1,int individuo2) con
 		newIndividuo1.setCromossomo(cromossomoNewInviduio1);
 		newIndividuo2.setCromossomo(cromossomoNewInviduio2);
 	}
-	cout << newIndividuo1.getCromossomo() << endl;
-	cout << newIndividuo2.getCromossomo() << endl;
-
-	return newIndividuos;
+	newIndividuosCrossover.push_back(newIndividuo1);
+	newIndividuosCrossover.push_back(newIndividuo2);
+	return newIndividuosCrossover;
 }
 
 const Populacao Populacao::crossoverRollet() {
 	static mt19937 mt(time(NULL));
 	vector<Individuo> newIndivuos;
-	Populacao newPop(this->qtdIndividuos, this->qtdGenes, this->qtdBits);
-	int valorTotalFitness = 0, var, valorDaRollet,individuoParaCross[1];
+	Populacao newPop;
+	int valorTotalFitness = 0, var, valorDaRollet, individuoParaCross[1],
+			auxInsertIndv = 0;
 	float valorAcumuladoFitness = 0.0;
-	//Individuo individuoParaCross1(this->qtdGenes,this->qtdBits),individuoParaCross2(this->qtdGenes,this->qtdBits);
-
 	for (var = 0; var < this->qtdIndividuos; ++var) {
 		valorTotalFitness += this->getIndividuo(var).getFitness();
 	}
+	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2;
+			++loopNovosIndiv) {
 
-	cout << valorTotalFitness << endl;
+		for (int loop = 0; loop < 2; ++loop) {
+			static uniform_int_distribution<int> numeroRandom(0, 100);
+			valorDaRollet = numeroRandom(mt);
+			for (var = 0; var < this->qtdIndividuos; ++var) {
+				valorAcumuladoFitness +=
+						((float) this->getIndividuo(var).getFitness()
+								/ valorTotalFitness) * 100;
+				if (valorDaRollet < valorAcumuladoFitness)
+					break;
+			}
 
-	for (int loop = 0; loop < 2; ++loop) {
-		static uniform_int_distribution<int> numeroRandom(0, 100);
-		valorDaRollet = numeroRandom(mt);
-		for (var = 0; var < this->qtdIndividuos; ++var) {
-			valorAcumuladoFitness +=
-					((float) this->getIndividuo(var).getFitness()
-							/ valorTotalFitness) * 100;
-			//cout << valorAcumuladoFitness << endl;
-			if (valorDaRollet < valorAcumuladoFitness)
-				break;
+			valorAcumuladoFitness = 0;
+			individuoParaCross[loop] = var;
 		}
-		cout << valorDaRollet << " fitnes: " << valorAcumuladoFitness << endl;
-		valorAcumuladoFitness = 0;
-		individuoParaCross[loop] = var;
-		cout << var << endl;
+		newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
+		newPop.insertIndividuo(newIndivuos[auxInsertIndv]);
+		newPop.insertIndividuo(newIndivuos[auxInsertIndv + 1]);
+		auxInsertIndv += 2;
 	}
-	newIndivuos = crossover(individuoParaCross[0],individuoParaCross[1]);
-	newPop.insertIndividuo(newIndivuos[0]);
-	newPop.insertIndividuo(newIndivuos[1]);
 	return newPop;
+}
+
+
+
+int Populacao::getQtdIndividuos() const {
+	return this->populacao.size();
 }
 
 } /* namespace std */

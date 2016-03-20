@@ -24,8 +24,8 @@ Individuo::Individuo(int qtdgenes, int qtdBits) {
 	for (int i = 0; i < qtdBits; i++) {
 		aux = static_cast<ostringstream*>(&(ostringstream() << bit(mt)))->str();
 		this->cromossomo = this->cromossomo + aux;
-
 	}
+	calculoFitness();
 }
 
 Individuo::~Individuo() {
