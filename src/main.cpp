@@ -13,10 +13,13 @@ using namespace std;
 int main() {
 	Populacao pop(10, 1, 10);
 	Populacao newpop;
+	Individuo mut(1,10);
 	int i = 0;
 	int a;
 	pop.print_populacao();
-
+	mut = pop.getIndividuo(0);
+	mut.mutacao();
+ /*
 	for (i = 0; i < 2; ++i) {
 		cout << "--------- Geração: " << i << endl;
 		newpop = pop.crossoverRollet();
@@ -26,6 +29,6 @@ int main() {
 		pop = newpop;
 		pop.print_populacao();
 	}
-
+*/
 	return 0;
 }

@@ -30,6 +30,7 @@ public:
 	int getFitness() const;
 	void setFitness(int fitness);
 	int calculoFitness();
+	void mutacao();
 
 private:
 	string cromossomo;

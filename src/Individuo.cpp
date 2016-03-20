@@ -64,3 +64,29 @@ int Individuo::calculoFitness() {
 	}
 	return this->fitness;
 }
+
+void Individuo::mutacao() {
+	int numRand, probabilidade = 2;
+	static mt19937 mt(time(NULL));
+	string oldCromossomo = getCromossomo(), newCromossomo = getCromossomo();
+
+	for (int loopCromossomos = 0; loopCromossomos < this->qtdBits;
+			++loopCromossomos) {
+
+		static uniform_int_distribution<int> numRandom(0, 100);
+
+		numRand = numRandom(mt);
+
+		if (numRand < probabilidade) {
+			cout << "-- " << loopCromossomos << endl;
+			cout << this->cromossomo << endl;
+			if (this->cromossomo[loopCromossomos] == '1') {
+				this->cromossomo[loopCromossomos] = '0';
+			} else
+				this->cromossomo[loopCromossomos] = '1';
+
+			cout << this->cromossomo << endl;
+		}
+	}
+
+}
