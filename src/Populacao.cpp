@@ -76,6 +76,7 @@ const vector<Individuo>& Populacao::crossover(int individuo1,
 	static vector<Individuo> newIndividuosCrossover;
 	Individuo newIndividuo1(this->qtdGenes, this->qtdBits);
 	Individuo newIndividuo2(this->qtdGenes, this->qtdBits);
+
 	if (chanceCrossover > a) {
 		string cromossomoInviduio1 =
 				this->populacao[individuo1].getCromossomo();
@@ -102,6 +103,7 @@ const vector<Individuo>& Populacao::crossover(int individuo1,
 		newIndividuo1.setCromossomo(cromossomoNewInviduio1);
 		newIndividuo2.setCromossomo(cromossomoNewInviduio2);
 	}
+
 	newIndividuosCrossover.push_back(newIndividuo1);
 	newIndividuosCrossover.push_back(newIndividuo2);
 	return newIndividuosCrossover;
@@ -111,12 +113,15 @@ const Populacao Populacao::crossoverRollet() {
 	static mt19937 mt(time(NULL));
 	vector<Individuo> newIndivuos;
 	Populacao newPop;
-	int valorTotalFitness = 0, var, valorDaRollet, individuoParaCross[1],
+	int valorTotalFitness = 0, var, valorDaRollet = 0, individuoParaCross[1] {0},
 			auxInsertIndv = 0;
 	float valorAcumuladoFitness = 0.0;
+
 	for (var = 0; var < this->qtdIndividuos; ++var) {
 		valorTotalFitness += this->getIndividuo(var).getFitness();
+
 	}
+
 	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2;
 			++loopNovosIndiv) {
 
@@ -127,6 +132,7 @@ const Populacao Populacao::crossoverRollet() {
 				valorAcumuladoFitness +=
 						((float) this->getIndividuo(var).getFitness()
 								/ valorTotalFitness) * 100;
+
 				if (valorDaRollet < valorAcumuladoFitness)
 					break;
 			}
@@ -135,17 +141,24 @@ const Populacao Populacao::crossoverRollet() {
 			individuoParaCross[loop] = var;
 		}
 		newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
+		cout << "cromo:" << newIndivuos[auxInsertIndv].getCromossomo() << endl;
 		newPop.insertIndividuo(newIndivuos[auxInsertIndv]);
 		newPop.insertIndividuo(newIndivuos[auxInsertIndv + 1]);
 		auxInsertIndv += 2;
+		newIndivuos.clear();
 	}
+
 	return newPop;
 }
 
-
-
 int Populacao::getQtdIndividuos() const {
 	return this->populacao.size();
+}
+
+void Populacao::mutacaoPopulacao() {
+	for (int var = 0; var < this->qtdIndividuos; ++var) {
+		this->populacao[var].mutacao();
+	}
 }
 
 } /* namespace std */

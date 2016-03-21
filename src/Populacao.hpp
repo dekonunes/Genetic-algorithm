@@ -30,6 +30,7 @@ public:
 	const vector<Individuo>& crossover(int,int) const;
 	const Populacao crossoverRollet();
 	int getQtdIndividuos() const;
+	void mutacaoPopulacao();
 
 private:
 	vector<Individuo> populacao;

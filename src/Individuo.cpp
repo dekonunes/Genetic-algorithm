@@ -78,14 +78,10 @@ void Individuo::mutacao() {
 		numRand = numRandom(mt);
 
 		if (numRand < probabilidade) {
-			cout << "-- " << loopCromossomos << endl;
-			cout << this->cromossomo << endl;
 			if (this->cromossomo[loopCromossomos] == '1') {
 				this->cromossomo[loopCromossomos] = '0';
 			} else
 				this->cromossomo[loopCromossomos] = '1';
-
-			cout << this->cromossomo << endl;
 		}
 	}
 
