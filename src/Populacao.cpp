@@ -59,6 +59,7 @@ const Individuo Populacao::getIndividuo(int index) {
 }
 
 const Individuo Populacao::getBestIndividuo() {
+	this->bestIndividuo = this->populacao[0];
 	for (int var = 0; var < this->populacao.size(); ++var) {
 		if (this->bestIndividuo.getFitness()
 				< this->populacao[var].calculoFitness()) {
@@ -68,12 +69,14 @@ const Individuo Populacao::getBestIndividuo() {
 	return this->bestIndividuo;
 }
 
-const vector<Individuo>& Populacao::crossover(int individuo1,
-		int individuo2) const {
+const pair<Individuo,Individuo> Populacao::crossover(int individuo1,int individuo2) {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 100);
 	int var, a = bit(mt), chanceCrossover = 90;
-	static vector<Individuo> newIndividuosCrossover;
+	pair<int, int> p1;
+	pair<Individuo,Individuo> newIndividuosCrossover;
+
+
 	Individuo newIndividuo1(this->qtdGenes, this->qtdBits);
 	Individuo newIndividuo2(this->qtdGenes, this->qtdBits);
 
@@ -103,15 +106,13 @@ const vector<Individuo>& Populacao::crossover(int individuo1,
 		newIndividuo1.setCromossomo(cromossomoNewInviduio1);
 		newIndividuo2.setCromossomo(cromossomoNewInviduio2);
 	}
-
-	newIndividuosCrossover.push_back(newIndividuo1);
-	newIndividuosCrossover.push_back(newIndividuo2);
+	newIndividuosCrossover = make_pair(newIndividuo1,newIndividuo2);
 	return newIndividuosCrossover;
 }
 
 const Populacao Populacao::crossoverRollet() {
 	static mt19937 mt(time(NULL));
-	vector<Individuo> newIndivuos;
+	pair<Individuo,Individuo> newIndivuos;
 	Populacao newPop;
 	int valorTotalFitness = 0, var, valorDaRollet = 0, individuoParaCross[1] {0},
 			auxInsertIndv = 0;
@@ -141,11 +142,9 @@ const Populacao Populacao::crossoverRollet() {
 			individuoParaCross[loop] = var;
 		}
 		newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
-		cout << "cromo:" << newIndivuos[auxInsertIndv].getCromossomo() << endl;
-		newPop.insertIndividuo(newIndivuos[auxInsertIndv]);
-		newPop.insertIndividuo(newIndivuos[auxInsertIndv + 1]);
-		auxInsertIndv += 2;
-		newIndivuos.clear();
+		newPop.insertIndividuo(newIndivuos.first);
+		newPop.insertIndividuo(newIndivuos.second);
+		//auxInsertIndv += 2;
 	}
 
 	return newPop;

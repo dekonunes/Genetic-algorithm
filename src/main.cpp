@@ -17,14 +17,16 @@ int main() {
 	int a;
 	pop.mutacaoPopulacao();
 	pop.print_populacao();
-	for (i = 0; i < 3; ++i) {
+	for (i = 0; i < 100; ++i) {
 		cout << "--------- Geração: " << i << endl;
 		newpop = pop.crossoverRollet();
-		newpop.print_populacao();
-		cout << "---" << endl;
+		//newpop.print_populacao();
+		cout << pop.getBestIndividuo().getFitness() << endl;
+		cout << pop.getBestIndividuo().getCromossomo() << endl;
 		pop.resetPopulacao();
 		pop.setPopulacao(newpop.getPopulacao());
 		pop.print_populacao();
+
 	}
 
 	return 0;

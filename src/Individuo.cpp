@@ -28,6 +28,10 @@ Individuo::Individuo(int qtdgenes, int qtdBits) {
 	calculoFitness();
 }
 
+Individuo::Individuo() {
+	// TODO Auto-generated destructor stub
+}
+
 Individuo::~Individuo() {
 	// TODO Auto-generated destructor stub
 }

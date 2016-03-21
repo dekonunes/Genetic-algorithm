@@ -11,6 +11,9 @@
 #include <vector>
 #include <iostream>
 #include <random>
+#include <utility>
+#include <string>
+
 
 namespace std {
 
@@ -27,12 +30,13 @@ public:
 	void insertIndividuo(Individuo newIndividuo);
 	const Individuo getIndividuo(int index);
 	const Individuo getBestIndividuo();
-	const vector<Individuo>& crossover(int,int) const;
+	const pair<Individuo,Individuo> crossover(int,int);
 	const Populacao crossoverRollet();
 	int getQtdIndividuos() const;
 	void mutacaoPopulacao();
 
 private:
+
 	vector<Individuo> populacao;
 	Individuo bestIndividuo;
 	int qtdIndividuos;

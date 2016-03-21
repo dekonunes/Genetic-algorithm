@@ -22,6 +22,7 @@ class Individuo {
 
 public:
 	Individuo(int qtdgenes, int qtdBits);
+	Individuo();
 	virtual ~Individuo();
 	const string& getCromossomo() const;
 	void setCromossomo(const string& cromossomo);
