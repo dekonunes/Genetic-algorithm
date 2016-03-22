@@ -70,11 +70,11 @@ int Individuo::calculoFitness() {
 }
 
 void Individuo::mutacao() {
-	int numRand, probabilidade = 2;
+	int numRand, probabilidade = 1;
 	static mt19937 mt(time(NULL));
 	string oldCromossomo = getCromossomo(), newCromossomo = getCromossomo();
 
-	for (int loopCromossomos = 0; loopCromossomos < this->qtdBits;
+	for (int loopCromossomos = 0; loopCromossomos < this->qtdBits-1;
 			++loopCromossomos) {
 
 		static uniform_int_distribution<int> numRandom(0, 100);
@@ -88,5 +88,4 @@ void Individuo::mutacao() {
 				this->cromossomo[loopCromossomos] = '1';
 		}
 	}
-
 }

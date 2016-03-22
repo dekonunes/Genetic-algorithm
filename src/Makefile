@@ -1,12 +1,13 @@
 CC=g++
 OBJ=main.o Individuo.o Populacao.o
-LIBS=-lm -Wall
-CPP11=-std=c++11
+LIBS=-lm -Wall -Wextra
+CPP11=-std=c++11 
+DEBUG=-g
 
 all: ga
 
 ga: $(OBJ) 
-	$(CC) main.o Individuo.o Populacao.o -o ga 
+	$(CC) $(DEBUG) main.o Individuo.o Populacao.o -o ga 
 	
 main.o: main.cpp
 	$(CC) $(CPP11) -c main.cpp 

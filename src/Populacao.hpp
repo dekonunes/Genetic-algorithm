@@ -30,15 +30,17 @@ public:
 	void insertIndividuo(Individuo newIndividuo);
 	const Individuo getIndividuo(int index);
 	const Individuo getBestIndividuo();
+	const Individuo getWorseIndividuo();
 	const pair<Individuo,Individuo> crossover(int,int);
 	const Populacao crossoverRollet();
 	int getQtdIndividuos() const;
 	void mutacaoPopulacao();
+	void atualizaPiorIndvNaPopulacao(const Individuo& newIndividuo);
 
 private:
-
 	vector<Individuo> populacao;
 	Individuo bestIndividuo;
+	Individuo worseIndividuo;
 	int qtdIndividuos;
 	int qtdBits;
 	int qtdGenes;
