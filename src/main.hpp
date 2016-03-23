@@ -10,7 +10,7 @@
 #include <vector>
 #include <iostream>
 #include "Populacao.hpp"
-#include "IndividuoFuncao.hpp"
+#include "Individuo.hpp"
 
 #define QTDINDIVIDUOS 10
 

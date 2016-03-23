@@ -109,8 +109,6 @@ const pair<Individuo, Individuo> Populacao::crossover(int individuo1,
 			cromossomoNewInviduio2 = cromossomoNewInviduio2
 					+ this->populacao[individuo1].getCromossomo()[var];
 		}
-		//cout << cromossomoNewInviduio1 << endl;
-		//cout << cromossomoNewInviduio2 << endl;
 		newIndividuo1.setCromossomo(cromossomoNewInviduio1);
 		newIndividuo2.setCromossomo(cromossomoNewInviduio2);
 	}
