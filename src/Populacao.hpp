@@ -29,7 +29,7 @@ public:
 	void print_individuo(int id);
 	void insertIndividuo(Individuo newIndividuo);
 	const Individuo getIndividuo(int index);
-	const Individuo getBestIndividuo();
+	Individuo getBestIndividuo();
 	const Individuo getWorseIndividuo();
 	const pair<Individuo,Individuo> crossover(int,int);
 	const Populacao crossoverRollet();

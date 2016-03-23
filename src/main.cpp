@@ -17,9 +17,24 @@ int main() {
 	//cout << a << endl;
 	Individuo indiv(1, 16);
 	//indiv.decodificaCromossomo();
-	cout << "fit:" << indiv.calculoFucaoObjetivo() << endl;
-	Populacao pop(10,1,16);
-	Populacao newPop;
+
+	Populacao pop(20, 1, 16);
+
+	Populacao newpop(20, 1, 16);
+
+	int i = 0;
+	for (i = 0; i < 500; ++i) {
+		//for (i = 0; pop.getBestIndividuo().getFitness() != 19; ++i) {
+		//cout << "--------- Geração: " << i << endl;
+		//pop.print_populacao();
+		pop.mutacaoPopulacao();
+		newpop = pop.crossoverRollet();
+		pop.setPopulacao(newpop.getPopulacao());
+		//cout << "Obj:" << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
+	}
+	pop.print_populacao();
+	cout << "Obj:" << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
+	cout << "fit:" << pop.getBestIndividuo().getFitness() << endl;
 
 	return 0;
 }

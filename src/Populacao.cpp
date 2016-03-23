@@ -58,10 +58,10 @@ const Individuo Populacao::getIndividuo(int index) {
 	return this->populacao[index];
 }
 
-const Individuo Populacao::getBestIndividuo() {
+Individuo Populacao::getBestIndividuo() {
 	this->bestIndividuo = this->populacao[0];
 	for (int var = 0; var < this->populacao.size(); ++var) {
-		if (this->bestIndividuo.getFitness()< this->populacao[var].calculoFitness()) {
+		if (this->bestIndividuo.getFitness() < this->populacao[var].getFitness()) {
 			this->bestIndividuo = this->populacao[var];
 		}
 	}
@@ -72,7 +72,7 @@ const Individuo Populacao::getWorseIndividuo() {
 	this->worseIndividuo = this->populacao[0];
 	for (int var = 0; var < this->populacao.size(); ++var) {
 		if (this->worseIndividuo.getFitness()
-				> this->populacao[var].calculoFitness()) {
+				> this->populacao[var].getFitness()) {
 			this->worseIndividuo = this->populacao[var];
 		}
 	}
@@ -83,7 +83,7 @@ const pair<Individuo, Individuo> Populacao::crossover(int individuo1,
 		int individuo2) {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 100);
-	int var, a = bit(mt), chanceCrossover = 100;
+	int var, a = bit(mt), chanceCrossover = 90;
 	pair<Individuo, Individuo> newIndividuosCrossover;
 	Individuo newIndividuo1 = this->populacao[individuo1];
 	Individuo newIndividuo2 = this->populacao[individuo2];
@@ -121,12 +121,12 @@ const Populacao Populacao::crossoverRollet() {
 	static mt19937 mt(time(NULL));
 	pair<Individuo, Individuo> newIndivuos;
 	Populacao newPop;
-	int valorTotalFitness = 0, var, valorDaRollet = 0,
+	int  var, valorDaRollet = 0,
 			individuoParaCross[1] { 0 }, auxInsertIndv = 0;
+	float valorTotalFitness = 0.0;
 	float valorAcumuladoFitness = 0.0;
 	for (var = 0; var < this->qtdIndividuos; ++var) {
-		valorTotalFitness += this->getIndividuo(var).getFitness();
-
+		valorTotalFitness += this->populacao[var].getFitness();
 	}
 
 	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2;
@@ -136,10 +136,7 @@ const Populacao Populacao::crossoverRollet() {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
 			valorDaRollet = numeroRandom(mt);
 			for (var = 0; var < this->qtdIndividuos - 1; ++var) {
-				valorAcumuladoFitness +=
-						((float) this->getIndividuo(var).getFitness()
-								/ valorTotalFitness) * 100;
-
+				valorAcumuladoFitness +=((float) this->populacao[var].getFitness()/ valorTotalFitness) * 100;
 				if (valorDaRollet < valorAcumuladoFitness)
 					break;
 			}
@@ -151,7 +148,6 @@ const Populacao Populacao::crossoverRollet() {
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
-	//cout <<"cromo:" <<getBestIndividuo().getCromossomo() << endl;
 	newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
 	return newPop;
 }
@@ -170,7 +166,8 @@ void Populacao::atualizaPiorIndvNaPopulacao(const Individuo& newIndividuo) {
 	int posicaoDoPiorIndiv = 0;
 	this->worseIndividuo = this->populacao[0];
 	for (int var = 0; var < this->populacao.size(); ++var) {
-		if (this->worseIndividuo.getFitness() > this->populacao[var].calculoFitness()) {
+		if (this->worseIndividuo.getFitness()
+				> this->populacao[var].getFitness()) {
 			posicaoDoPiorIndiv = var;
 		}
 	}

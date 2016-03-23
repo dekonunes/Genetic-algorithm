@@ -28,21 +28,21 @@ public:
 	void setCromossomo(const string& cromossomo);
 	int getQtdgenes() const;
 	int getQtdBits() const;
-	float getFitness() const;
-	void setFitness(int fitness);
-	float calculoFitness();
-	float calculoFucaoObjetivo();
+	float getFitness();
+	void calculoFitness();
+	void calculoFucaoObjetivo();
 	void mutacao();
 	string decToBin(int number);
 	int binToDec(string number);
 	const float decodificaCromossomo();
-
+	float getFuncaoObjetivo();
 
 private:
 	string cromossomo;
 	int qtdgenes;
 	int qtdBits;
 	float fitness;
+	float funcaoObjetivo;
 };
 
 #endif /* INDIVIDUO_HPP_ */

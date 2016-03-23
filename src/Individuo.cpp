@@ -52,28 +52,21 @@ int Individuo::getQtdBits() const {
 	return qtdBits;
 }
 
-float Individuo::getFitness() const {
-	return fitness;
-}
-
-void Individuo::setFitness(int fitness) {
-	this->fitness = fitness;
-}
-
-float Individuo::calculoFitness() {
-	this->fitness = 4.0;
-	float x = decodificaCromossomo();
-
-	this->fitness += cos(20 * x) - (abs(x) / 2) + ((x * x * x) / 4);
+float Individuo::getFitness() {
+	calculoFitness();
 	return this->fitness;
 }
 
-float Individuo::calculoFucaoObjetivo() {
-	this->fitness = 0.0;
+void Individuo::calculoFitness() {
+	float x = decodificaCromossomo();
+	this->fitness = (cos(20 * x) - (abs(x) / 2) + ((x * x * x) / 4)) + 4;
+}
+
+void Individuo::calculoFucaoObjetivo() {
+	this->funcaoObjetivo = 0.0;
 	float x = decodificaCromossomo();
 
-	this->fitness += cos(20 * x) - (abs(x) / 2) + ((x * x * x) / 4);
-	return this->fitness;
+	this->funcaoObjetivo = cos(20 * x) - (abs(x) / 2) + ((x * x * x) / 4);
 }
 
 void Individuo::mutacao() {
@@ -119,10 +112,14 @@ int Individuo::binToDec(string number) {
 
 const float Individuo::decodificaCromossomo() {
 	int l = 16;
-	float decimal, x, x_max = 2, x_min = -2;
+	float decimal, x, x_max = 2.0, x_min = -2.0;
 
-	decimal = binToDec(this->cromossomo) * 0.0001;
-	x = x_min + ((x_max - x_min) / (2 ^ (l) - 1)) * decimal;
-	//cout << decimal << "  " << x << endl;
+	decimal = binToDec(this->cromossomo);
+	x = x_min + (((x_max - x_min) / (pow(2, 16) - 1)) * decimal);
 	return x;
+}
+
+float Individuo::getFuncaoObjetivo() {
+	calculoFucaoObjetivo();
+	return this->funcaoObjetivo;
 }
