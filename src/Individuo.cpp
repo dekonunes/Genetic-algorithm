@@ -123,3 +123,25 @@ int Individuo::getNumeroBits(float x_max, float x_min, int precisao) {
 	int numBits = (x_max - x_min) / pow(10, -precisao);
 	return log2(numBits) + 1;
 }
+
+const int Individuo::restricaoMaiorIgual(int posGene, int valorRestricao) {
+	int valorGeneInt;
+	string stringGene;
+
+	for (int var = 0; var < this->qtdBits[posGene]; ++var) {
+		stringGene = stringGene
+				+ this->cromossomo[posGeneNoCromosso(posGene) + var];
+	}
+	cout << binToDec(stringGene) << endl;
+	if (binToDec(stringGene) >= valorRestricao)
+		return 1; //atingiu a restrição
+	return 0; //não atingiu a restrição
+}
+
+const int Individuo::posGeneNoCromosso(int posGene) {
+	int posicao = 0;
+	for (int var = 0; var < posGene; ++var) {
+		posicao += this->qtdBits[var];
+	}
+	return posicao;
+}

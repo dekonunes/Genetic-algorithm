@@ -15,7 +15,8 @@ int main() {
 	genes.push_back(10);
 	genes.push_back(15);
 	Individuo indiv(genes);
-
+	cout << indiv.getCromossomo() << endl;
+	cout << indiv.restricaoMaiorIgual(1,10) << endl;
 	/*
 	 Populacao pop(20, 1, 16);
 	 Populacao newpop(20, 1, 16);

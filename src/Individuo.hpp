@@ -26,8 +26,6 @@ public:
 	virtual ~Individuo();
 	const string& getCromossomo() const;
 	void setCromossomo(const string& cromossomo);
-	int getQtdgenes() const;
-	int getQtdBits() const;
 	float getFitness();
 	void calculoFitness();
 	void calculoFucaoObjetivo();
@@ -37,11 +35,13 @@ public:
 	const float decodificaCromossomo();
 	float getFuncaoObjetivo();
 	int getNumeroBits(float x_max, float x_min, int precisao);
+	const int restricaoMaiorIgual(int posGene, int valorRestricao);
+	const int posGeneNoCromosso(int posGene);
 
 private:
 	string cromossomo;
 	vector<float> genes;
-	int qtdBits[];
+	int qtdBits[100];
 	float fitness;
 	float funcaoObjetivo;
 };
