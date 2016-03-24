@@ -21,7 +21,7 @@ using namespace std;
 class Individuo {
 
 public:
-	Individuo(int qtdgenes, int qtdBits);
+	Individuo(vector<float> genes);
 	Individuo();
 	virtual ~Individuo();
 	const string& getCromossomo() const;
@@ -40,8 +40,8 @@ public:
 
 private:
 	string cromossomo;
-	int qtdgenes;
-	int qtdBits;
+	vector<float> genes;
+	int qtdBits[];
 	float fitness;
 	float funcaoObjetivo;
 };

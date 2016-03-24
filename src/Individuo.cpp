@@ -7,24 +7,24 @@
 
 #include "Individuo.hpp"
 
-Individuo::Individuo(int qtdgenes, int qtdBits) {
+Individuo::Individuo(vector<float> genes) {
 	// TODO Auto-generated constructor stub
-
-	this->qtdgenes = qtdgenes;
-	this->qtdBits = qtdBits;
-	this->fitness = 0;
+	static mt19937 mt(time(NULL));
+	static uniform_int_distribution<int> bit(0, 1);
 	string aux;
 	string cromossomo;
 
-	static mt19937 mt(time(NULL));
+	this->qtdBits[0] = getNumeroBits(24, 0, 0); //Para radios ST
+	this->qtdBits[1] = getNumeroBits(16, 0, 0); //Para radios LX
 
-	static uniform_int_distribution<int> bit(0, 1);
-
-	//cout << bit(mt) << endl;
-	for (int i = 0; i < qtdBits; i++) {
-		aux = static_cast<ostringstream*>(&(ostringstream() << bit(mt)))->str();
-		this->cromossomo = this->cromossomo + aux;
+	for (int var = 0; var < genes.size(); ++var) {
+		for (int i = 0; i < this->qtdBits[var]; i++) {
+			aux =
+					static_cast<ostringstream*>(&(ostringstream() << bit(mt)))->str();
+			this->cromossomo = this->cromossomo + aux;
+		}
 	}
+	this->fitness = 0.0;
 	calculoFitness();
 }
 
@@ -42,14 +42,6 @@ const string& Individuo::getCromossomo() const {
 
 void Individuo::setCromossomo(const string& cromossomo) {
 	this->cromossomo = cromossomo;
-}
-
-int Individuo::getQtdgenes() const {
-	return qtdgenes;
-}
-
-int Individuo::getQtdBits() const {
-	return qtdBits;
 }
 
 float Individuo::getFitness() {
@@ -70,24 +62,27 @@ void Individuo::calculoFucaoObjetivo() {
 }
 
 void Individuo::mutacao() {
+
 	int numRand, probabilidade = 1;
 	static mt19937 mt(time(NULL));
 	string oldCromossomo = getCromossomo(), newCromossomo = getCromossomo();
+	for (int var = 0; var < genes.size(); ++var) {
+		for (int loopCromossomos = 0; loopCromossomos < this->qtdBits[var] - 1;
+				++loopCromossomos) {
 
-	for (int loopCromossomos = 0; loopCromossomos < this->qtdBits - 1;
-			++loopCromossomos) {
+			static uniform_int_distribution<int> numRandom(0, 100);
 
-		static uniform_int_distribution<int> numRandom(0, 100);
+			numRand = numRandom(mt);
 
-		numRand = numRandom(mt);
-
-		if (numRand < probabilidade) {
-			if (this->cromossomo[loopCromossomos] == '1') {
-				this->cromossomo[loopCromossomos] = '0';
-			} else
-				this->cromossomo[loopCromossomos] = '1';
+			if (numRand < probabilidade) {
+				if (this->cromossomo[loopCromossomos] == '1') {
+					this->cromossomo[loopCromossomos] = '0';
+				} else
+					this->cromossomo[loopCromossomos] = '1';
+			}
 		}
 	}
+
 }
 
 string Individuo::decToBin(int number) {
@@ -125,6 +120,6 @@ float Individuo::getFuncaoObjetivo() {
 }
 
 int Individuo::getNumeroBits(float x_max, float x_min, int precisao) {
-	int numBits = (x_max - x_min)/pow(10,-precisao);
-	return log2(numBits)+1;
+	int numBits = (x_max - x_min) / pow(10, -precisao);
+	return log2(numBits) + 1;
 }

@@ -9,11 +9,11 @@
 
 namespace std {
 
-Populacao::Populacao(int qtdIndividuos, int qtdGenes, int qtdBits) :
-		bestIndividuo(qtdGenes, qtdBits), worseIndividuo(qtdGenes, qtdBits) {
+Populacao::Populacao(int qtdIndividuos,vector<float> genes) :
+		bestIndividuo(genes), worseIndividuo(genes) {
 	// TODO Auto-generated constructor stub
 	for (int var = 0; var < qtdIndividuos; ++var) {
-		this->populacao.push_back(Individuo(qtdGenes, qtdBits));
+		this->populacao.push_back(Individuo(genes));
 	}
 	this->qtdIndividuos = qtdIndividuos;
 	this->qtdBits = qtdBits;
@@ -21,7 +21,7 @@ Populacao::Populacao(int qtdIndividuos, int qtdGenes, int qtdBits) :
 }
 
 Populacao::Populacao() :
-		bestIndividuo(qtdGenes, qtdBits) {
+		bestIndividuo() {
 }
 
 Populacao::~Populacao() {

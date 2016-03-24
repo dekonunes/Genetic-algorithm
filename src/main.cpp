@@ -11,18 +11,20 @@
 using namespace std;
 
 int main() {
-	Individuo indiv(1, 16);
-	Populacao pop(20, 1, 16);
-	Populacao newpop(20, 1, 16);
+	vector<float> genes;
+	genes.push_back(10);
+	genes.push_back(15);
+	Individuo indiv(genes);
 
-	int i = 0;
-	for (i = 0; i < 500; ++i) {
-		pop.mutacaoPopulacao();
-		newpop = pop.crossoverRollet();
-		pop.setPopulacao(newpop.getPopulacao());
-		cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
-	}
-	cout << indiv.getNumeroBits(2,-2,4) << endl;
+	/*
+	 Populacao pop(20, 1, 16);
+	 Populacao newpop(20, 1, 16);
+	 for (int i = 0; i < 500; ++i) {
+	 pop.mutacaoPopulacao();
+	 newpop = pop.crossoverRollet();
+	 pop.setPopulacao(newpop.getPopulacao());
+	 //cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
+	 }	*/
 
 	return 0;
 }
