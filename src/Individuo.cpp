@@ -123,3 +123,8 @@ float Individuo::getFuncaoObjetivo() {
 	calculoFucaoObjetivo();
 	return this->funcaoObjetivo;
 }
+
+int Individuo::getNumeroBits(float x_max, float x_min, int precisao) {
+	int numBits = (x_max - x_min)/pow(10,-precisao);
+	return log2(numBits)+1;
+}

@@ -36,6 +36,7 @@ public:
 	int binToDec(string number);
 	const float decodificaCromossomo();
 	float getFuncaoObjetivo();
+	int getNumeroBits(float x_max, float x_min, int precisao);
 
 private:
 	string cromossomo;
