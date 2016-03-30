@@ -83,7 +83,7 @@ const pair<Individuo, Individuo> Populacao::crossover(int individuo1,
 		int individuo2) {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 100);
-	int var, a = bit(mt), chanceCrossover = 90;
+	int var, a = bit(mt), chanceCrossover = 95;
 	pair<Individuo, Individuo> newIndividuosCrossover;
 	Individuo newIndividuo1 = this->populacao[individuo1];
 	Individuo newIndividuo2 = this->populacao[individuo2];

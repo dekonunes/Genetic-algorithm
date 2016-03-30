@@ -15,18 +15,14 @@ int main() {
 	genes.push_back(10);
 	genes.push_back(15);
 	Individuo indiv(genes);
-	cout << indiv.getCromossomo() << endl;
-	cout << indiv.restricaoMaiorIgual(1,10) << endl;
-	/*
-	 Populacao pop(20, 1, 16);
-	 Populacao newpop(20, 1, 16);
-	 for (int i = 0; i < 500; ++i) {
-	 pop.mutacaoPopulacao();
-	 newpop = pop.crossoverRollet();
-	 pop.setPopulacao(newpop.getPopulacao());
-	 //cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
-	 }	*/
-
+	Populacao pop(10, genes);
+	Populacao newPop(10, genes);
+	for (int i = 0; i < 500; ++i) {
+		pop.mutacaoPopulacao();
+		newPop = pop.crossoverRollet();
+		pop.setPopulacao(newPop.getPopulacao());
+		//cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
+	}
 	return 0;
 }
 
