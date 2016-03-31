@@ -27,15 +27,14 @@ public:
 	const string& getCromossomo() const;
 	void setCromossomo(const string& cromossomo);
 	float getFitness();
-	void calculoFitness();
-	void calculoFucaoObjetivo();
+	float calculoFitness();
+	float calculoFucaoObjetivo();
 	void mutacao();
 	string decToBin(int number);
 	int binToDec(string number);
-	const float decodificaCromossomo();
+	const float decodificaCromossomo(int max, int min, string gene);
 	float getFuncaoObjetivo();
 	int getNumeroBits(float x_max, float x_min, int precisao);
-	const int restricaoMaiorIgual(int posGene, int valorRestricao);
 	const int posGeneNoCromosso(int posGene);
 
 private:

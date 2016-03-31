@@ -16,8 +16,6 @@ Populacao::Populacao(int qtdIndividuos,vector<float> genes) :
 		this->populacao.push_back(Individuo(genes));
 	}
 	this->qtdIndividuos = qtdIndividuos;
-	this->qtdBits = qtdBits;
-	this->qtdGenes = qtdGenes;
 }
 
 Populacao::Populacao() :
@@ -84,6 +82,7 @@ const pair<Individuo, Individuo> Populacao::crossover(int individuo1,
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 100);
 	int var, a = bit(mt), chanceCrossover = 95;
+	int qtdBits = this->populacao[individuo1].getCromossomo().size();
 	pair<Individuo, Individuo> newIndividuosCrossover;
 	Individuo newIndividuo1 = this->populacao[individuo1];
 	Individuo newIndividuo2 = this->populacao[individuo2];
@@ -93,7 +92,7 @@ const pair<Individuo, Individuo> Populacao::crossover(int individuo1,
 		string cromossomoNewInviduio1;
 		string cromossomoNewInviduio2;
 
-		static uniform_int_distribution<int> numRandon(0, this->qtdBits - 1);
+		static uniform_int_distribution<int> numRandon(0, qtdBits - 1);
 		a = numRandon(mt);
 
 		for (var = 0; var < a; ++var) {
@@ -103,7 +102,7 @@ const pair<Individuo, Individuo> Populacao::crossover(int individuo1,
 					+ this->populacao[individuo2].getCromossomo()[var];
 
 		}
-		for (; var < this->qtdBits; ++var) {
+		for (; var < qtdBits; ++var) {
 			cromossomoNewInviduio1 = cromossomoNewInviduio1
 					+ this->populacao[individuo2].getCromossomo()[var];
 			cromossomoNewInviduio2 = cromossomoNewInviduio2

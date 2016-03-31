@@ -42,8 +42,6 @@ private:
 	Individuo bestIndividuo;
 	Individuo worseIndividuo;
 	int qtdIndividuos;
-	int qtdBits;
-	int qtdGenes;
 };
 
 } /* namespace std */

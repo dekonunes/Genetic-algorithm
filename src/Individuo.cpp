@@ -50,8 +50,9 @@ float Individuo::getFitness() {
 	return this->fitness;
 }
 
-void Individuo::calculoFitness() {
-	int ST,LX,c = 1,r = 1;
+float Individuo::calculoFitness() {
+	int ST, LX, qtdFunc, maxExtrapolaFunc, maxExtrapolaFO;
+	float penalidade, aux, r = -1.0;
 	string stringGene[10];
 	for (int var2 = 0; var2 < this->genes.size(); ++var2) {
 		for (int var = 0; var < this->qtdBits[var2]; ++var) {
@@ -60,42 +61,60 @@ void Individuo::calculoFitness() {
 		}
 
 	}
-	ST = binToDec(stringGene[0]);
-	LX = binToDec(stringGene[1]);
-	cout << "ST:" << ST << " LX:" << LX << endl;
-	cout << "fitt:" << ST * 30 + LX * 40 << endl;
-	ST -= r*restricaoMaiorIgual(0,24);
-	LX -= c*restricaoMaiorIgual(1,16);
-	cout << "ST:" << ST << " LX:" << LX << endl;
-	cout << "fitt:" << ST * 30 + LX * 40 << endl << endl;
-	this->fitness = ST * 30 + LX * 40;
+	ST = (int) decodificaCromossomo(24, 0, stringGene[0]);
+	LX = (int) decodificaCromossomo(16, 0, stringGene[1]);
+	qtdFunc = ST + (2 * LX);
+	maxExtrapolaFunc = (24 + 32) - 40;
+	maxExtrapolaFO = 24 * 30 + 16 * 40;
+
+	if (qtdFunc <= 40)
+		penalidade = 0;
+	else
+		penalidade = (float) (qtdFunc - 40) / (float) maxExtrapolaFunc;
+
+	aux = calculoFucaoObjetivo() / maxExtrapolaFO + (r * penalidade);
+	if (aux < 0)
+		this->fitness = 0;
+	else
+		this->fitness = aux;
+
+	return this->fitness;
 }
 
-void Individuo::calculoFucaoObjetivo() {
-	this->funcaoObjetivo = 0.0;
-	float x = decodificaCromossomo();
+float Individuo::calculoFucaoObjetivo() {
+	int ST, LX;
+	string stringGene[10];
+	for (int var2 = 0; var2 < this->genes.size(); ++var2) {
+		for (int var = 0; var < this->qtdBits[var2]; ++var) {
+			stringGene[var2] = stringGene[var2]
+					+ this->cromossomo[posGeneNoCromosso(var2) + var];
+		}
 
-	this->funcaoObjetivo = cos(20 * x) - (abs(x) / 2) + ((x * x * x) / 4);
+	}
+	ST = (int) decodificaCromossomo(24, 0, stringGene[0]);
+	LX = (int) decodificaCromossomo(16, 0, stringGene[1]);
+
+	this->funcaoObjetivo = ST * 30 + LX * 40;
+	return this->funcaoObjetivo;
 }
 
 void Individuo::mutacao() {
 	int numRand, probabilidade = 1;
 	static mt19937 mt(time(NULL));
 	string oldCromossomo = getCromossomo(), newCromossomo = getCromossomo();
-	for (int var = 0; var < genes.size(); ++var) {
-		for (int loopCromossomos = 0; loopCromossomos < this->qtdBits[var] - 1;
-				++loopCromossomos) {
 
-			static uniform_int_distribution<int> numRandom(0, 100);
+	for (int loopCromossomos = 0; loopCromossomos < this->cromossomo.size();
+			++loopCromossomos) {
 
-			numRand = numRandom(mt);
+		static uniform_int_distribution<int> numRandom(0, 100);
 
-			if (numRand < probabilidade) {
-				if (this->cromossomo[loopCromossomos] == '1') {
-					this->cromossomo[loopCromossomos] = '0';
-				} else
-					this->cromossomo[loopCromossomos] = '1';
-			}
+		numRand = numRandom(mt);
+
+		if (numRand < probabilidade) {
+			if (this->cromossomo[loopCromossomos] == '1') {
+				this->cromossomo[loopCromossomos] = '0';
+			} else
+				this->cromossomo[loopCromossomos] = '1';
 		}
 	}
 
@@ -121,12 +140,11 @@ int Individuo::binToDec(string number) {
 	return result;
 }
 
-const float Individuo::decodificaCromossomo() {
-	int l = 16;
-	float decimal, x, x_max = 2.0, x_min = -2.0;
-
-	decimal = binToDec(this->cromossomo);
-	x = x_min + (((x_max - x_min) / (pow(2, 16) - 1)) * decimal);
+const float Individuo::decodificaCromossomo(int max, int min, string gene) {
+	int l = getNumeroBits(max, min, 0);
+	int decimal, x, x_max = max, x_min = min;
+	decimal = binToDec(gene);
+	x = x_min + (((x_max - x_min) / (pow(2, l) - 1)) * decimal);
 	return x;
 }
 
@@ -140,47 +158,10 @@ int Individuo::getNumeroBits(float x_max, float x_min, int precisao) {
 	return log2(numBits) + 1;
 }
 
-const int Individuo::restricaoMaiorIgual(int posGene, int valorRestricao) {
-	int valorGeneInt;
-	string stringGene;
-
-	for (int var = 0; var < this->qtdBits[posGene]; ++var) {
-		stringGene = stringGene
-				+ this->cromossomo[posGeneNoCromosso(posGene) + var];
-	}
-	//cout << binToDec(stringGene) << endl;
-	if (binToDec(stringGene) >= valorRestricao)
-		return binToDec(stringGene) - valorRestricao; //atingiu a restrição
-	return 0; //não atingiu a restrição
-}
-
 const int Individuo::posGeneNoCromosso(int posGene) {
 	int posicao = 0;
 	for (int var = 0; var < posGene; ++var) {
 		posicao += this->qtdBits[var];
 	}
 	return posicao;
-}
-
-double normaliza(vector<vector<double> > *itens, int dimension, int qtdItens) {
-	double maior = -9999999;
-	double menor = 9999999;
-	double tmp = 0.0;
-	vector<double> vet;
-	for (int i = 0; i < dimension; i++) {
-		for (unsigned int j = 0; j < itens->size(); j++) {
-			tmp = itens->at(j).at(i);
-			if (tmp > maior)
-				maior = tmp;
-			if (tmp < menor)
-				menor = tmp;
-		}
-		vet.push_back(maior - menor);
-		cout << "maior" << maior << endl;
-		cout << "menor" << menor << endl;
-	}
-	double soma = 0;
-	for (unsigned int i = 0; i < vet.size(); i++)
-		soma += pow(vet[i], 2);
-	return sqrt(soma);
 }
