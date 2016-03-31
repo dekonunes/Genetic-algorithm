@@ -12,12 +12,12 @@ using namespace std;
 
 int main() {
 	vector<float> genes;
-	genes.push_back(10);
-	genes.push_back(15);
+	genes.push_back(60); //Computador A
+	genes.push_back(50); //Computador B
 	Individuo indiv(genes);
-	Populacao pop(20, genes);
-	Populacao newPop(20, genes);
-	for (int i = 0; i < 50; ++i) {
+	Populacao pop(30, genes);
+	Populacao newPop(30, genes);
+	for (int i = 0; i < 1000; ++i) {
 		pop.mutacaoPopulacao();
 		newPop = pop.crossoverRollet();
 		pop.setPopulacao(newPop.getPopulacao());

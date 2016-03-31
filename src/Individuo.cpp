@@ -13,9 +13,9 @@ Individuo::Individuo(vector<float> genes) {
 	static uniform_int_distribution<int> bit(0, 1);
 	string aux;
 	string cromossomo;
-
-	this->qtdBits[0] = getNumeroBits(24, 0, 0); //Para radios ST
-	this->qtdBits[1] = getNumeroBits(32, 0, 0); //Para radios LX
+	for (int var = 0; var < genes.size(); ++var) {
+		this->qtdBits[var] = getNumeroBits(genes[var], 0, 0);
+	}
 
 	for (int var = 0; var < genes.size(); ++var) {
 		for (int i = 0; i < this->qtdBits[var]; i++) {
@@ -51,8 +51,8 @@ float Individuo::getFitness() {
 }
 
 float Individuo::calculoFitness() {
-	int A, B, qtdDisco, maxExtrapolaFunc, maxExtrapolaFO;
-	float penalidade, aux, r = -1.0;
+	int A, B, qtdDisco, maxExtrapolaFunc;
+	float penalidade, aux, r = -1.0, maxExtrapolaFO;
 	string stringGene[10];
 	for (int var2 = 0; var2 < this->genes.size(); ++var2) {
 		for (int var = 0; var < this->qtdBits[var2]; ++var) {
@@ -64,17 +64,16 @@ float Individuo::calculoFitness() {
 	A = (int) decodificaCromossomo(60, 0, stringGene[0]);
 	B = (int) decodificaCromossomo(50, 0, stringGene[1]);
 	qtdDisco = A + (2 * B);
-	maxExtrapolaFunc = (60 + 50) - 60;
+	maxExtrapolaFunc = 40;
 	maxExtrapolaFO = 60 * 180 + 50 * 300;
 
 	if (qtdDisco <= 120)
 		penalidade = 0;
-	else {
+	else
 		penalidade = (float) (qtdDisco - 120) / (float) maxExtrapolaFunc;
-		//cout << penalidade << endl;
-	}
-	cout << "A: " << A << " B:" << B << " max:" <<maxExtrapolaFunc <<endl;
-	aux = calculoFucaoObjetivo() / maxExtrapolaFO + (r * penalidade);
+
+	aux = calculoFucaoObjetivo() / (float) maxExtrapolaFO + (r * penalidade);
+
 	if (aux < 0)
 		this->fitness = 0;
 	else
