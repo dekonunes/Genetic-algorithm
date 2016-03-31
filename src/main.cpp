@@ -17,7 +17,7 @@ int main() {
 	Individuo indiv(genes);
 	Populacao pop(20, genes);
 	Populacao newPop(20, genes);
-	for (int i = 0; i < 500; ++i) {
+	for (int i = 0; i < 50; ++i) {
 		pop.mutacaoPopulacao();
 		newPop = pop.crossoverRollet();
 		pop.setPopulacao(newPop.getPopulacao());

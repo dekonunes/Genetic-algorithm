@@ -51,7 +51,7 @@ float Individuo::getFitness() {
 }
 
 float Individuo::calculoFitness() {
-	int ST, LX, qtdFunc, maxExtrapolaFunc, maxExtrapolaFO;
+	int A, B, qtdDisco, maxExtrapolaFunc, maxExtrapolaFO;
 	float penalidade, aux, r = -1.0;
 	string stringGene[10];
 	for (int var2 = 0; var2 < this->genes.size(); ++var2) {
@@ -61,17 +61,19 @@ float Individuo::calculoFitness() {
 		}
 
 	}
-	ST = (int) decodificaCromossomo(24, 0, stringGene[0]);
-	LX = (int) decodificaCromossomo(16, 0, stringGene[1]);
-	qtdFunc = ST + (2 * LX);
-	maxExtrapolaFunc = (24 + 32) - 40;
-	maxExtrapolaFO = 24 * 30 + 16 * 40;
+	A = (int) decodificaCromossomo(60, 0, stringGene[0]);
+	B = (int) decodificaCromossomo(50, 0, stringGene[1]);
+	qtdDisco = A + (2 * B);
+	maxExtrapolaFunc = (60 + 50) - 60;
+	maxExtrapolaFO = 60 * 180 + 50 * 300;
 
-	if (qtdFunc <= 40)
+	if (qtdDisco <= 120)
 		penalidade = 0;
-	else
-		penalidade = (float) (qtdFunc - 40) / (float) maxExtrapolaFunc;
-
+	else {
+		penalidade = (float) (qtdDisco - 120) / (float) maxExtrapolaFunc;
+		//cout << penalidade << endl;
+	}
+	cout << "A: " << A << " B:" << B << " max:" <<maxExtrapolaFunc <<endl;
 	aux = calculoFucaoObjetivo() / maxExtrapolaFO + (r * penalidade);
 	if (aux < 0)
 		this->fitness = 0;
@@ -82,7 +84,7 @@ float Individuo::calculoFitness() {
 }
 
 float Individuo::calculoFucaoObjetivo() {
-	int ST, LX;
+	int A, B;
 	string stringGene[10];
 	for (int var2 = 0; var2 < this->genes.size(); ++var2) {
 		for (int var = 0; var < this->qtdBits[var2]; ++var) {
@@ -91,10 +93,10 @@ float Individuo::calculoFucaoObjetivo() {
 		}
 
 	}
-	ST = (int) decodificaCromossomo(24, 0, stringGene[0]);
-	LX = (int) decodificaCromossomo(16, 0, stringGene[1]);
+	A = (int) decodificaCromossomo(60, 0, stringGene[0]);
+	B = (int) decodificaCromossomo(50, 0, stringGene[1]);
 
-	this->funcaoObjetivo = ST * 30 + LX * 40;
+	this->funcaoObjetivo = A * 180 + B * 300;
 	return this->funcaoObjetivo;
 }
 
