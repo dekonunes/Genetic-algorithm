@@ -12,9 +12,4 @@
 #include "Populacao.hpp"
 #include "Individuo.hpp"
 
-#define QTDINDIVIDUOS 10
-
-
-
-
 #endif /* MAIN_HPP_ */

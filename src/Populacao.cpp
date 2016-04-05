@@ -9,7 +9,7 @@
 
 namespace std {
 
-Populacao::Populacao(int qtdIndividuos,vector<float> genes) :
+Populacao::Populacao(int qtdIndividuos, vector<float> genes) :
 		bestIndividuo(genes), worseIndividuo(genes) {
 	// TODO Auto-generated constructor stub
 	for (int var = 0; var < qtdIndividuos; ++var) {
@@ -59,7 +59,8 @@ const Individuo Populacao::getIndividuo(int index) {
 Individuo Populacao::getBestIndividuo() {
 	this->bestIndividuo = this->populacao[0];
 	for (int var = 0; var < this->populacao.size(); ++var) {
-		if (this->bestIndividuo.getFitness() < this->populacao[var].getFitness()) {
+		if (this->bestIndividuo.getFitness()
+				< this->populacao[var].getFitness()) {
 			this->bestIndividuo = this->populacao[var];
 		}
 	}
@@ -116,12 +117,48 @@ const pair<Individuo, Individuo> Populacao::crossover(int individuo1,
 	return newIndividuosCrossover;
 }
 
-const Populacao Populacao::crossoverRollet() {
+const pair<Individuo, Individuo> Populacao::crossoverUniforme(int individuo1,
+		int individuo2) {
+	static mt19937 mt(time(NULL));
+	static uniform_int_distribution<int> bit(0, 100);
+	int var, a = bit(mt), chanceCrossover = 95;
+	int qtdBits = this->populacao[individuo1].getCromossomo().size();
+	pair<Individuo, Individuo> newIndividuosCrossover;
+	Individuo newIndividuo1 = this->populacao[individuo1];
+	Individuo newIndividuo2 = this->populacao[individuo2];
+
+	if (chanceCrossover > a) {
+
+		string cromossomoNewInviduio1 = this->populacao[individuo1].getCromossomo();
+		string cromossomoNewInviduio2 = this->populacao[individuo2].getCromossomo();
+		for (int var = 0;
+				var < this->populacao[individuo1].getCromossomo().size();
+				++var) {
+			static uniform_int_distribution<int> numRandon(0, 1);
+			a = numRandon(mt);
+
+			if (a == 1) {
+				//cout << cromossomoNewInviduio1 << endl;
+				cromossomoNewInviduio1[var] = this->populacao[individuo2].getCromossomo()[var];
+				cromossomoNewInviduio2[var] = this->populacao[individuo1].getCromossomo()[var];
+				cout << var << endl;
+			}
+
+		}
+		//cout << cromossomoNewInviduio1 << endl;
+		newIndividuo1.setCromossomo(cromossomoNewInviduio1);
+		newIndividuo2.setCromossomo(cromossomoNewInviduio2);
+	}
+	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
+
+	return newIndividuosCrossover;
+}
+
+const Populacao Populacao::rollet() {
 	static mt19937 mt(time(NULL));
 	pair<Individuo, Individuo> newIndivuos;
 	Populacao newPop;
-	int  var, valorDaRollet = 0,
-			individuoParaCross[1] { 0 }, auxInsertIndv = 0;
+	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
 	float valorTotalFitness = 0.0;
 	float valorAcumuladoFitness = 0.0;
 	for (var = 0; var < this->qtdIndividuos; ++var) {
@@ -135,7 +172,9 @@ const Populacao Populacao::crossoverRollet() {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
 			valorDaRollet = numeroRandom(mt);
 			for (var = 0; var < this->qtdIndividuos - 1; ++var) {
-				valorAcumuladoFitness +=((float) this->populacao[var].getFitness()/ valorTotalFitness) * 100;
+				valorAcumuladoFitness +=
+						((float) this->populacao[var].getFitness()
+								/ valorTotalFitness) * 100;
 				if (valorDaRollet < valorAcumuladoFitness)
 					break;
 			}

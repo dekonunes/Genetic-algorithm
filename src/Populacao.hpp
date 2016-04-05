@@ -32,10 +32,12 @@ public:
 	Individuo getBestIndividuo();
 	const Individuo getWorseIndividuo();
 	const pair<Individuo,Individuo> crossover(int,int);
-	const Populacao crossoverRollet();
+	const pair<Individuo,Individuo> crossoverUniforme(int,int);
+	const Populacao rollet();
 	int getQtdIndividuos() const;
 	void mutacaoPopulacao();
 	void atualizaPiorIndvNaPopulacao(const Individuo& newIndividuo);
+
 
 private:
 	vector<Individuo> populacao;
