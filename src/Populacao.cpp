@@ -59,8 +59,7 @@ const Individuo Populacao::getIndividuo(int index) {
 Individuo Populacao::getBestIndividuo() {
 	this->bestIndividuo = this->populacao[0];
 	for (int var = 0; var < this->populacao.size(); ++var) {
-		if (this->bestIndividuo.getFitness()
-				< this->populacao[var].getFitness()) {
+		if (this->bestIndividuo.getFitness() < this->populacao[var].getFitness()) {
 			this->bestIndividuo = this->populacao[var];
 		}
 	}
@@ -70,16 +69,14 @@ Individuo Populacao::getBestIndividuo() {
 const Individuo Populacao::getWorseIndividuo() {
 	this->worseIndividuo = this->populacao[0];
 	for (int var = 0; var < this->populacao.size(); ++var) {
-		if (this->worseIndividuo.getFitness()
-				> this->populacao[var].getFitness()) {
+		if (this->worseIndividuo.getFitness() > this->populacao[var].getFitness()) {
 			this->worseIndividuo = this->populacao[var];
 		}
 	}
 	return this->worseIndividuo;
 }
 
-const pair<Individuo, Individuo> Populacao::crossover(int individuo1,
-		int individuo2) {
+const pair<Individuo, Individuo> Populacao::crossover(int individuo1, int individuo2) {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 100);
 	int var, a = bit(mt), chanceCrossover = 95;
@@ -117,8 +114,7 @@ const pair<Individuo, Individuo> Populacao::crossover(int individuo1,
 	return newIndividuosCrossover;
 }
 
-const pair<Individuo, Individuo> Populacao::crossoverUniforme(int individuo1,
-		int individuo2) {
+const pair<Individuo, Individuo> Populacao::crossoverUniforme(int individuo1, int individuo2) {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 100);
 	int var, a = bit(mt), chanceCrossover = 95;
@@ -129,21 +125,15 @@ const pair<Individuo, Individuo> Populacao::crossoverUniforme(int individuo1,
 
 	if (chanceCrossover > a) {
 
-		string cromossomoNewInviduio1 =
-				this->populacao[individuo1].getCromossomo();
-		string cromossomoNewInviduio2 =
-				this->populacao[individuo2].getCromossomo();
-		for (int var = 0;
-				var < this->populacao[individuo1].getCromossomo().size();
-				++var) {
+		string cromossomoNewInviduio1 = this->populacao[individuo1].getCromossomo();
+		string cromossomoNewInviduio2 = this->populacao[individuo2].getCromossomo();
+		for (int var = 0; var < this->populacao[individuo1].getCromossomo().size(); ++var) {
 			static uniform_int_distribution<int> numRandon(0, 1);
 			a = numRandon(mt);
 
 			if (a == 1) {
-				cromossomoNewInviduio1[var] =
-						this->populacao[individuo2].getCromossomo()[var];
-				cromossomoNewInviduio2[var] =
-						this->populacao[individuo1].getCromossomo()[var];
+				cromossomoNewInviduio1[var] = this->populacao[individuo2].getCromossomo()[var];
+				cromossomoNewInviduio2[var] = this->populacao[individuo1].getCromossomo()[var];
 			}
 
 		}
@@ -162,17 +152,13 @@ const Populacao Populacao::tournament(int k) {
 	Populacao newPop;
 	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
 
-	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2;
-			++loopNovosIndiv) {
-		for (int qtdIndvParaCross = 0; qtdIndvParaCross < 2;
-				++qtdIndvParaCross) {
-			static uniform_int_distribution<int> numeroRandom(0,
-					this->qtdIndividuos - 1);
+	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
+		for (int qtdIndvParaCross = 0; qtdIndvParaCross < 2; ++qtdIndvParaCross) {
+			static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
 			indvDoTournament = numeroRandom(mt);
 			indAux = this->populacao[indvDoTournament]; //Já encontra o primeiro indv aleatório, já o primeiro k
 			for (int var = 0; var < k - 1; ++var) { //k-1 pois o primeiro individuo veio da linha acima
-				static uniform_int_distribution<int> numeroRandom(0,
-						this->qtdIndividuos - 1);
+				static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
 				indvDoTournament = numeroRandom(mt);
 				indRand = this->populacao[indvDoTournament];
 				//cout << indvDoTournament << endl;
@@ -182,13 +168,12 @@ const Populacao Populacao::tournament(int k) {
 				//cout << individuoParaCross[qtdIndvParaCross] << endl;
 			}
 		}
-
-		newIndivuos = crossoverUniforme(individuoParaCross[0],
-				individuoParaCross[1]);
+		//cout << individuoParaCross[0] << "  " << individuoParaCross[1] << endl;
+		newIndivuos	 = crossoverUniforme(individuoParaCross[0], individuoParaCross[1]);
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
-	//newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
+	newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
 	return newPop;
 }
 
@@ -203,16 +188,14 @@ const Populacao Populacao::rollet() {
 		valorTotalFitness += this->populacao[var].getFitness();
 	}
 
-	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2;
-			++loopNovosIndiv) {
+	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
 
 		for (int loop = 0; loop < 2; ++loop) {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
 			valorDaRollet = numeroRandom(mt);
 			for (var = 0; var < this->qtdIndividuos - 1; ++var) {
-				valorAcumuladoFitness +=
-						((float) this->populacao[var].getFitness()
-								/ valorTotalFitness) * 100;
+				valorAcumuladoFitness += ((float) this->populacao[var].getFitness()
+						/ valorTotalFitness) * 100;
 				if (valorDaRollet < valorAcumuladoFitness)
 					break;
 			}
@@ -220,8 +203,7 @@ const Populacao Populacao::rollet() {
 			valorAcumuladoFitness = 0;
 			individuoParaCross[loop] = var;
 		}
-		newIndivuos = crossoverUniforme(individuoParaCross[0],
-				individuoParaCross[1]);
+		newIndivuos = crossoverUniforme(individuoParaCross[0], individuoParaCross[1]);
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
@@ -243,8 +225,7 @@ void Populacao::atualizaPiorIndvNaPopulacao(const Individuo& newIndividuo) {
 	int posicaoDoPiorIndiv = 0;
 	this->worseIndividuo = this->populacao[0];
 	for (int var = 0; var < this->populacao.size(); ++var) {
-		if (this->worseIndividuo.getFitness()
-				> this->populacao[var].getFitness()) {
+		if (this->worseIndividuo.getFitness() > this->populacao[var].getFitness()) {
 			posicaoDoPiorIndiv = var;
 		}
 	}

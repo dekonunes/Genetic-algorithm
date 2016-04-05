@@ -20,7 +20,7 @@ int main() {
 	Populacao newPop(10, genes);
 	for (int i = 0; i < 100; ++i) {
 		pop.mutacaoPopulacao();
-		newPop = pop.tournament(4);
+		newPop = pop.tournament(2);
 		pop.setPopulacao(newPop.getPopulacao());
 		cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
 	}
