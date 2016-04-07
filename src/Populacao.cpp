@@ -129,8 +129,10 @@ const pair<Individuo, Individuo> Populacao::crossoverUniforme(int individuo1,
 
 	if (chanceCrossover > a) {
 
-		string cromossomoNewInviduio1 = this->populacao[individuo1].getCromossomo();
-		string cromossomoNewInviduio2 = this->populacao[individuo2].getCromossomo();
+		string cromossomoNewInviduio1 =
+				this->populacao[individuo1].getCromossomo();
+		string cromossomoNewInviduio2 =
+				this->populacao[individuo2].getCromossomo();
 		for (int var = 0;
 				var < this->populacao[individuo1].getCromossomo().size();
 				++var) {
@@ -138,20 +140,56 @@ const pair<Individuo, Individuo> Populacao::crossoverUniforme(int individuo1,
 			a = numRandon(mt);
 
 			if (a == 1) {
-				//cout << cromossomoNewInviduio1 << endl;
-				cromossomoNewInviduio1[var] = this->populacao[individuo2].getCromossomo()[var];
-				cromossomoNewInviduio2[var] = this->populacao[individuo1].getCromossomo()[var];
-				cout << var << endl;
+				cromossomoNewInviduio1[var] =
+						this->populacao[individuo2].getCromossomo()[var];
+				cromossomoNewInviduio2[var] =
+						this->populacao[individuo1].getCromossomo()[var];
 			}
 
 		}
-		//cout << cromossomoNewInviduio1 << endl;
 		newIndividuo1.setCromossomo(cromossomoNewInviduio1);
 		newIndividuo2.setCromossomo(cromossomoNewInviduio2);
 	}
 	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
 
 	return newIndividuosCrossover;
+}
+
+const Populacao Populacao::tournament(int k) {
+	static mt19937 mt(time(NULL));
+	pair<Individuo, Individuo> newIndivuos;
+	Individuo indRand, indAux;
+	Populacao newPop;
+	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
+
+	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2;
+			++loopNovosIndiv) {
+		for (int qtdIndvParaCross = 0; qtdIndvParaCross < 2;
+				++qtdIndvParaCross) {
+			static uniform_int_distribution<int> numeroRandom(0,
+					this->qtdIndividuos - 1);
+			indvDoTournament = numeroRandom(mt);
+			indAux = this->populacao[indvDoTournament]; //Já encontra o primeiro indv aleatório, já o primeiro k
+			for (int var = 0; var < k - 1; ++var) { //k-1 pois o primeiro individuo veio da linha acima
+				static uniform_int_distribution<int> numeroRandom(0,
+						this->qtdIndividuos - 1);
+				indvDoTournament = numeroRandom(mt);
+				indRand = this->populacao[indvDoTournament];
+				//cout << indvDoTournament << endl;
+				if (indRand.getFitness() > indAux.getFitness()) {
+					individuoParaCross[qtdIndvParaCross] = indvDoTournament;
+				}
+				//cout << individuoParaCross[qtdIndvParaCross] << endl;
+			}
+		}
+
+		newIndivuos = crossoverUniforme(individuoParaCross[0],
+				individuoParaCross[1]);
+		newPop.insertIndividuo(newIndivuos.first);
+		newPop.insertIndividuo(newIndivuos.second);
+	}
+	//newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
+	return newPop;
 }
 
 const Populacao Populacao::rollet() {
@@ -182,7 +220,8 @@ const Populacao Populacao::rollet() {
 			valorAcumuladoFitness = 0;
 			individuoParaCross[loop] = var;
 		}
-		newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
+		newIndivuos = crossoverUniforme(individuoParaCross[0],
+				individuoParaCross[1]);
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
