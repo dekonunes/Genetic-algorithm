@@ -18,10 +18,12 @@ int main() {
 
 	Populacao pop(10, genes);
 	Populacao newPop(10, genes);
-	for (int i = 0; i < 100; ++i) {
-		pop.mutacaoPopulacao();
-		newPop = pop.tournament(2);
-		pop.setPopulacao(newPop.getPopulacao());
+	for (int numExecucoes = 0; numExecucoes < 10; ++numExecucoes) {
+		for (int i = 0; i < 1000; ++i) {
+			pop.mutacaoPopulacao();
+			newPop = pop.tournament(2);
+			pop.setPopulacao(newPop.getPopulacao());
+		}
 		cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
 	}
 
