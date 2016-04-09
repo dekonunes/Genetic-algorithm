@@ -16,12 +16,14 @@ int main() {
 	genes.push_back(50); //Computador B
 	Individuo indiv(genes);
 
-	Populacao pop(10, genes,95,false);
-	Populacao newPop(10, genes,95,false);
-	for (int i = 0; i < 1000; ++i) {
-		pop.mutacaoPopulacao();
-		newPop = pop.tournament(2);
-		pop.setPopulacao(newPop.getPopulacao());
+	Populacao pop(10, genes);
+	Populacao newPop(10, genes);
+	for (int numExecucoes = 0; numExecucoes < 10; ++numExecucoes) {
+		for (int i = 0; i < 1000; ++i) {
+			pop.mutacaoPopulacao();
+			newPop = pop.tournament(2);
+			pop.setPopulacao(newPop.getPopulacao());
+		}
 		cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
 	}
 
