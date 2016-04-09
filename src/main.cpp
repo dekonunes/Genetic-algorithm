@@ -11,33 +11,45 @@
 using namespace std;
 
 int main() {
-	std::fstream myfile("input.txt", std::ios_base::in);
-	myfile.open("input", std::ios_base::in);
+	fstream myfile("input.txt", ios_base::in);
+	myfile.open("input", ios_base::in);
 	if (myfile.is_open()) {
 		//Lê do arquivo e retorna os valores das variaveis.
 		stringstream ss;
-		int found;
+		int param[10], i = 0;
 		string temp;
 		while (getline(myfile, temp, '\n')) {
-			if (stringstream(temp) >> found) {
-				cout << found << std::endl;
+			if (stringstream(temp) >> param[i]) {
+				i++;
 			}
 		}
 
 		vector<float> genes;
-		genes.push_back(60); //Computador A
-		genes.push_back(50); //Computador B
-		Individuo indiv(genes, 1);
+		i = 7; //a partir daqui é os genes
+		while (param[i] != 0) {
+			genes.push_back(param[i]);
+			i++;
+		}
+		Individuo indiv(genes, param[3]);
 
-		Populacao pop(10, genes, 95, 1, false);
-		Populacao newPop(10, genes, 95, 1, false);
-		for (int numExecucoes = 0; numExecucoes < 10; ++numExecucoes) {
-			for (int i = 0; i < 1000; ++i) {
+		Populacao pop(param[0], genes, param[2], param[3], param[4]);
+		Populacao newPop(param[0], genes, param[2], param[3], param[4]);
+		for (int numExecucoes = 0; numExecucoes < param[6]; ++numExecucoes) {
+			for (int i = 0; i < param[5]; ++i) {
 				pop.mutacaoPopulacao();
-				newPop = pop.tournament(2);
+				switch (param[1]) {
+				case 1:
+					newPop = pop.rollet();
+					break;
+				case 2:
+					newPop = pop.tournament(2);
+					break;
+				default:
+					break;
+				}
 				pop.setPopulacao(newPop.getPopulacao());
 			}
-			//cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
+			cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
 		}
 		myfile.close();
 	} else

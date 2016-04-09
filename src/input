@@ -3,5 +3,7 @@
 95 Chance Crossover
 1 Probabilidade de Mutação
 1 eletrismo
+1000 Numero de iterações
+10 Numero de execuções
 60 Gene 1
 50 Gene 2

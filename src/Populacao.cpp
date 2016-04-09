@@ -9,7 +9,7 @@
 
 namespace std {
 
-Populacao::Populacao(int qtdIndividuos, vector<float> genes, int chanceCrossover, int eletismo, int probMutacao) :
+Populacao::Populacao(int qtdIndividuos, vector<float> genes, int chanceCrossover, int probMutacao, int eletismo) :
 		bestIndividuo(genes, probMutacao), worseIndividuo(genes, probMutacao) {
 	// TODO Auto-generated constructor stub
 	for (int var = 0; var < qtdIndividuos; ++var) {
