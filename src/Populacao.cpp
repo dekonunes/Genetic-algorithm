@@ -9,11 +9,11 @@
 
 namespace std {
 
-Populacao::Populacao(int qtdIndividuos, vector<float> genes, int chanceCrossover, int eletismo) :
-		bestIndividuo(genes), worseIndividuo(genes) {
+Populacao::Populacao(int qtdIndividuos, vector<float> genes, int chanceCrossover, int eletismo, int probMutacao) :
+		bestIndividuo(genes, probMutacao), worseIndividuo(genes, probMutacao) {
 	// TODO Auto-generated constructor stub
 	for (int var = 0; var < qtdIndividuos; ++var) {
-		this->populacao.push_back(Individuo(genes));
+		this->populacao.push_back(Individuo(genes,probMutacao));
 	}
 	this->qtdIndividuos = qtdIndividuos;
 	this->chanceCrossover = chanceCrossover;

@@ -7,7 +7,7 @@
 
 #include "Individuo.hpp"
 
-Individuo::Individuo(vector<float> genes) {
+Individuo::Individuo(vector<float> genes, int probMutacao) {
 	// TODO Auto-generated constructor stub
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 1);
@@ -24,6 +24,7 @@ Individuo::Individuo(vector<float> genes) {
 			this->cromossomo = this->cromossomo + aux;
 		}
 	}
+	this->probMutacao = probMutacao;
 	this->genes = genes;
 	this->fitness = 0.0;
 	calculoFitness();
@@ -100,7 +101,7 @@ float Individuo::calculoFucaoObjetivo() {
 }
 
 void Individuo::mutacao() {
-	int numRand, probabilidade = 1;
+	int numRand;
 	static mt19937 mt(time(NULL));
 	string oldCromossomo = getCromossomo(), newCromossomo = getCromossomo();
 
@@ -111,7 +112,7 @@ void Individuo::mutacao() {
 
 		numRand = numRandom(mt);
 
-		if (numRand < probabilidade) {
+		if (numRand < this->probMutacao) {
 			if (this->cromossomo[loopCromossomos] == '1') {
 				this->cromossomo[loopCromossomos] = '0';
 			} else

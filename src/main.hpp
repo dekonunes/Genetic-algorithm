@@ -9,6 +9,7 @@
 #define MAIN_HPP_
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include "Populacao.hpp"
 #include "Individuo.hpp"
 

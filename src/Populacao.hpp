@@ -19,7 +19,7 @@ namespace std {
 
 class Populacao {
 public:
-	Populacao(int qtdIndividuos,vector<float> genes, int chanceCrossover, int eletismo);
+	Populacao(int qtdIndividuos,vector<float> genes, int chanceCrossover, int probMutacao, int eletismo);
 	Populacao();
 	virtual ~Populacao();
 	void resetPopulacao();
