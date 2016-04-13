@@ -135,7 +135,7 @@ string Individuo::decToBin(int number) {
 }
 
 int Individuo::binToDec(string number) {
-	return result = stoi(number,nullptr,2);
+	return stoi(number,nullptr,2);
 }
 
 const float Individuo::decodificaCromossomo(int max, int min, string gene) {
