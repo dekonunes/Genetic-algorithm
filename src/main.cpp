@@ -38,26 +38,24 @@ int main() {
 			i++;
 			genesF.push_back(auxGenes);
 		}
-
+		Individuo ind(genesF,1);
 		Populacao pop(param[0], genesF, param[2], param[3], param[4]);
-		Populacao newPop(param[0], genesF, param[2], param[3], param[4]);
-		/*for (int numExecucoes = 0; numExecucoes < param[6]; ++numExecucoes) {
+		//for (int numExecucoes = 0; numExecucoes < param[6]; ++numExecucoes) {
 			for (int i = 0; i < param[5]; ++i) {
+				/*for (int var = 0; var < 40; ++var) {
+					ind = pop.getIndividuo(var);
+					cout << ind.getFitness() << endl;
+				}*/
+				cout << pop.getBestIndividuo().getFitness() << endl;
+				//getchar();
 				pop.mutacaoPopulacao();
-				switch (param[1]) {
-				case 1:
-					newPop = pop.rollet();
-					break;
-				case 2:
-					newPop = pop.tournament(2);
-					break;
-				default:
+				if (pop.getBestIndividuo().getFitness() == 25 ){
+					cout << "pego bixo" << endl;
 					break;
 				}
-				pop.setPopulacao(newPop.getPopulacao());
 			}
 			cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
-		}*/
+		//}
 		myfile.close();
 	} else
 		cout << "Erro para abrir o arquivo de entrada";

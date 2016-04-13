@@ -19,8 +19,7 @@ Individuo::Individuo(vector<pair<int, int>> genes, int probMutacao) {
 
 	for (int var = 0; var < genes.size(); ++var) {
 		for (int i = 0; i < this->qtdBits[var]; i++) {
-			aux =
-					static_cast<ostringstream*>(&(ostringstream() << bit(mt)))->str();
+			aux = static_cast<ostringstream*>(&(ostringstream() << bit(mt)))->str();
 			this->cromossomo = this->cromossomo + aux;
 		}
 	}
@@ -33,18 +32,15 @@ Individuo::Individuo(vector<pair<int, int>> genes, int probMutacao) {
 Individuo::Individuo(vector<pair<float, float>> genesInicial, int probMutacao) {
 	// TODO Auto-generated constructor stub
 	static mt19937 mt(time(NULL));
-	string cromossomo;
 
 	for (int var = 0; var < genesInicial.size(); ++var) {
-		static uniform_real_distribution<float> bit(genesInicial[var].first, genesInicial[var].second);
+		static uniform_real_distribution<float> bit(genesInicial[var].first,
+				genesInicial[var].second);
 		this->genesF.push_back(bit(mt));
-		cout << bit(mt) << endl;
 	}
-	cout << this->genesF[0] << endl;
 	this->probMutacao = probMutacao;
 	this->fitness = 0.0;
 	calculoFitness();
-
 }
 
 Individuo::Individuo() {
@@ -69,46 +65,26 @@ float Individuo::getFitness() {
 }
 
 float Individuo::calculoFitness() {
-
-
+	this->fitness = 25.0 - (this->genesF[0] * this->genesF[0]);
 	return this->fitness;
 }
 
 float Individuo::calculoFucaoObjetivo() {
-	int A, B;
-	string stringGene[10];
-	for (int var2 = 0; var2 < this->genesB.size(); ++var2) {
-		for (int var = 0; var < this->qtdBits[var2]; ++var) {
-			stringGene[var2] = stringGene[var2]
-					+ this->cromossomo[posGeneNoCromosso(var2) + var];
-		}
-
-	}
-	A = (int) decodificaCromossomo(60, 0, stringGene[0]);
-	B = (int) decodificaCromossomo(50, 0, stringGene[1]);
-
-	this->funcaoObjetivo = A * 180 + B * 300;
+	this->funcaoObjetivo = (this->genesF[0] * this->genesF[0]);
 	return this->funcaoObjetivo;
 }
 
 void Individuo::mutacao() {
-	int numRand;
+	float delta = 0.5;
+	int numRand, probabilidade = this->probMutacao;
 	static mt19937 mt(time(NULL));
-	string oldCromossomo = getCromossomo(), newCromossomo = getCromossomo();
 
-	for (int loopCromossomos = 0; loopCromossomos < this->cromossomo.size();
-			++loopCromossomos) {
+	static uniform_int_distribution<int> numRandom(0, 100);
 
-		static uniform_int_distribution<int> numRandom(0, 100);
-
-		numRand = numRandom(mt);
-
-		if (numRand < this->probMutacao) {
-			if (this->cromossomo[loopCromossomos] == '1') {
-				this->cromossomo[loopCromossomos] = '0';
-			} else
-				this->cromossomo[loopCromossomos] = '1';
-		}
+	numRand = numRandom(mt);
+	if (numRand < probabilidade) {
+		static uniform_real_distribution<float> numDelta(-delta, delta);
+		this->genesF[0] = this->genesF[0] + numDelta(mt);
 	}
 
 }
@@ -118,7 +94,6 @@ string Individuo::decToBin(int number) {
 		return "0";
 	if (number == 1)
 		return "1";
-
 	if (number % 2 == 0)
 		return decToBin(number / 2) + "0";
 	else
@@ -126,10 +101,11 @@ string Individuo::decToBin(int number) {
 }
 
 int Individuo::binToDec(string number) {
-	int result = 0, pow = 1;
-		for (int i = number.length() - 1; i >= 0; --i, pow <<= 1)
-			result += (number[i] - '0') * pow;
-	return result;//stoi(number,nullptr,2);
+	/*int result = 0, pow = 1;
+	 for (int i = number.length() - 1; i >= 0; --i, pow <<= 1)
+	 result += (number[i] - '0') * pow;
+	 return result;//stoi(number,nullptr,2);*/
+	return stoi(number, nullptr, 2);
 }
 
 const float Individuo::decodificaCromossomo(int max, int min, string gene) {
