@@ -26,9 +26,9 @@ int main() {
 		}
 
 		vector<pair<int, int>> genesB;
-		vector<pair<float, float>> genesF;
+		vector<pair<double, double>> genesF;
 		pair<int, int> auxGenes;
-		pair<float, float> auxGeneF;
+		pair<double, double> auxGeneF;
 		i = 7; //a partir daqui é os genes
 
 		while (param[i] != 145142) {
@@ -46,15 +46,13 @@ int main() {
 					ind = pop.getIndividuo(var);
 					cout << ind.getFitness() << endl;
 				}*/
-				cout << pop.getBestIndividuo().getFitness() << endl;
-				//getchar();
+				//cout << pop.getBestIndividuo().getFitness() << endl;
 				pop.mutacaoPopulacao();
-				if (pop.getBestIndividuo().getFitness() == 25 ){
-					cout << "pego bixo" << endl;
-					break;
+				if (pop.getBestIndividuo().getFitness() > ind.getFitness() ){
+					ind = pop.getBestIndividuo(); //best indiv ever
 				}
 			}
-			cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
+			cout << ind.getFuncaoObjetivo() << endl;
 		//}
 		myfile.close();
 	} else

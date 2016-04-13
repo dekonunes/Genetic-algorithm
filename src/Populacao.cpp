@@ -20,7 +20,7 @@ Populacao::Populacao(int qtdIndividuos, vector<pair<int, int>> genes, int chance
 	this->eletismo = eletismo;
 }
 
-Populacao::Populacao(int qtdIndividuos, vector<pair<float, float>> genes, int chanceCrossover, int probMutacao, int eletismo) :
+Populacao::Populacao(int qtdIndividuos, vector<pair<double, double>> genes, int chanceCrossover, int probMutacao, int eletismo) :
 		bestIndividuo(genes, probMutacao), worseIndividuo(genes, probMutacao) {
 	// TODO Auto-generated constructor stub
 	for (int var = 0; var < qtdIndividuos; ++var) {
@@ -196,8 +196,8 @@ const Populacao Populacao::rollet() {
 	pair<Individuo, Individuo> newIndivuos;
 	Populacao newPop;
 	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
-	float valorTotalFitness = 0.0;
-	float valorAcumuladoFitness = 0.0;
+	double valorTotalFitness = 0.0;
+	double valorAcumuladoFitness = 0.0;
 	for (var = 0; var < this->qtdIndividuos; ++var) {
 		valorTotalFitness += this->populacao[var].getFitness();
 	}
@@ -208,7 +208,7 @@ const Populacao Populacao::rollet() {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
 			valorDaRollet = numeroRandom(mt);
 			for (var = 0; var < this->qtdIndividuos - 1; ++var) {
-				valorAcumuladoFitness += ((float) this->populacao[var].getFitness()
+				valorAcumuladoFitness += ((double) this->populacao[var].getFitness()
 						/ valorTotalFitness) * 100;
 				if (valorDaRollet < valorAcumuladoFitness)
 					break;

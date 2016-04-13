@@ -22,31 +22,31 @@ class Individuo {
 
 public:
 	Individuo(vector<pair<int, int>> genes, int probMutacao);
-	Individuo(vector<pair<float, float>> genes, int probMutacao);
+	Individuo(vector<pair<double, double>> genes, int probMutacao);
 	Individuo();
 	virtual ~Individuo();
 	const string& getCromossomo() const;
 	void setCromossomo(const string& cromossomo);
-	float getFitness();
-	float calculoFitness();
-	float calculoFucaoObjetivo();
+	double getFitness();
+	double calculoFitness();
+	double calculoFucaoObjetivo();
 	void mutacao();
 	string decToBin(int number);
 	int binToDec(string number);
-	const float decodificaCromossomo(int max, int min, string gene);
-	float getFuncaoObjetivo();
-	int getNumeroBits(float x_max, float x_min, int precisao);
+	const double decodificaCromossomo(int max, int min, string gene);
+	double getFuncaoObjetivo();
+	int getNumeroBits(double x_max, double x_min, int precisao);
 	const int posGeneNoCromosso(int posGene);
 
 private:
 	string cromossomo;
 	vector<pair<int, int>> genesB;
-	vector<pair<float, float>> genesFInicial;
+	vector<pair<double, double>> genesFInicial;
 	vector<double> genesF;
 	int qtdBits[100];
-	float fitness;
+	double fitness;
 	int probMutacao;
-	float funcaoObjetivo;
+	double funcaoObjetivo;
 };
 
 #endif /* INDIVIDUO_HPP_ */

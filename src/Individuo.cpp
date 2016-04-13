@@ -29,12 +29,12 @@ Individuo::Individuo(vector<pair<int, int>> genes, int probMutacao) {
 	calculoFitness();
 }
 
-Individuo::Individuo(vector<pair<float, float>> genesInicial, int probMutacao) {
+Individuo::Individuo(vector<pair<double, double>> genesInicial, int probMutacao) {
 	// TODO Auto-generated constructor stub
 	static mt19937 mt(time(NULL));
 
 	for (int var = 0; var < genesInicial.size(); ++var) {
-		static uniform_real_distribution<float> bit(genesInicial[var].first,
+		static uniform_real_distribution<double> bit(genesInicial[var].first,
 				genesInicial[var].second);
 		this->genesF.push_back(bit(mt));
 	}
@@ -59,23 +59,23 @@ void Individuo::setCromossomo(const string& cromossomo) {
 	this->cromossomo = cromossomo;
 }
 
-float Individuo::getFitness() {
+double Individuo::getFitness() {
 	calculoFitness();
 	return this->fitness;
 }
 
-float Individuo::calculoFitness() {
+double Individuo::calculoFitness() {
 	this->fitness = 25.0 - (this->genesF[0] * this->genesF[0]);
 	return this->fitness;
 }
 
-float Individuo::calculoFucaoObjetivo() {
+double Individuo::calculoFucaoObjetivo() {
 	this->funcaoObjetivo = (this->genesF[0] * this->genesF[0]);
 	return this->funcaoObjetivo;
 }
 
 void Individuo::mutacao() {
-	float delta = 0.5;
+	double delta = 0.005;
 	int numRand, probabilidade = this->probMutacao;
 	static mt19937 mt(time(NULL));
 
@@ -83,7 +83,7 @@ void Individuo::mutacao() {
 
 	numRand = numRandom(mt);
 	if (numRand < probabilidade) {
-		static uniform_real_distribution<float> numDelta(-delta, delta);
+		static uniform_real_distribution<double> numDelta(-delta, delta);
 		this->genesF[0] = this->genesF[0] + numDelta(mt);
 	}
 
@@ -108,7 +108,7 @@ int Individuo::binToDec(string number) {
 	return stoi(number, nullptr, 2);
 }
 
-const float Individuo::decodificaCromossomo(int max, int min, string gene) {
+const double Individuo::decodificaCromossomo(int max, int min, string gene) {
 	int l = getNumeroBits(max, min, 0);
 	int decimal, x, x_max = max, x_min = min;
 	decimal = binToDec(gene);
@@ -116,12 +116,12 @@ const float Individuo::decodificaCromossomo(int max, int min, string gene) {
 	return x;
 }
 
-float Individuo::getFuncaoObjetivo() {
+double Individuo::getFuncaoObjetivo() {
 	calculoFucaoObjetivo();
 	return this->funcaoObjetivo;
 }
 
-int Individuo::getNumeroBits(float x_max, float x_min, int precisao) {
+int Individuo::getNumeroBits(double x_max, double x_min, int precisao) {
 	int numBits = (x_max - x_min) / pow(10, -precisao);
 	return log2(numBits) + 1;
 }
