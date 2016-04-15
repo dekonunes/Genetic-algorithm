@@ -25,8 +25,10 @@ int main() {
 			param[i] = 145142; //significa o fim do parametro
 		}
 
-		vector<pair<float, float>> genes;
-		pair<float, float> auxGenes;
+		vector<pair<int, int>> genesB;
+		vector<pair<float, float>> genesF;
+		pair<int, int> auxGenes;
+		pair<float, float> auxGeneF;
 		i = 7; //a partir daqui é os genes
 
 		while (param[i] != 145142) {
@@ -34,12 +36,11 @@ int main() {
 			i++;
 			auxGenes.second = param[i];
 			i++;
-			genes.push_back(auxGenes);
+			genesB.push_back(auxGenes);
 		}
-		/*Individuo indiv(genes, param[3]);
 
-		Populacao pop(param[0], genes, param[2], param[3], param[4]);
-		Populacao newPop(param[0], genes, param[2], param[3], param[4]);
+		Populacao pop(param[0], genesB, param[2], param[3], param[4]);
+		Populacao newPop(param[0], genesB, param[2], param[3], param[4]);
 		for (int numExecucoes = 0; numExecucoes < param[6]; ++numExecucoes) {
 			for (int i = 0; i < param[5]; ++i) {
 				pop.mutacaoPopulacao();
@@ -56,7 +57,7 @@ int main() {
 				pop.setPopulacao(newPop.getPopulacao());
 			}
 			cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
-		}*/
+		}
 		myfile.close();
 	} else
 		cout << "Erro para abrir o arquivo de entrada";

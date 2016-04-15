@@ -7,14 +7,14 @@
 
 #include "Individuo.hpp"
 
-Individuo::Individuo(vector<float> genes, int probMutacao) {
+Individuo::Individuo(vector<pair<int, int>> genes, int probMutacao) {
 	// TODO Auto-generated constructor stub
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 1);
 	string aux;
 	string cromossomo;
 	for (int var = 0; var < genes.size(); ++var) {
-		this->qtdBits[var] = getNumeroBits(genes[var], 0, 0);
+		this->qtdBits[var] = getNumeroBits(genes[var].second, genes[var].first, 0);
 	}
 
 	for (int var = 0; var < genes.size(); ++var) {
@@ -25,9 +25,33 @@ Individuo::Individuo(vector<float> genes, int probMutacao) {
 		}
 	}
 	this->probMutacao = probMutacao;
-	this->genes = genes;
+	this->genesB = genes;
 	this->fitness = 0.0;
 	calculoFitness();
+}
+
+Individuo::Individuo(vector<pair<float, float>> genes, int probMutacao) {
+	// TODO Auto-generated constructor stub
+	static mt19937 mt(time(NULL));
+	static uniform_int_distribution<int> bit(0, 1);
+	string aux;
+	string cromossomo;
+	for (int var = 0; var < genes.size(); ++var) {
+		this->qtdBits[var] = getNumeroBits(genes[var].second, genes[var].first, 0);
+	}
+
+	for (int var = 0; var < genes.size(); ++var) {
+		for (int i = 0; i < this->qtdBits[var]; i++) {
+			aux =
+					static_cast<ostringstream*>(&(ostringstream() << bit(mt)))->str();
+			this->cromossomo = this->cromossomo + aux;
+		}
+	}
+	this->probMutacao = probMutacao;
+	this->genesF = genes;
+	this->fitness = 0.0;
+	calculoFitness();
+
 }
 
 Individuo::Individuo() {
@@ -55,7 +79,7 @@ float Individuo::calculoFitness() {
 	int A, B, qtdDisco, maxExtrapolaFunc;
 	float penalidade, aux, r = -1.0, maxExtrapolaFO;
 	string stringGene[10];
-	for (int var2 = 0; var2 < this->genes.size(); ++var2) {
+	for (int var2 = 0; var2 < this->genesB.size(); ++var2) {
 		for (int var = 0; var < this->qtdBits[var2]; ++var) {
 			stringGene[var2] = stringGene[var2]
 					+ this->cromossomo[posGeneNoCromosso(var2) + var];
@@ -86,7 +110,7 @@ float Individuo::calculoFitness() {
 float Individuo::calculoFucaoObjetivo() {
 	int A, B;
 	string stringGene[10];
-	for (int var2 = 0; var2 < this->genes.size(); ++var2) {
+	for (int var2 = 0; var2 < this->genesB.size(); ++var2) {
 		for (int var = 0; var < this->qtdBits[var2]; ++var) {
 			stringGene[var2] = stringGene[var2]
 					+ this->cromossomo[posGeneNoCromosso(var2) + var];
@@ -135,7 +159,10 @@ string Individuo::decToBin(int number) {
 }
 
 int Individuo::binToDec(string number) {
-	return stoi(number,nullptr,2);
+	int result = 0, pow = 1;
+		for (int i = number.length() - 1; i >= 0; --i, pow <<= 1)
+			result += (number[i] - '0') * pow;
+	return result;//stoi(number,nullptr,2);
 }
 
 const float Individuo::decodificaCromossomo(int max, int min, string gene) {
