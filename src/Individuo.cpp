@@ -30,25 +30,18 @@ Individuo::Individuo(vector<pair<int, int>> genes, int probMutacao) {
 	calculoFitness();
 }
 
-Individuo::Individuo(vector<pair<float, float>> genes, int probMutacao) {
+Individuo::Individuo(vector<pair<float, float>> genesInicial, int probMutacao) {
 	// TODO Auto-generated constructor stub
 	static mt19937 mt(time(NULL));
-	static uniform_int_distribution<int> bit(0, 1);
-	string aux;
 	string cromossomo;
-	for (int var = 0; var < genes.size(); ++var) {
-		this->qtdBits[var] = getNumeroBits(genes[var].second, genes[var].first, 0);
-	}
 
-	for (int var = 0; var < genes.size(); ++var) {
-		for (int i = 0; i < this->qtdBits[var]; i++) {
-			aux =
-					static_cast<ostringstream*>(&(ostringstream() << bit(mt)))->str();
-			this->cromossomo = this->cromossomo + aux;
-		}
+	for (int var = 0; var < genesInicial.size(); ++var) {
+		static uniform_real_distribution<float> bit(genesInicial[var].first, genesInicial[var].second);
+		this->genesF.push_back(bit(mt));
+		cout << bit(mt) << endl;
 	}
+	cout << this->genesF[0] << endl;
 	this->probMutacao = probMutacao;
-	this->genesF = genes;
 	this->fitness = 0.0;
 	calculoFitness();
 
@@ -76,33 +69,7 @@ float Individuo::getFitness() {
 }
 
 float Individuo::calculoFitness() {
-	int A, B, qtdDisco, maxExtrapolaFunc;
-	float penalidade, aux, r = -1.0, maxExtrapolaFO;
-	string stringGene[10];
-	for (int var2 = 0; var2 < this->genesB.size(); ++var2) {
-		for (int var = 0; var < this->qtdBits[var2]; ++var) {
-			stringGene[var2] = stringGene[var2]
-					+ this->cromossomo[posGeneNoCromosso(var2) + var];
-		}
 
-	}
-	A = (int) decodificaCromossomo(60, 0, stringGene[0]);
-	B = (int) decodificaCromossomo(50, 0, stringGene[1]);
-	qtdDisco = A + (2 * B);
-	maxExtrapolaFunc = 40;
-	maxExtrapolaFO = 60 * 180 + 50 * 300;
-
-	if (qtdDisco <= 120)
-		penalidade = 0;
-	else
-		penalidade = (float) (qtdDisco - 120) / (float) maxExtrapolaFunc;
-
-	aux = calculoFucaoObjetivo() / (float) maxExtrapolaFO + (r * penalidade);
-
-	if (aux < 0)
-		this->fitness = 0;
-	else
-		this->fitness = aux;
 
 	return this->fitness;
 }

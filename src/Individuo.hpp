@@ -41,7 +41,8 @@ public:
 private:
 	string cromossomo;
 	vector<pair<int, int>> genesB;
-	vector<pair<float, float>> genesF;
+	vector<pair<float, float>> genesFInicial;
+	vector<double> genesF;
 	int qtdBits[100];
 	float fitness;
 	int probMutacao;

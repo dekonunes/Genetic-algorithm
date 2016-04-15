@@ -5,7 +5,5 @@
 1 eletrismo
 1000 Numero de iterações
 10 Numero de execuções
-0 Gene 1 Min
-60 Gene 1 Max
-0 Gene 2 Min
-50 Gene 2 Max
+-20 Gene 1 Min
+20 Gene 1 Max

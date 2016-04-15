@@ -36,12 +36,12 @@ int main() {
 			i++;
 			auxGenes.second = param[i];
 			i++;
-			genesB.push_back(auxGenes);
+			genesF.push_back(auxGenes);
 		}
 
-		Populacao pop(param[0], genesB, param[2], param[3], param[4]);
-		Populacao newPop(param[0], genesB, param[2], param[3], param[4]);
-		for (int numExecucoes = 0; numExecucoes < param[6]; ++numExecucoes) {
+		Populacao pop(param[0], genesF, param[2], param[3], param[4]);
+		Populacao newPop(param[0], genesF, param[2], param[3], param[4]);
+		/*for (int numExecucoes = 0; numExecucoes < param[6]; ++numExecucoes) {
 			for (int i = 0; i < param[5]; ++i) {
 				pop.mutacaoPopulacao();
 				switch (param[1]) {
@@ -57,7 +57,7 @@ int main() {
 				pop.setPopulacao(newPop.getPopulacao());
 			}
 			cout << pop.getBestIndividuo().getFuncaoObjetivo() << endl;
-		}
+		}*/
 		myfile.close();
 	} else
 		cout << "Erro para abrir o arquivo de entrada";
