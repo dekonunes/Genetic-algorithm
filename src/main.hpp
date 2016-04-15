@@ -12,5 +12,6 @@
 #include <fstream>
 #include "Populacao.hpp"
 #include "Individuo.hpp"
+#include "gnuplot-iostream/gnuplot-iostream.h"
 
 #endif /* MAIN_HPP_ */

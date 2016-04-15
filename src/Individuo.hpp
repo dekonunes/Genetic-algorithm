@@ -37,6 +37,8 @@ public:
 	double getFuncaoObjetivo();
 	int getNumeroBits(double x_max, double x_min, int precisao);
 	const int posGeneNoCromosso(int posGene);
+	const vector<double>& getGenesF() const;
+	void setGenesF(const vector<double>& genesF);
 
 private:
 	string cromossomo;

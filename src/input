@@ -1,9 +1,15 @@
 40 Tamanho população
 1 Tipo de Crossover
-95 Chance Crossover
+100 Chance Crossover
 5 Probabilidade de Mutação
 1 eletismo
-1000000 Numero de iterações
-10 Numero de execuções
+100000 Numero de iterações
+5 Numero de execuções
+-5 Gene 1 Min
+5 Gene 1 Max
+-5 Gene 1 Min
+5 Gene 1 Max
+-5 Gene 1 Min
+5 Gene 1 Max
 -5 Gene 1 Min
 5 Gene 1 Max

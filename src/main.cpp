@@ -13,6 +13,8 @@ using namespace std;
 int main() {
 	fstream myfile("input.txt", ios_base::in);
 	myfile.open("input", ios_base::in);
+	Gnuplot gp;
+	vector<double> vectorPlot;
 	if (myfile.is_open()) {
 		//Lê do arquivo e retorna os valores das variaveis.
 		stringstream ss;
@@ -38,25 +40,39 @@ int main() {
 			i++;
 			genesF.push_back(auxGenes);
 		}
-		Individuo ind(genesF,1);
+		Individuo ind(genesF, 1);
 		Populacao pop(param[0], genesF, param[2], param[3], param[4]);
-		//for (int numExecucoes = 0; numExecucoes < param[6]; ++numExecucoes) {
+		Populacao newPop(param[0], genesF, param[2], param[3], param[4]);
+		for (int numExecucoes = 0; numExecucoes < param[6]; ++numExecucoes) {
 			for (int i = 0; i < param[5]; ++i) {
-				/*for (int var = 0; var < 40; ++var) {
-					ind = pop.getIndividuo(var);
-					cout << ind.getFitness() << endl;
-				}*/
-				//cout << pop.getBestIndividuo().getFitness() << endl;
 				pop.mutacaoPopulacao();
-				if (pop.getBestIndividuo().getFitness() > ind.getFitness() ){
+				switch (param[1]) {
+				case 1:
+					newPop = pop.rollet();
+					break;
+				case 2:
+					newPop = pop.tournament(2);
+					break;
+				default:
+					break;
+				}
+				pop.setPopulacao(newPop.getPopulacao());
+
+				if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
 					ind = pop.getBestIndividuo(); //best indiv ever
 				}
+				vectorPlot.push_back(ind.getFitness());
 			}
 			cout << ind.getFuncaoObjetivo() << endl;
-		//}
+		}
 		myfile.close();
 	} else
 		cout << "Erro para abrir o arquivo de entrada";
+
+	/* Plot */
+
+	//gp << "set xrange [-2:2]\nset yrange [-2:2]\n";
+	//gp << "plot" << gp.file1d(vectorPlot) << "with points title 'circle'" << endl;
 
 	return 0;
 }

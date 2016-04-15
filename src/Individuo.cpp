@@ -65,7 +65,11 @@ double Individuo::getFitness() {
 }
 
 double Individuo::calculoFitness() {
-	this->fitness = 25.0 - (this->genesF[0] * this->genesF[0]);
+	for (int var = 0; var < this->genesF.size(); ++var) {
+		this->fitness += 25.0 - (this->genesF[var] * this->genesF[var]);
+	}
+	if(this->fitness < 0)
+		this->fitness = 0;
 	return this->fitness;
 }
 
@@ -132,4 +136,12 @@ const int Individuo::posGeneNoCromosso(int posGene) {
 		posicao += this->qtdBits[var];
 	}
 	return posicao;
+}
+
+const vector<double>& Individuo::getGenesF() const {
+	return genesF;
+}
+
+void Individuo::setGenesF(const vector<double>& genesF) {
+	this->genesF = genesF;
 }

@@ -34,6 +34,7 @@ public:
 	const Individuo getWorseIndividuo();
 	const pair<Individuo,Individuo> crossover(int,int);
 	const pair<Individuo,Individuo> crossoverUniforme(int,int);
+	const pair<Individuo, Individuo> crossoverReal(int individuo1, int individuo2);
 	const Populacao rollet();
 	const Populacao tournament(int k);
 	int getQtdIndividuos() const;
