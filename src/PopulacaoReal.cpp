@@ -9,18 +9,16 @@
 
 namespace std {
 
-PopulacaoReal::PopulacaoReal(int qtdIndividuos, vector<pair<double, double>> genes, int chanceCrossover, int eletismo) {
-	// TODO Auto-generated constructor stub
-	for (int var = 0; var < qtdIndividuos; ++var) {
-		//this->populacao.push_back(IndividuoReal(genes, probMutacao));
-	}
-	this->qtdIndividuos = qtdIndividuos;
-	this->chanceCrossover = chanceCrossover;
-	this->eletismo = eletismo;
-}
-
 PopulacaoReal::PopulacaoReal() {
-	// TODO Auto-generated destructor stub
+	// TODO Auto-generated constructor stub
+	openJson();
+	this->qtdIndividuos = this->entrada["tamPop"];
+	this->chanceCrossover = this->entrada["chanceMutacao"];
+	this->eletismo = this->entrada["elitismo"];
+
+	for (int var = 0; var < this->qtdIndividuos; ++var)
+		this->populacao.push_back(IndividuoReal());
+
 }
 
 PopulacaoReal::~PopulacaoReal() {
@@ -177,5 +175,14 @@ void PopulacaoReal::atualizaPiorIndvNaPopulacao(const IndividuoReal& newIndividu
 	this->populacao[posicaoDoPiorIndiv] = newIndividuo;
 }
 
+void PopulacaoReal::openJson() {
+	using json = nlohmann::json;
+	ifstream texto("entrada.json");
+
+	stringstream buffer;
+	buffer << texto.rdbuf();
+
+	this->entrada = json::parse(buffer.str());
+}
 
 } /* namespace std */

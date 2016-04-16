@@ -24,69 +24,33 @@ int main() {
 	vector<double> vectorPlot;
 
 	if (entrada["codificacao"] == "real") {
-			vector<pair<double, double>> genes;
-			pair<double, double> auxGenes;
-			IndividuoReal ind;
-			cout << ind.getGenes().at(0);
-			/*
-			PopulacaoBinario pop;
-			PopulacaoBinario newPop;
-			int aux;
-			for (int i = 0; i < entrada["geracoes"]; ++i) {
-				pop.mutacaoPopulacao();
-				aux = entrada["selecao"];
-				switch (aux) {
-				case 1:
-					newPop = pop.rollet();
-					break;
-				case 2:
-					newPop = pop.tournament(2);
-					break;
-				default:
-					break;
-				}
-				pop.setPopulacao(newPop.getPopulacao());
+		vector<pair<double, double>> genes;
+		pair<double, double> auxGenes;
+		IndividuoReal ind;
+		PopulacaoReal pop;
+		PopulacaoReal newPop;
+		int aux;
+		for (int i = 0; i < entrada["geracoes"]; ++i) {
+			pop.mutacaoPopulacao();
+			/*aux = entrada["selecao"];
+			 switch (aux) {
+			 case 1:
+			 newPop = pop.rollet();
+			 break;
+			 case 2:
+			 newPop = pop.tournament(2);
+			 break;
+			 default:
+			 break;
+			 }*/
+			pop.setPopulacao(newPop.getPopulacao());
 
-				if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
-					ind = pop.getBestIndividuo(); //best indiv ever
-				}
+			if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
+				ind = pop.getBestIndividuo(); //best indiv ever
 			}
-			cout << ind.getFuncaoObjetivo() << endl;*/
 		}
-
-	/*vector<pair<double, double>> genesF;
-
-	 pair<double, double> auxGeneF;
-
-
-	 IndividuoReal ind(genesF, 1);
-	 PopulacaoReal pop(param[0], genesF, param[2], param[3], param[4]);
-	 PopulacaoReal newPop(param[0], genesF, param[2], param[3], param[4]);
-	 for (int numExecucoes = 0; numExecucoes < param[6]; ++numExecucoes) {
-	 for (int i = 0; i < param[5]; ++i) {
-	 pop.mutacaoPopulacao();
-
-	 switch (param[1]) {
-	 case 1:
-	 newPop = pop.rollet();
-	 break;
-	 case 2:
-	 newPop = pop.tournament(2);
-	 break;
-	 default:
-	 break;
-	 }
-	 pop.setPopulacao(newPop.getPopulacao());
-
-	 if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
-	 ind = pop.getBestIndividuo(); //best indiv ever
-	 }
-	 //vectorPlot.push_back(ind.getFitness());
-	 //cout << ind = pop.getBestIndividuo() << endl;
-	 }
-	 cout << ind.getFuncaoObjetivo() << endl;
-	 }*/
-
+		cout << ind.getFuncaoObjetivo() << endl;
+	}
 	/* Plot */
 
 //gp << "set xrange [-2:2]\nset yrange [-2:2]\n";

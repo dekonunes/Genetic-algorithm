@@ -51,7 +51,7 @@ double IndividuoReal::getFuncaoObjetivo() {
 }
 
 void IndividuoReal::mutacao() {
-	double delta = 0.005;
+	double delta = 0.5;
 	int numRand, probabilidade = this->probMutacao;
 	static mt19937 mt(time(NULL));
 

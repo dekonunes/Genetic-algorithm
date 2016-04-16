@@ -9,8 +9,10 @@
 #define POPULACAOREAL_HPP_
 #include "IndividuoReal.hpp"
 #include "Populacao.hpp"
+#include "json.hpp"
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <random>
 #include <utility>
 
@@ -18,7 +20,6 @@ namespace std {
 
 class PopulacaoReal: public Populacao {
 public:
-	PopulacaoReal(int, vector<pair<double, double>>, int, int);
 	PopulacaoReal();
 	virtual ~PopulacaoReal();
 	const PopulacaoReal rollet();
@@ -33,10 +34,12 @@ public:
 	const IndividuoReal getWorseIndividuo();
 	const pair<IndividuoReal, IndividuoReal> crossover(int, int);
 	void atualizaPiorIndvNaPopulacao(const IndividuoReal& newIndividuo);
+	void openJson();
 private:
 	vector<IndividuoReal> populacao;
 	IndividuoReal bestIndividuo;
 	IndividuoReal worseIndividuo;
+	json entrada;
 };
 
 } /* namespace std */

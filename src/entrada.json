@@ -1,13 +1,13 @@
 {
   "codificacao": "real",
-  "tamPop": 40,
+  "tamPop": 20,
   "execucoes": 1,
-  "geracoes": 100,
+  "geracoes": 1000000,
   "selecao": 1,
   "crossover": "padrao",
-  "chanceMutacao": 1,
+  "chanceMutacao": 5,
   "chanceCrossover": 95,
-  "qtdVariaveis": 2,
+  "qtdVariaveis": 1,
   "variaveis": [
     {
       "min": -5,
