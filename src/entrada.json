@@ -3,7 +3,7 @@
   "tamPop": 40,
   "execucoes": 1,
   "geracoes": 100,
-  "selecao": "roleta",
+  "selecao": 1,
   "crossover": "padrao",
   "chanceMutacao": 1,
   "chanceCrossover": 95,
@@ -11,13 +11,13 @@
   "variaveis": [
     {
       "min": 0,
-      "max": 24,
-      "precisao": 1
+      "max": 60,
+      "precisao": 0
     },
     {
       "min": 0,
-      "max": 32,
-      "precisao": 1
+      "max": 50,
+      "precisao": 0
     }
   ],
   "elitismo": true

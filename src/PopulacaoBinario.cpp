@@ -10,7 +10,6 @@
 namespace std {
 
 PopulacaoBinario::PopulacaoBinario() {
-	// TODO Auto-generated constructor stub
 	openJson();
 
 	this->qtdIndividuos = this->entrada["tamPop"];
@@ -168,7 +167,8 @@ const PopulacaoBinario PopulacaoBinario::tournament(int k) {
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
-	newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
+	if (this->eletismo == true)
+		newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
 	return newPop;
 }
 
