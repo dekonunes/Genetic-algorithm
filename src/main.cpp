@@ -41,27 +41,29 @@ int main() {
 			genesF.push_back(auxGenes);
 		}
 		Individuo ind(genesF, 1);
-		Populacao pop(param[0], genesF, param[2], param[3], param[4]);
-		Populacao newPop(param[0], genesF, param[2], param[3], param[4]);
+		PopulacaoReal pop(param[0], genesF, param[2], param[3], param[4]);
+		PopulacaoReal newPop(param[0], genesF, param[2], param[3], param[4]);
 		for (int numExecucoes = 0; numExecucoes < param[6]; ++numExecucoes) {
 			for (int i = 0; i < param[5]; ++i) {
 				pop.mutacaoPopulacao();
-				switch (param[1]) {
-				case 1:
-					newPop = pop.rollet();
-					break;
-				case 2:
-					newPop = pop.tournament(2);
-					break;
-				default:
-					break;
-				}
-				pop.setPopulacao(newPop.getPopulacao());
+				ind = pop.getBestIndividuo(); //best indiv ever
+				/*switch (param[1]) {
+				 case 1:
+				 newPop = pop.rollet();
+				 break;
+				 case 2:
+				 newPop = pop.tournament(2);
+				 break;
+				 default:
+				 break;
+				 }
+				 pop.setPopulacao(newPop.getPopulacao());
+				 */
+				//if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
 
-				if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
-					ind = pop.getBestIndividuo(); //best indiv ever
-				}
-				vectorPlot.push_back(ind.getFitness());
+				//}
+				//vectorPlot.push_back(ind.getFitness());
+				//cout << ind = pop.getBestIndividuo() << endl;
 			}
 			cout << ind.getFuncaoObjetivo() << endl;
 		}
@@ -73,7 +75,6 @@ int main() {
 
 	//gp << "set xrange [-2:2]\nset yrange [-2:2]\n";
 	//gp << "plot" << gp.file1d(vectorPlot) << "with points title 'circle'" << endl;
-
 	return 0;
 }
 

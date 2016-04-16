@@ -65,9 +65,10 @@ double Individuo::getFitness() {
 }
 
 double Individuo::calculoFitness() {
-	for (int var = 0; var < this->genesF.size(); ++var) {
+	/*for (int var = 0; var < this->genesF.size(); ++var) {
 		this->fitness += 25.0 - (this->genesF[var] * this->genesF[var]);
-	}
+	}*/
+	this->fitness = 25.0 - (this->genesF[0] * this->genesF[0]);
 	if(this->fitness < 0)
 		this->fitness = 0;
 	return this->fitness;
@@ -79,7 +80,7 @@ double Individuo::calculoFucaoObjetivo() {
 }
 
 void Individuo::mutacao() {
-	double delta = 0.005;
+	double delta = 0.05;
 	int numRand, probabilidade = this->probMutacao;
 	static mt19937 mt(time(NULL));
 
