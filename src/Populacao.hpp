@@ -11,7 +11,7 @@
 class Populacao {
 protected:
 	int chanceCrossover;
-	int eletismo;
+	bool eletismo;
 	int qtdIndividuos;
 };
 

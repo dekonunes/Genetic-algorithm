@@ -9,14 +9,25 @@
 
 namespace std {
 
-IndividuoBinario::IndividuoBinario(vector<pair<int, int>> genes, int probMutacao) {
+IndividuoBinario::IndividuoBinario() {
 	// TODO Auto-generated constructor stub
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 1);
 	string aux;
 	string cromossomo;
+	openJson();
+	pair<int, int> auxGenes;
+
+	for (int i = 0; i < entrada["qtdVariaveis"]; i++) {
+		auxGenes.first = this->entrada["variaveis"][i]["min"];
+		auxGenes.second = this->entrada["variaveis"][i]["max"];
+		this->genes.push_back(auxGenes);
+	}
+
 	for (int var = 0; var < genes.size(); ++var) {
-		this->qtdBits[var] = getNumeroBits(genes[var].second, genes[var].first, 0);
+		this->qtdBits[var] = getNumeroBits(this->entrada["variaveis"][var]["max"],
+				this->entrada["variaveis"][var]["min"],
+				this->entrada["variaveis"][var]["precisao"]);
 	}
 
 	for (int var = 0; var < genes.size(); ++var) {
@@ -25,19 +36,14 @@ IndividuoBinario::IndividuoBinario(vector<pair<int, int>> genes, int probMutacao
 			this->cromossomo = this->cromossomo + aux;
 		}
 	}
-	this->probMutacao = probMutacao;
-	this->genes = genes;
+	this->probMutacao = this->entrada["chanceMutacao"];
 	this->fitness = 0.0;
 	calculoFitness();
 }
 
-IndividuoBinario::IndividuoBinario() {
+IndividuoBinario::~IndividuoBinario() {
 	// TODO Auto-generated constructor stub
 
-}
-
-IndividuoBinario::~IndividuoBinario() {
-	// TODO Auto-generated destructor stub
 }
 
 const string& IndividuoBinario::getCromossomo() const {
@@ -163,6 +169,16 @@ int IndividuoBinario::binToDec(string number) {
 	 result += (number[i] - '0') * pow;
 	 return result;//stoi(number,nullptr,2);*/
 	return stoi(number, nullptr, 2);
+}
+
+void IndividuoBinario::openJson() {
+	using json = nlohmann::json;
+	ifstream texto("entrada.json");
+
+	stringstream buffer;
+	buffer << texto.rdbuf();
+
+	this->entrada = json::parse(buffer.str());
 }
 
 } /* namespace std */

@@ -9,11 +9,10 @@
 
 namespace std {
 
-PopulacaoReal::PopulacaoReal(int qtdIndividuos, vector<pair<double, double>> genes, int chanceCrossover,
-		int probMutacao, int eletismo) {
+PopulacaoReal::PopulacaoReal(int qtdIndividuos, vector<pair<double, double>> genes, int chanceCrossover, int eletismo) {
 	// TODO Auto-generated constructor stub
 	for (int var = 0; var < qtdIndividuos; ++var) {
-		this->populacao.push_back(IndividuoReal(genes, probMutacao));
+		//this->populacao.push_back(IndividuoReal(genes, probMutacao));
 	}
 	this->qtdIndividuos = qtdIndividuos;
 	this->chanceCrossover = chanceCrossover;

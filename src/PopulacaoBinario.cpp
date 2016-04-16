@@ -9,19 +9,16 @@
 
 namespace std {
 
-PopulacaoBinario::PopulacaoBinario(int qtdIndividuos, vector<pair<int, int>> genes, int chanceCrossover,
-		int probMutacao, int eletismo) {
-	// TODO Auto-generated constructor stub
-	for (int var = 0; var < qtdIndividuos; ++var) {
-		this->populacao.push_back(IndividuoBinario(genes, probMutacao));
-	}
-	this->qtdIndividuos = qtdIndividuos;
-	this->chanceCrossover = chanceCrossover;
-	this->eletismo = eletismo;
-}
-
 PopulacaoBinario::PopulacaoBinario() {
 	// TODO Auto-generated constructor stub
+	openJson();
+
+	this->qtdIndividuos = this->entrada["tamPop"];
+	this->chanceCrossover = this->entrada["chanceMutacao"];
+	this->eletismo = this->entrada["elitismo"];
+
+	for (int var = 0; var < this->qtdIndividuos; ++var)
+		this->populacao.push_back(IndividuoBinario());
 
 }
 
@@ -74,7 +71,8 @@ const IndividuoBinario PopulacaoBinario::getWorseIndividuo() {
 	return this->worseIndividuo;
 }
 
-const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossover(int individuo1, int individuo2) {
+const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossover(int individuo1,
+		int individuo2) {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 100);
 	int var, a = bit(mt);
@@ -112,7 +110,8 @@ const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossover(int i
 	return newIndividuosCrossover;
 }
 
-const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossoverUniforme(int individuo1, int individuo2) {
+const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossoverUniforme(int individuo1,
+		int individuo2) {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 100);
 	int var, a = bit(mt);
@@ -213,6 +212,16 @@ void PopulacaoBinario::mutacaoPopulacao() {
 	for (int var = 0; var < this->qtdIndividuos; ++var) {
 		this->populacao[var].mutacao();
 	}
+}
+
+void PopulacaoBinario::openJson() {
+	using json = nlohmann::json;
+	ifstream texto("entrada.json");
+
+	stringstream buffer;
+	buffer << texto.rdbuf();
+
+	this->entrada = json::parse(buffer.str());
 }
 
 void PopulacaoBinario::atualizaPiorIndvNaPopulacao(const IndividuoBinario& newIndividuo) {

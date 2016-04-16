@@ -1,0 +1,24 @@
+{
+  "codificacao": "binaria",
+  "tamPop": 40,
+  "execucoes": 1,
+  "geracoes": 100,
+  "selecao": "roleta",
+  "crossover": "padrao",
+  "chanceMutacao": 1,
+  "chanceCrossover": 95,
+  "qtdVariaveis": 2,
+  "variaveis": [
+    {
+      "min": 0,
+      "max": 24,
+      "precisao": 1
+    },
+    {
+      "min": 0,
+      "max": 32,
+      "precisao": 1
+    }
+  ],
+  "elitismo": true
+}

@@ -18,7 +18,7 @@ namespace std {
 
 class PopulacaoReal: public Populacao {
 public:
-	PopulacaoReal(int, vector<pair<double, double>>, int, int, int);
+	PopulacaoReal(int, vector<pair<double, double>>, int, int);
 	PopulacaoReal();
 	virtual ~PopulacaoReal();
 	const PopulacaoReal rollet();

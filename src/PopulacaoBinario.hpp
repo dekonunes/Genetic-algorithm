@@ -8,15 +8,16 @@
 #ifndef SRC_POPULACAOBINARIO_HPP_
 #define SRC_POPULACAOBINARIO_HPP_
 
+#include <fstream>
 #include "IndividuoBinario.hpp"
 #include "Populacao.hpp"
+#include "json.hpp"
 
+using json = nlohmann::json;
 namespace std {
 
 class PopulacaoBinario: public Populacao {
 public:
-	PopulacaoBinario(int qtdIndividuos, vector<pair<int, int>> genes, int chanceCrossover,
-			int probMutacao, int eletismo);
 	PopulacaoBinario();
 	virtual ~PopulacaoBinario();
 	const vector<IndividuoBinario>& getPopulacao() const;
@@ -33,11 +34,14 @@ public:
 	const PopulacaoBinario tournament(int k);
 	int getQtdIndividuos() const;
 	void mutacaoPopulacao();
+	void openJson();
 	void atualizaPiorIndvNaPopulacao(const IndividuoBinario& newIndividuo);
+
 private:
 	vector<IndividuoBinario> populacao;
 	IndividuoBinario bestIndividuo;
 	IndividuoBinario worseIndividuo;
+	json entrada;
 };
 
 } /* namespace std */
