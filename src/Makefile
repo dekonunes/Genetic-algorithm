@@ -1,5 +1,5 @@
 CC=g++
-OBJ=main.o Individuo.o Populacao.o PopulacaoReal.o 
+OBJ=main.o IndividuoReal.o PopulacaoReal.o 
 LIBS=-lm -Wall -Wextra -lboost_iostreams -lboost_system -lboost_filesystem
 CPP11=-std=c++11 
 DEBUG=-g
@@ -12,13 +12,9 @@ ga: $(OBJ)
 main.o: main.cpp
 	$(CC) $(CPP11) -c main.cpp 
 	
-Individuo.o: Individuo.cpp
-	$(CC) $(CPP11) -c Individuo.cpp
+IndividuoReal.o: IndividuoReal.cpp
+	$(CC) $(CPP11) -c IndividuoReal.cpp
 
-
-Populacao.o: Populacao.cpp
-	$(CC) $(CPP11) -c Populacao.cpp
-	
 PopulacaoReal.o: PopulacaoReal.cpp
 	$(CC) $(CPP11) -c PopulacaoReal.cpp  
 

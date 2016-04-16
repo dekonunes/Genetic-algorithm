@@ -3,7 +3,7 @@
 100 Chance Crossover
 5 Probabilidade de Mutação
 1 eletismo
-100000 Numero de iterações
-5 Numero de execuções
+10000 Numero de iterações
+1 Numero de execuções
 -5 Gene 1 Min
 5 Gene 1 Max

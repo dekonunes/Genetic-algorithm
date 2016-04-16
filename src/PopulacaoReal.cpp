@@ -13,7 +13,7 @@ PopulacaoReal::PopulacaoReal(int qtdIndividuos, vector<pair<double, double>> gen
 		int probMutacao, int eletismo) {
 	// TODO Auto-generated constructor stub
 	for (int var = 0; var < qtdIndividuos; ++var) {
-		this->populacao.push_back(Individuo(genes, probMutacao));
+		this->populacao.push_back(IndividuoReal(genes, probMutacao));
 	}
 	this->qtdIndividuos = qtdIndividuos;
 	this->chanceCrossover = chanceCrossover;
@@ -28,55 +28,13 @@ PopulacaoReal::~PopulacaoReal() {
 	// TODO Auto-generated destructor stub
 }
 
-void Populacao::print_populacao() {
-	for (int i = 0; i < this->populacao.size(); ++i)
-		cout << this->populacao[i].getCromossomo() << endl;
-}
-
-void Populacao::print_individuo(int id) {
-	cout << this->populacao[id].getCromossomo() << endl;
-}
-
-const pair<Individuo, Individuo> PopulacaoReal::crossoverUniforme(int individuo1, int individuo2) {
-	static mt19937 mt(time(NULL));
-	static uniform_int_distribution<int> bit(0, 100);
-	int var, a = bit(mt);
-	int qtdBits = this->populacao[individuo1].getCromossomo().size();
-	pair<Individuo, Individuo> newIndividuosCrossover;
-	Individuo newIndividuo1 = this->populacao[individuo1];
-	Individuo newIndividuo2 = this->populacao[individuo2];
-
-	if (this->chanceCrossover > a) {
-
-		string cromossomoNewInviduio1 = this->populacao[individuo1].getCromossomo();
-		string cromossomoNewInviduio2 = this->populacao[individuo2].getCromossomo();
-		for (int var = 0; var < this->populacao[individuo1].getCromossomo().size(); ++var) {
-			static uniform_int_distribution<int> numRandon(0, 1);
-			a = numRandon(mt);
-
-			if (a == 1) {
-				cromossomoNewInviduio1[var] = this->populacao[individuo2].getCromossomo()[var];
-				cromossomoNewInviduio2[var] = this->populacao[individuo1].getCromossomo()[var];
-			}
-
-		}
-		newIndividuo1.setCromossomo(cromossomoNewInviduio1);
-		newIndividuo2.setCromossomo(cromossomoNewInviduio2);
-	}
-	if (this->eletismo == true)
-		newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
-
-	return newIndividuosCrossover;
-}
-
-const pair<Individuo, Individuo> Populacao::crossover(int individuo1, int individuo2) {
+const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossover(int individuo1, int individuo2) {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 99);
 	int var, a = bit(mt);
-	int qtdBits = this->populacao[individuo1].getCromossomo().size();
-	pair<Individuo, Individuo> newIndividuosCrossover;
-	Individuo newIndividuo1 = this->populacao[individuo1];
-	Individuo newIndividuo2 = this->populacao[individuo2];
+	pair<IndividuoReal, IndividuoReal> newIndividuosCrossover;
+	IndividuoReal newIndividuo1 = this->populacao[individuo1];
+	IndividuoReal newIndividuo2 = this->populacao[individuo2];
 	vector<double> genesInd1, genesInd2;
 	if (this->chanceCrossover > a) {
 		static uniform_int_distribution<int> numRandon(0,
@@ -103,7 +61,7 @@ const pair<Individuo, Individuo> Populacao::crossover(int individuo1, int indivi
 
 const PopulacaoReal PopulacaoReal::rollet() {
 	static mt19937 mt(time(NULL));
-	pair<Individuo, Individuo> newIndivuos;
+	pair<IndividuoReal, IndividuoReal> newIndivuos;
 	PopulacaoReal newPop;
 	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
 	double valorTotalFitness = 0.0;
@@ -136,8 +94,8 @@ const PopulacaoReal PopulacaoReal::rollet() {
 
 const PopulacaoReal PopulacaoReal::tournament(int k) {
 	static mt19937 mt(time(NULL));
-	pair<Individuo, Individuo> newIndivuos;
-	Individuo indRand, indAux;
+	pair<IndividuoReal, IndividuoReal> newIndivuos;
+	IndividuoReal indRand, indAux;
 	PopulacaoReal newPop;
 	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
 
@@ -161,6 +119,63 @@ const PopulacaoReal PopulacaoReal::tournament(int k) {
 	}
 	newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
 	return newPop;
+}
+
+int PopulacaoReal::getQtdIndividuos() const {
+	return this->populacao.size();
+}
+
+void PopulacaoReal::mutacaoPopulacao() {
+	for (int var = 0; var < this->qtdIndividuos; ++var) {
+		this->populacao[var].mutacao();
+	}
+}
+
+const vector<IndividuoReal>& PopulacaoReal::getPopulacao() const {
+	return this->populacao;
+}
+
+void PopulacaoReal::setPopulacao(const vector<IndividuoReal>& populacao) {
+	this->populacao = populacao;
+}
+
+void PopulacaoReal::insertIndividuo(IndividuoReal newIndividuo) {
+	this->populacao.push_back(newIndividuo);
+}
+
+const IndividuoReal PopulacaoReal::getIndividuo(int index) {
+	return this->populacao[index];
+}
+
+IndividuoReal PopulacaoReal::getBestIndividuo() {
+	this->bestIndividuo = this->populacao[0];
+	for (int var = 0; var < this->populacao.size(); ++var) {
+		if (this->bestIndividuo.getFitness() < this->populacao[var].getFitness()) {
+			this->bestIndividuo = this->populacao[var];
+		}
+	}
+	return this->bestIndividuo;
+}
+
+const IndividuoReal PopulacaoReal::getWorseIndividuo() {
+	this->worseIndividuo = this->populacao[0];
+	for (int var = 0; var < this->populacao.size(); ++var) {
+		if (this->worseIndividuo.getFitness() > this->populacao[var].getFitness()) {
+			this->worseIndividuo = this->populacao[var];
+		}
+	}
+	return this->worseIndividuo;
+}
+
+void PopulacaoReal::atualizaPiorIndvNaPopulacao(const IndividuoReal& newIndividuo) {
+	int posicaoDoPiorIndiv = 0;
+	this->worseIndividuo = this->populacao[0];
+	for (int var = 0; var < this->populacao.size(); ++var) {
+		if (this->worseIndividuo.getFitness() > this->populacao[var].getFitness()) {
+			posicaoDoPiorIndiv = var;
+		}
+	}
+	this->populacao[posicaoDoPiorIndiv] = newIndividuo;
 }
 
 

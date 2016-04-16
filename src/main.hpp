@@ -10,7 +10,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include "Individuo.hpp"
+#include "IndividuoReal.hpp"
 #include "gnuplot-iostream/gnuplot-iostream.h"
 #include "PopulacaoReal.hpp"
 
