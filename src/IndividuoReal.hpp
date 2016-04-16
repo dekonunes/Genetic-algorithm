@@ -9,7 +9,6 @@
 #define SRC_INDIVIDUOREAL_HPP_
 
 #include "Individuo.hpp"
-#include "Funcoes.hpp"
 #include <iostream>
 #include <ctime>
 #include <sstream>
@@ -29,15 +28,12 @@ public:
 	double getFitness();
 	double getFuncaoObjetivo();
 	void mutacao();
-	const vector<double>& getGenesF() const;
-	void setGenesF(const vector<double>& genesF);
+	const vector<double>& getGenes() const;
+	void setGenes(const vector<double>& genes);
 
-protected:
+private:
 	vector<pair<double, double>> genesFInicial;
-	vector<double> genesF;
-	double fitness;
-	int probMutacao;
-	double funcaoObjetivo;
+	vector<double> genes;
 };
 
 } /* namespace std */

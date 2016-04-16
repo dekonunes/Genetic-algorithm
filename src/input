@@ -5,5 +5,7 @@
 1 eletismo
 10000 Numero de iterações
 1 Numero de execuções
--5 Gene 1 Min
-5 Gene 1 Max
+0 Gene 1 Min
+60 Gene 1 Max
+0 Gene 1 Min
+50 Gene 1 Max

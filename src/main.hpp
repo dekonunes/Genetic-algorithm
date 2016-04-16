@@ -11,7 +11,9 @@
 #include <iostream>
 #include <fstream>
 #include "IndividuoReal.hpp"
+#include "IndividuoBinario.hpp"
 #include "gnuplot-iostream/gnuplot-iostream.h"
 #include "PopulacaoReal.hpp"
+#include "PopulacaoBinario.hpp"
 
 #endif /* MAIN_HPP_ */

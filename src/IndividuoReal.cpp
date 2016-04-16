@@ -16,7 +16,7 @@ IndividuoReal::IndividuoReal(vector<pair<double, double>> genesInicial, int prob
 	for (int var = 0; var < genesInicial.size(); ++var) {
 		static uniform_real_distribution<double> bit(genesInicial[var].first,
 				genesInicial[var].second);
-		this->genesF.push_back(bit(mt));
+		this->genes.push_back(bit(mt));
 	}
 	this->probMutacao = probMutacao;
 	this->fitness = 0.0;
@@ -32,8 +32,8 @@ IndividuoReal::~IndividuoReal() {
 }
 
 double IndividuoReal::calculoFitness() {
-	for (int var = 0; var < this->genesF.size(); ++var) {
-		this->fitness = 25.0 - (this->genesF[var] * this->genesF[var]);
+	for (int var = 0; var < this->genes.size(); ++var) {
+		this->fitness = 25.0 - (this->genes[var] * this->genes[var]);
 	}
 	if (this->fitness < 0)
 		this->fitness = 0;
@@ -41,7 +41,7 @@ double IndividuoReal::calculoFitness() {
 }
 
 double IndividuoReal::calculoFucaoObjetivo() {
-	this->funcaoObjetivo = (this->genesF[0] * this->genesF[0]);
+	this->funcaoObjetivo = (this->genes[0] * this->genes[0]);
 	return this->funcaoObjetivo;
 }
 
@@ -65,17 +65,17 @@ void IndividuoReal::mutacao() {
 	numRand = numRandom(mt);
 	if (numRand < probabilidade) {
 		static uniform_real_distribution<double> numDelta(-delta, delta);
-		this->genesF[0] = this->genesF[0] + numDelta(mt);
+		this->genes[0] = this->genes[0] + numDelta(mt);
 	}
 
 }
 
-const vector<double>& IndividuoReal::getGenesF() const {
-	return genesF;
+const vector<double>& IndividuoReal::getGenes() const {
+	return genes;
 }
 
-void IndividuoReal::setGenesF(const vector<double>& genesF) {
-	this->genesF = genesF;
+void IndividuoReal::setGenes(const vector<double>& genes) {
+	this->genes = genes;
 }
 
 } /* namespace std */
