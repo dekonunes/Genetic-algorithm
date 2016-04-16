@@ -9,22 +9,17 @@
 
 namespace std {
 
-IndividuoReal::IndividuoReal(vector<pair<double, double>> genesInicial, int probMutacao) {
-	// TODO Auto-generated constructor stub
+IndividuoReal::IndividuoReal() {
 	static mt19937 mt(time(NULL));
-
-	for (int var = 0; var < genesInicial.size(); ++var) {
-		static uniform_real_distribution<double> bit(genesInicial[var].first,
-				genesInicial[var].second);
+	openJson();
+	for (int var = 0; var < this->entrada["qtdVariaveis"]; ++var) {
+		static uniform_real_distribution<double> bit(this->entrada["variaveis"][var]["min"],
+				this->entrada["variaveis"][var]["max"]);
 		this->genes.push_back(bit(mt));
 	}
 	this->probMutacao = probMutacao;
 	this->fitness = 0.0;
 	calculoFitness();
-}
-
-IndividuoReal::IndividuoReal() {
-	// TODO Auto-generated destructor stub
 }
 
 IndividuoReal::~IndividuoReal() {
@@ -76,6 +71,16 @@ const vector<double>& IndividuoReal::getGenes() const {
 
 void IndividuoReal::setGenes(const vector<double>& genes) {
 	this->genes = genes;
+}
+
+void IndividuoReal::openJson() {
+	using json = nlohmann::json;
+	ifstream texto("entrada.json");
+
+	stringstream buffer;
+	buffer << texto.rdbuf();
+
+	this->entrada = json::parse(buffer.str());
 }
 
 } /* namespace std */

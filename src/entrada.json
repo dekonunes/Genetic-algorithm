@@ -1,5 +1,5 @@
 {
-  "codificacao": "binaria",
+  "codificacao": "real",
   "tamPop": 40,
   "execucoes": 1,
   "geracoes": 100,
@@ -10,13 +10,13 @@
   "qtdVariaveis": 2,
   "variaveis": [
     {
-      "min": 0,
-      "max": 60,
+      "min": -5,
+      "max": 5,
       "precisao": 0
     },
     {
-      "min": 0,
-      "max": 50,
+      "min": -5,
+      "max": 5,
       "precisao": 0
     }
   ],

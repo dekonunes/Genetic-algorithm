@@ -14,7 +14,6 @@ IndividuoBinario::IndividuoBinario() {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 1);
 	string aux;
-	string cromossomo;
 	openJson();
 	pair<int, int> auxGenes;
 

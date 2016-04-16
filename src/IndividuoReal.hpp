@@ -9,18 +9,20 @@
 #define SRC_INDIVIDUOREAL_HPP_
 
 #include "Individuo.hpp"
+#include "json.hpp"
 #include <iostream>
+#include <fstream>
 #include <ctime>
 #include <sstream>
 #include <sys/types.h>
 #include <unistd.h>
 #include <random>
 
+using json = nlohmann::json;
 namespace std {
 
 class IndividuoReal: public Individuo {
 public:
-	IndividuoReal(vector<pair<double, double>> genesInicial, int probMutacao);
 	IndividuoReal();
 	virtual ~IndividuoReal();
 	double calculoFitness();
@@ -30,10 +32,12 @@ public:
 	void mutacao();
 	const vector<double>& getGenes() const;
 	void setGenes(const vector<double>& genes);
+	void openJson();
 
 private:
 	vector<pair<double, double>> genesFInicial;
 	vector<double> genes;
+	json entrada;
 };
 
 } /* namespace std */
