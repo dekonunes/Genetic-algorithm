@@ -5,7 +5,8 @@
   "geracoes": 1000000,
   "selecao": 1,
   "crossover": "padrao",
-  "chanceMutacao": 5,
+  "tournament": 2,
+  "chanceMutacao": 100,
   "chanceCrossover": 95,
   "qtdVariaveis": 1,
   "variaveis": [

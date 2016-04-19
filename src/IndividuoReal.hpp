@@ -29,7 +29,7 @@ public:
 	double calculoFucaoObjetivo();
 	double getFitness();
 	double getFuncaoObjetivo();
-	void mutacao();
+	void mutacao(int);
 	const vector<double>& getGenes() const;
 	void setGenes(const vector<double>& genes);
 	void openJson();

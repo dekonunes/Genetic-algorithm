@@ -33,6 +33,7 @@ public:
 	IndividuoReal getBestIndividuo();
 	const IndividuoReal getWorseIndividuo();
 	const pair<IndividuoReal, IndividuoReal> crossover(int, int);
+	const pair<IndividuoReal, IndividuoReal> crossoverArithmetic(int, int);
 	void atualizaPiorIndvNaPopulacao(const IndividuoReal& newIndividuo);
 	void openJson();
 private:

@@ -11,13 +11,17 @@ namespace std {
 
 IndividuoReal::IndividuoReal() {
 	static mt19937 mt(time(NULL));
+	pair<double, double> auxGenesIniciais;
 	openJson();
 	for (int var = 0; var < this->entrada["qtdVariaveis"]; ++var) {
 		static uniform_real_distribution<double> bit(this->entrada["variaveis"][var]["min"],
 				this->entrada["variaveis"][var]["max"]);
 		this->genes.push_back(bit(mt));
+		auxGenesIniciais.first = this->entrada["variaveis"][var]["min"];
+		auxGenesIniciais.second = this->entrada["variaveis"][var]["max"];
+		this->genesFInicial.push_back(auxGenesIniciais);
 	}
-	this->probMutacao = probMutacao;
+	this->probMutacao = this->entrada["chanceMutacao"];
 	this->fitness = 0.0;
 	calculoFitness();
 }
@@ -51,16 +55,18 @@ double IndividuoReal::getFuncaoObjetivo() {
 }
 
 void IndividuoReal::mutacao() {
-	double delta = 0.5;
-	int numRand, probabilidade = this->probMutacao;
 	static mt19937 mt(time(NULL));
-
+	pair<double, double> genesIniciais = this->genesFInicial[0];
+	static uniform_real_distribution<double> numRandomDelta(genesIniciais.first,
+			genesIniciais.second);
+	double delta = numRandomDelta(mt)/100;
 	static uniform_int_distribution<int> numRandom(0, 100);
-
-	numRand = numRandom(mt);
-	if (numRand < probabilidade) {
+	int numRand = numRandom(mt);
+	if (numRand < this->probMutacao) {
 		static uniform_real_distribution<double> numDelta(-delta, delta);
+		//cout << this->genes[0] << endl;
 		this->genes[0] = this->genes[0] + numDelta(mt);
+		//cout << this->genes[0] << endl;
 	}
 
 }
