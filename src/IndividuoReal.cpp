@@ -64,9 +64,7 @@ void IndividuoReal::mutacao() {
 	int numRand = numRandom(mt);
 	if (numRand < this->probMutacao) {
 		static uniform_real_distribution<double> numDelta(-delta, delta);
-		//cout << this->genes[0] << endl;
 		this->genes[0] = this->genes[0] + numDelta(mt);
-		//cout << this->genes[0] << endl;
 	}
 
 }

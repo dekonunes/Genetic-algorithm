@@ -59,7 +59,7 @@ int main() {
 
 		for (int i = 0; i < entrada["geracoes"]; ++i) {
 			pop.mutacaoPopulacao();
-			/*aux = entrada["selecao"];
+			aux = entrada["selecao"];
 			switch (aux) {
 			case 1:
 				newPop = pop.rollet();
@@ -69,13 +69,13 @@ int main() {
 				break;
 			default:
 				break;
-			}*/
+			}
 
-			//pop.setPopulacao(newPop.getPopulacao());
+			pop.setPopulacao(newPop.getPopulacao());
 			//cout << ind.getFitness() << "  " << i<< endl;
 			if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
 				ind = pop.getBestIndividuo(); //best indiv ever
-				cout << ind.getFuncaoObjetivo() << "  " << i<< endl;
+				cout << ind.getFuncaoObjetivo() << "  " << i << endl;
 			}
 		}
 

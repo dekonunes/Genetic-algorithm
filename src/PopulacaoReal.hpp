@@ -38,6 +38,7 @@ public:
 	void openJson();
 private:
 	vector<IndividuoReal> populacao;
+	vector<pair<double, double>> genesInicial;
 	IndividuoReal bestIndividuo;
 	IndividuoReal worseIndividuo;
 	json entrada;

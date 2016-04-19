@@ -19,6 +19,29 @@ PopulacaoReal::PopulacaoReal() {
 	for (int var = 0; var < this->qtdIndividuos; ++var)
 		this->populacao.push_back(IndividuoReal());
 
+	pair<double, double> auxGenesIniciais;
+	for (int var = 0; var < this->entrada["qtdVariaveis"]; ++var) {
+		auxGenesIniciais.first = this->entrada["variaveis"][var]["min"];
+		auxGenesIniciais.second = this->entrada["variaveis"][var]["max"];
+		this->genesInicial.push_back(auxGenesIniciais);
+	}
+
+	if (entrada["crossover"] == "padrao") {
+		this->tipoCrossover = 1;
+	}
+
+	if (entrada["crossover"] == "arithmetic") {
+		this->tipoCrossover = 2;
+	}
+
+	if (entrada["crossover"] == "uniform") {
+		this->tipoCrossover = 3;
+	}
+
+	if (entrada["crossover"] == "BLX") {
+		this->tipoCrossover = 4;
+	}
+
 }
 
 PopulacaoReal::~PopulacaoReal() {
@@ -60,31 +83,37 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverArithmetic(int 
 		int individuo2) {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 99);
-	int var, a = bit(mt);
+	int probCross = bit(mt);
+	double a;
+	pair<double, double> auxGenesIniciais = this->genesInicial[0];
 	pair<IndividuoReal, IndividuoReal> newIndividuosCrossover;
 	IndividuoReal newIndividuo1 = this->populacao[individuo1];
 	IndividuoReal newIndividuo2 = this->populacao[individuo2];
 	vector<double> genesInd1, genesInd2;
-	if (this->chanceCrossover > a) {
-		static uniform_int_distribution<int> numRandon(0,
-				this->populacao[individuo1].getGenes().size() - 1);
+
+	if (this->chanceCrossover < probCross) {
+		static uniform_real_distribution<double> numRandon(0,
+				auxGenesIniciais.second); //Perguntar esse valores quanto é esses visinhos?
 		a = numRandon(mt);
-		for (var = 0; var < a; ++var) {
-			genesInd1.push_back(this->populacao[individuo2].getGenes().at(var));
-			genesInd2.push_back(this->populacao[individuo1].getGenes().at(var));
+		for (int var = 0; var < this->genesInicial.size(); ++var) {
+			genesInd1.push_back(
+					(a * this->populacao[individuo1].getGenes().at(var))
+							+ ((1 - a) * this->populacao[individuo2].getGenes().at(var)));
+			genesInd2.push_back(
+					((1 - a) * this->populacao[individuo1].getGenes().at(var))
+							+ (a * this->populacao[individuo2].getGenes().at(var)));
+			cout << this->populacao[individuo1].getGenes().at(var) << endl;
+			cout << this->populacao[individuo2].getGenes().at(var) << endl;
+			cout << a << endl;
+			cout << a * this->populacao[individuo1].getGenes().at(var)
+									+ (1 - a) * this->populacao[individuo2].getGenes().at(var) << endl;
+			cout << "---" << endl;
+
 		}
-		for (; var < this->populacao[individuo1].getGenes().size(); ++var) {
-			genesInd1.push_back(this->populacao[individuo1].getGenes().at(var));
-			genesInd2.push_back(this->populacao[individuo2].getGenes().at(var));
-		}
-	} else {
-		newIndividuo1.setGenes(this->populacao[individuo1].getGenes());
-		newIndividuo2.setGenes(this->populacao[individuo2].getGenes());
 	}
 	newIndividuo1.setGenes(genesInd1);
 	newIndividuo2.setGenes(genesInd2);
 	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
-
 	return newIndividuosCrossover;
 }
 
@@ -112,8 +141,23 @@ const PopulacaoReal PopulacaoReal::rollet() {
 			valorAcumuladoFitness = 0;
 			individuoParaCross[loop] = var;
 		}
+		switch (this->tipoCrossover) {
+		case 1:
+			newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
+			break;
+		case 2:
+			newIndivuos = crossoverArithmetic(individuoParaCross[0], individuoParaCross[1]);
+			break;
+		case 3:
 
-		newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
+			break;
+		case 4:
+
+			break;
+		default:
+			break;
+		}
+
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
