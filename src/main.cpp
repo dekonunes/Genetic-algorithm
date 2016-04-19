@@ -75,7 +75,7 @@ int main() {
 			//cout << ind.getFitness() << "  " << i<< endl;
 			if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
 				ind = pop.getBestIndividuo(); //best indiv ever
-				cout << ind.getFuncaoObjetivo() << "  " << i << endl;
+				//cout << ind.getFuncaoObjetivo() << "  " << i << endl;
 			}
 		}
 

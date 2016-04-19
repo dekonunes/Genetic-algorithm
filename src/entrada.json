@@ -4,7 +4,7 @@
   "execucoes": 1,
   "geracoes": 10000000,
   "selecao": 1,
-  "crossover": "arithmetic",
+  "crossover": "BLX",
   "tournament": 2,
   "chanceCrossover": 100,
   "chanceMutacao": 5,
