@@ -4,7 +4,7 @@
   "execucoes": 5,
   "geracoes": 10000000,
   "selecao": 1,
-  "crossover": "padrao",
+  "crossover": "uniform",
   "tournament": 2,
   "chanceCrossover": 95,
   "chanceMutacao": 5,
