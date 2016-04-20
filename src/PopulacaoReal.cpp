@@ -51,29 +51,27 @@ PopulacaoReal::~PopulacaoReal() {
 const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossover(int individuo1, int individuo2) {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 99);
-	int var, a = bit(mt);
+	int var = 0, a = bit(mt);
 	pair<IndividuoReal, IndividuoReal> newIndividuosCrossover;
 	IndividuoReal newIndividuo1 = this->populacao[individuo1];
 	IndividuoReal newIndividuo2 = this->populacao[individuo2];
-	vector<double> genesInd1, genesInd2;
+	vector<double> genesInd1 = this->populacao[individuo1].getGenes(), genesInd2 =
+			this->populacao[individuo2].getGenes();
+
 	if (this->chanceCrossover > a) {
-		static uniform_int_distribution<int> numRandon(0,
-				this->populacao[individuo1].getGenes().size() - 1);
+		static uniform_int_distribution<int> numRandon(0, this->genesInicial.size() - 1);
 		a = numRandon(mt);
 		for (var = 0; var < a; ++var) {
 			genesInd1.push_back(this->populacao[individuo2].getGenes().at(var));
 			genesInd2.push_back(this->populacao[individuo1].getGenes().at(var));
 		}
-		for (; var < this->populacao[individuo1].getGenes().size(); ++var) {
+		for (; var < this->genesInicial.size() - 1; ++var) {
 			genesInd1.push_back(this->populacao[individuo1].getGenes().at(var));
 			genesInd2.push_back(this->populacao[individuo2].getGenes().at(var));
 		}
-	} else {
-		newIndividuo1.setGenes(this->populacao[individuo1].getGenes());
-		newIndividuo2.setGenes(this->populacao[individuo2].getGenes());
+		newIndividuo1.setGenes(genesInd1);
+		newIndividuo2.setGenes(genesInd2);
 	}
-	newIndividuo1.setGenes(genesInd1);
-	newIndividuo2.setGenes(genesInd2);
 	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
 
 	return newIndividuosCrossover;
@@ -86,6 +84,7 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverBLX(int individ
 	pair<IndividuoReal, IndividuoReal> newIndividuosCrossover;
 	IndividuoReal newIndividuo1 = this->populacao[individuo1];
 	IndividuoReal newIndividuo2 = this->populacao[individuo2];
+	vector<double> genesInd1, genesInd2;
 
 	for (int var = 0; var < this->genesInicial.size(); ++var) {
 		d = abs(
@@ -174,6 +173,7 @@ const PopulacaoReal PopulacaoReal::rollet() {
 			valorAcumuladoFitness = 0;
 			individuoParaCross[loop] = var;
 		}
+		//cout << this->tipoCrossover << endl;
 		switch (this->tipoCrossover) {
 		case 1:
 			newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);

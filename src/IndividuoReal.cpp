@@ -32,7 +32,7 @@ IndividuoReal::~IndividuoReal() {
 
 double IndividuoReal::calculoFitness() {
 	for (int var = 0; var < this->genes.size(); ++var) {
-		this->fitness = 25.0 - (this->genes[var] * this->genes[var]);
+		this->fitness = 150.0 - (this->genes[var] * this->genes[var]);
 	}
 	if (this->fitness < 0)
 		this->fitness = 0;
@@ -40,7 +40,9 @@ double IndividuoReal::calculoFitness() {
 }
 
 double IndividuoReal::calculoFucaoObjetivo() {
-	this->funcaoObjetivo = (this->genes[0] * this->genes[0]);
+	for (int var = 0; var < this->genes.size(); ++var) {
+		this->funcaoObjetivo = (this->genes[var] * this->genes[var]);
+	}
 	return this->funcaoObjetivo;
 }
 
@@ -59,7 +61,7 @@ void IndividuoReal::mutacao() {
 	pair<double, double> genesIniciais = this->genesFInicial[0];
 	static uniform_real_distribution<double> numRandomDelta(genesIniciais.first,
 			genesIniciais.second);
-	double delta = numRandomDelta(mt)/100;
+	double delta = numRandomDelta(mt) / 100;
 	static uniform_int_distribution<int> numRandom(0, 100);
 	int numRand = numRandom(mt);
 	if (numRand < this->probMutacao) {

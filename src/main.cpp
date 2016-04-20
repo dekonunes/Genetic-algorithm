@@ -21,64 +21,66 @@ int main() {
 
 	Gnuplot gp;
 	vector<double> vectorPlot;
-	if (entrada["codificacao"] == "binaria") {
-		vector<pair<int, int>> genes;
-		pair<int, int> auxGenes;
-		IndividuoBinario ind;
-		PopulacaoBinario pop;
-		PopulacaoBinario newPop;
-		int aux;
-		for (int i = 0; i < entrada["geracoes"]; ++i) {
-			pop.mutacaoPopulacao();
-			aux = entrada["selecao"];
-			switch (aux) {
-			case 1:
-				newPop = pop.rollet();
-				break;
-			case 2:
-				newPop = pop.tournament(entrada["tournament"]);
-				break;
-			default:
-				break;
-			}
-			pop.setPopulacao(newPop.getPopulacao());
+	for (int execucoes = 0; execucoes < entrada["execucoes"]; ++execucoes) {
+		if (entrada["codificacao"] == "binaria") {
+			vector<pair<int, int>> genes;
+			pair<int, int> auxGenes;
+			IndividuoBinario ind;
+			PopulacaoBinario pop;
+			PopulacaoBinario newPop;
+			int aux;
+			for (int i = 0; i < entrada["geracoes"]; ++i) {
+				pop.mutacaoPopulacao();
+				aux = entrada["selecao"];
+				switch (aux) {
+				case 1:
+					newPop = pop.rollet();
+					break;
+				case 2:
+					newPop = pop.tournament(entrada["tournament"]);
+					break;
+				default:
+					break;
+				}
+				pop.setPopulacao(newPop.getPopulacao());
 
-			if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
-				ind = pop.getBestIndividuo(); //best indiv ever
+				if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
+					ind = pop.getBestIndividuo(); //best indiv ever
+				}
 			}
+			cout << ind.getFuncaoObjetivo() << endl;
 		}
-		cout << ind.getFuncaoObjetivo() << endl;
-	}
-	if (entrada["codificacao"] == "real") {
-		vector<pair<double, double>> genes;
-		pair<double, double> auxGenes;
-		IndividuoReal ind;
-		PopulacaoReal pop;
-		PopulacaoReal newPop;
-		int aux;
+		if (entrada["codificacao"] == "real") {
+			vector<pair<double, double>> genes;
+			pair<double, double> auxGenes;
+			IndividuoReal ind;
+			PopulacaoReal pop;
+			PopulacaoReal newPop;
+			int aux;
 
-		for (int i = 0; i < entrada["geracoes"]; ++i) {
-			pop.mutacaoPopulacao();
-			aux = entrada["selecao"];
-			switch (aux) {
-			case 1:
-				newPop = pop.rollet();
-				break;
-			case 2:
-				newPop = pop.tournament(entrada["tournament"]);
-				break;
-			default:
-				break;
+			for (int i = 0; i < entrada["geracoes"]; ++i) {
+				pop.mutacaoPopulacao();
+				aux = entrada["selecao"];
+				switch (aux) {
+				case 1:
+					newPop = pop.rollet();
+					break;
+				case 2:
+					newPop = pop.tournament(entrada["tournament"]);
+					break;
+				default:
+					break;
+				}
+
+				pop.setPopulacao(newPop.getPopulacao());
+				//cout << ind.getFitness() << "  " << i<< endl;
+				if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
+					ind = pop.getBestIndividuo(); //best indiv ever
+					cout << ind.getFuncaoObjetivo() << "  " << i << endl;
+				}
 			}
 
-			pop.setPopulacao(newPop.getPopulacao());
-			//cout << ind.getFitness() << "  " << i<< endl;
-			if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
-				ind = pop.getBestIndividuo(); //best indiv ever
-				//cout << ind.getFuncaoObjetivo() << "  " << i << endl;
-			}
 		}
-
 	}
 	/* Plot */
 

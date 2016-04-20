@@ -1,15 +1,35 @@
 {
   "codificacao": "real",
   "tamPop": 20,
-  "execucoes": 1,
+  "execucoes": 5,
   "geracoes": 10000000,
   "selecao": 1,
-  "crossover": "BLX",
+  "crossover": "padrao",
   "tournament": 2,
-  "chanceCrossover": 100,
+  "chanceCrossover": 95,
   "chanceMutacao": 5,
-  "qtdVariaveis": 2,
+  "qtdVariaveis": 6,
   "variaveis": [
+    {
+      "min": -5,
+      "max": 5,
+      "precisao": 0
+    },
+    {
+      "min": -5,
+      "max": 5,
+      "precisao": 0
+    },
+    {
+      "min": -5,
+      "max": 5,
+      "precisao": 0
+    },
+    {
+      "min": -5,
+      "max": 5,
+      "precisao": 0
+    },
     {
       "min": -5,
       "max": 5,
