@@ -108,7 +108,32 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverBLX(int individ
 
 const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverUniformAverage(int individuo1,
 		int individuo2) {
+	static mt19937 mt(time(NULL));
+	static uniform_int_distribution<int> bit(0, 99);
+	int a = bit(mt);
+	pair<IndividuoReal, IndividuoReal> newIndividuosCrossover;
+	IndividuoReal newIndividuo1 = this->populacao[individuo1];
+	IndividuoReal newIndividuo2 = this->populacao[individuo2];
+	vector<double> genesInd1 = this->populacao[individuo1].getGenes(), genesInd2 =
+			this->populacao[individuo2].getGenes();
 
+	if (this->chanceCrossover > a) {
+		static uniform_int_distribution<int> numRandon(0, 1);
+		for (int var = 0; var < this->genesInicial.size(); ++var) {
+			a = numRandon(mt);
+			if (a == 1) {
+				genesInd1.push_back(this->populacao[individuo2].getGenes().at(var));
+				genesInd2.push_back(this->populacao[individuo1].getGenes().at(var));
+				newIndividuo1.setGenes(genesInd1);
+				newIndividuo2.setGenes(genesInd2);
+			}
+
+		}
+
+	}
+	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
+
+	return newIndividuosCrossover;
 }
 
 const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverArithmetic(int individuo1,
