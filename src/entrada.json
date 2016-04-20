@@ -2,7 +2,7 @@
   "codificacao": "real",
   "tamPop": 20,
   "execucoes": 5,
-  "geracoes": 10000000,
+  "geracoes": 1000,
   "selecao": 1,
   "crossover": "uniform",
   "tournament": 2,
