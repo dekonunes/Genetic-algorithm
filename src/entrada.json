@@ -1,10 +1,10 @@
 {
   "codificacao": "real",
   "tamPop": 50,
-  "execucoes": 1,
-  "geracoes": 2000,
+  "execucoes": 5,
+  "geracoes": 300,
   "selecao": 1,
-  "crossover": "arithmetic",
+  "crossover": "BLX",
   "tournament": 2,
   "chanceCrossover": 95,
   "chanceMutacao": 5,

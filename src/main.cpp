@@ -19,7 +19,7 @@ int main() {
 
 	auto entrada = json::parse(buffer.str());
 
-	//Gnuplot gp;
+	Gnuplot gp;
 	vector<double> vectorPlot;
 	vector<double> vectorPlotAux;
 	vector<vector<double>> vectorPlotGeracoes;
@@ -81,7 +81,7 @@ int main() {
 					ind = pop.getBestIndividuo(); //best indiv ever
 					cout << ind.getFuncaoObjetivo() << endl;
 				}
-				//ind = pop.getBestIndividuo();
+				ind = pop.getBestIndividuo();
 				vectorPlotAux.push_back(ind.getFuncaoObjetivo());
 			}
 			vectorPlotGeracoes.push_back(vectorPlotAux);
@@ -91,14 +91,17 @@ int main() {
 	int execucoes = entrada["execucoes"];
 	for (int var = 0; var < entrada["geracoes"]; ++var) {
 		for (int execucoes = 0; execucoes < entrada["execucoes"]; ++execucoes) {
-			aux += vectorPlotGeracoes[execucoes].at(var) / execucoes;
+			aux += vectorPlotGeracoes[execucoes].at(var);
 		}
+		aux = aux / execucoes;
 		vectorPlot.push_back(aux);
-		cout << aux << endl;
+		//cout << aux << endl;
+		aux = 0;
 	}
 	/* Plot */
 
-	/*gp << "set xrange [-2:2]\nset yrange [-2:2]\n";
-	 gp << "plot" << gp.file1d(vectorPlot) << "with points title 'circle'" << endl;*/
+	//gp << "set xrange [-2:2]\nset yrange [-2:2]\n";
+	//gp << "yrange [1:-1]\n";
+	gp << "plot" << gp.file1d(vectorPlot) << endl;
 	return 0;
 }
