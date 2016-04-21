@@ -75,7 +75,13 @@ int main() {
 				}
 
 				pop.setPopulacao(newPop.getPopulacao());
-				ind = pop.getBestIndividuo();
+
+				//cout << ind.getFuncaoObjetivo() << endl;
+				if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
+					ind = pop.getBestIndividuo(); //best indiv ever
+					cout << ind.getFuncaoObjetivo() << endl;
+				}
+				//ind = pop.getBestIndividuo();
 				vectorPlotAux.push_back(ind.getFuncaoObjetivo());
 			}
 			vectorPlotGeracoes.push_back(vectorPlotAux);
@@ -85,7 +91,7 @@ int main() {
 	int execucoes = entrada["execucoes"];
 	for (int var = 0; var < entrada["geracoes"]; ++var) {
 		for (int execucoes = 0; execucoes < entrada["execucoes"]; ++execucoes) {
-			aux += vectorPlotGeracoes[execucoes].at(var)/execucoes;
+			aux += vectorPlotGeracoes[execucoes].at(var) / execucoes;
 		}
 		vectorPlot.push_back(aux);
 		cout << aux << endl;
@@ -93,6 +99,6 @@ int main() {
 	/* Plot */
 
 	/*gp << "set xrange [-2:2]\nset yrange [-2:2]\n";
-	gp << "plot" << gp.file1d(vectorPlot) << "with points title 'circle'" << endl;*/
+	 gp << "plot" << gp.file1d(vectorPlot) << "with points title 'circle'" << endl;*/
 	return 0;
 }

@@ -1,10 +1,10 @@
 {
   "codificacao": "real",
   "tamPop": 50,
-  "execucoes": 5,
+  "execucoes": 1,
   "geracoes": 2000,
   "selecao": 1,
-  "crossover": "uniform",
+  "crossover": "arithmetic",
   "tournament": 2,
   "chanceCrossover": 95,
   "chanceMutacao": 5,
