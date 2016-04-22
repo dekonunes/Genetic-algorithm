@@ -89,7 +89,7 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverBLX(int individ
 	for (int var = 0; var < this->genesInicial.size(); ++var) {
 		d = abs(
 				this->populacao[individuo1].getGenes().at(var)
-						- this->populacao[individuo2].getGenes().at(var)); //ERRO AQUI, ESTA DANDO FORA DOS LIMITES
+						- this->populacao[individuo2].getGenes().at(var));
 
 		static uniform_real_distribution<double> numRandon(this->genesInicial[0].first - (a * d),
 				this->genesInicial[0].second + (a * d));
@@ -141,7 +141,7 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverArithmetic(int 
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 99);
 	int probCross = bit(mt);
-	double a;
+	double a = 0.7;
 	pair<double, double> auxGenesIniciais = this->genesInicial[0];
 	pair<IndividuoReal, IndividuoReal> newIndividuosCrossover;
 	IndividuoReal newIndividuo1 = this->populacao[individuo1];
@@ -149,8 +149,6 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverArithmetic(int 
 	vector<double> genesInd1, genesInd2;
 
 	if (this->chanceCrossover < probCross) {
-		static uniform_real_distribution<double> numRandon(0, auxGenesIniciais.second); //Perguntar esse valores quanto é esses visinhos?
-		a = numRandon(mt);
 		for (int var = 0; var < this->genesInicial.size(); ++var) {
 			genesInd1.push_back(
 					(a * this->populacao[individuo1].getGenes().at(var))
