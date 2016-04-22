@@ -12,7 +12,7 @@
 #include <fstream>
 #include "IndividuoReal.hpp"
 #include "IndividuoBinario.hpp"
-#include "gnuplot-iostream/gnuplot-iostream.h"
+//#include "gnuplot-iostream/gnuplot-iostream.h"
 #include "PopulacaoReal.hpp"
 #include "PopulacaoBinario.hpp"
 #include "json.hpp"

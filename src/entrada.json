@@ -1,8 +1,8 @@
 {
   "codificacao": "real",
-  "tamPop": 20,
+  "tamPop": 50,
   "execucoes": 5,
-  "geracoes": 1000,
+  "geracoes": 2000,
   "selecao": 1,
   "crossover": "uniform",
   "tournament": 2,

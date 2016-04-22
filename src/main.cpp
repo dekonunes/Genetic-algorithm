@@ -19,7 +19,7 @@ int main() {
 
 	auto entrada = json::parse(buffer.str());
 
-	Gnuplot gp;
+	//Gnuplot gp;
 	vector<double> vectorPlot;
 	vector<double> vectorPlotAux;
 	vector<vector<double>> vectorPlotGeracoes;
@@ -92,7 +92,7 @@ int main() {
 	}
 	/* Plot */
 
-	gp << "set xrange [-2:2]\nset yrange [-2:2]\n";
-	gp << "plot" << gp.file1d(vectorPlot) << "with points title 'circle'" << endl;
+	/*gp << "set xrange [-2:2]\nset yrange [-2:2]\n";
+	gp << "plot" << gp.file1d(vectorPlot) << "with points title 'circle'" << endl;*/
 	return 0;
 }
