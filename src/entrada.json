@@ -1,8 +1,8 @@
 {
   "codificacao": "real",
-  "tamPop": 50,
+  "tamPop": 30,
   "execucoes": 5,
-  "geracoes": 300,
+  "geracoes": 200,
   "selecao": 1,
   "crossover": "BLX",
   "tournament": 2,
