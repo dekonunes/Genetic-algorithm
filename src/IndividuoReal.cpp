@@ -34,19 +34,17 @@ double IndividuoReal::calculoFitness() {
 	/*for (int var = 0; var < this->genes.size() - 1; ++var) {
 	 this->fitness = 250.0 - (this->genes[var] * this->genes[var]);
 	 }*/
+	/*for (int var = 0; var < this->genes.size() - 1; ++var) {
+	 this->fitness = pow(cos(2 * (this->genes[var] * this->genes[var])) - 1.1, 2)
+	 + pow(sin(0.5 * this->genes[var]) - 1.2, 2)
+	 - pow(cos(2 * this->genes[var + 1] * this->genes[var + 1]) - 1.1, 2)
+	 + pow(sin(0.5 * this->genes[var + 1] * this->genes[var + 1]) - 1.2, 2);
+	 }*/
 	for (int var = 0; var < this->genes.size() - 1; ++var) {
-		this->fitness = 1000.0
-				- pow(
-						this->genes[var] * this->genes[var]
-								+ this->genes[var + 1] * this->genes[var + 1], 0.25)
-						* (pow(
-								sin(
-										50.0
-												* pow(
-														this->genes[var] * this->genes[var]
-																+ this->genes[var + 1]
-																		* this->genes[var + 1],
-														0.1)), 2) + 1);
+		this->fitness = pow(cos((double) (2 * this->genes[var] * this->genes[var])) - 0.11e1, 0.2e1)
+				+ pow(sin(0.5e0 * (double) this->genes[var]) - 0.12e1, 0.2e1)
+				- pow(cos((double) (2 * this->genes[var + 1] * this->genes[var + 1])) - 0.11e1,
+						0.2e1) + pow(sin(0.5e0 * (double) this->genes[var + 1]) - 0.12e1, 0.2e1);
 	}
 	if (this->fitness < 0)
 		this->fitness = 0;
@@ -55,14 +53,28 @@ double IndividuoReal::calculoFitness() {
 }
 
 double IndividuoReal::calculoFucaoObjetivo() {
+	/*for (int var = 0; var < this->genes.size() - 1; ++var) {
+	 this->funcaoObjetivo = (this->genes[var] * this->genes[var]);
+	 }*/
+	/*for (int var = 0; var < this->genes.size() - 1; ++var) {
+	 this->funcaoObjetivo = pow(cos(2 * (this->genes[var] * this->genes[var])) - 1.1, 2)
+	 + pow(sin(0.5 * this->genes[var]) - 1.2, 2)
+	 - pow(cos(2 * this->genes[var + 1] * this->genes[var + 1]) - 1.1, 2)
+	 + pow(sin(0.5 * this->genes[var + 1] * this->genes[var + 1]) - 1.2, 2);
+
+	 }*/
 	for (int var = 0; var < this->genes.size() - 1; ++var) {
-		this->funcaoObjetivo = (this->genes[var] * this->genes[var]);
+		this->funcaoObjetivo = pow(cos((double) (2 * this->genes[var] * this->genes[var])) - 0.11e1,
+				0.2e1) + pow(sin(0.5e0 * (double) this->genes[var]) - 0.12e1, 0.2e1)
+				- pow(cos((double) (2 * this->genes[var + 1] * this->genes[var + 1])) - 0.11e1,
+						0.2e1) + pow(sin(0.5e0 * (double) this->genes[var + 1]) - 0.12e1, 0.2e1);
 	}
 	/*for (int var = 0; var < this->genes.size()-1; ++var) {
 	 this->funcaoObjetivo = pow(pow(this->genes[var], 2) + pow(this->genes[var + 1], 2), 0.25)
 	 * (pow(sin (50.0 * pow(this->genes[var] + this->genes[var + 1],(double) 0.1)), 2)
 	 + 1);
 	 }*/
+
 	return this->funcaoObjetivo;
 }
 
