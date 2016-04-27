@@ -21,10 +21,9 @@ int main() {
 
 	Gnuplot gp;
 	double mediaFITCadaGeracao = 0;
-	vector<double> vectorPlotAuxFO, vectorPlotFO, vectorPlotAuxFIT, vectorPlotFIT, bestInd;
-	vector<vector<double>> vectorPlotGeracoesFO, vectorPlotGeracoesFIT;
 	int geracoes = entrada["geracoes"];
 	int execucoes = entrada["execucoes"];
+	vector<double> vectorPlotFIT(geracoes, 0);
 	for (int execucoes = 0; execucoes < entrada["execucoes"]; ++execucoes) {
 		if (entrada["codificacao"] == "binaria") {
 			vector<pair<int, int>> genes;
@@ -62,7 +61,7 @@ int main() {
 			PopulacaoReal newPop;
 			int aux;
 
-			for (int i = 0; i < entrada["geracoes"]; ++i) {
+			for (int i = 0; i < geracoes; ++i) {
 				pop.mutacaoPopulacao();
 				aux = entrada["selecao"];
 				switch (aux) {
@@ -80,36 +79,23 @@ int main() {
 
 				if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
 					ind = pop.getBestIndividuo(); //best indiv ever
-					auxGenes = ind.getGenes();
-					cout << auxGenes.at(0) << "   " << auxGenes.at(1) << endl;
-					cout << ind.getFuncaoObjetivo() << endl;
+					//cout << ind.getFuncaoObjetivo() << endl;
 				}
-				/*ind = pop.getBestIndividuo();
-				 bestInd.push_back(ind.getFuncaoObjetivo());
-				 vectorPlotAuxFO.push_back(ind.getFuncaoObjetivo());
-				 for (int var = 0; var < pop.getQtdIndividuos(); ++var) {
-				 ind = pop.getIndividuo(var);
-				 mediaFITCadaGeracao += ind.getFitness();
-				 }*/
+				ind = pop.getBestIndividuo();
+
+				vectorPlotFIT.at(i) += ind.getFitness();
 			}
-			vectorPlotFIT.push_back(mediaFITCadaGeracao / geracoes);
 			mediaFITCadaGeracao = 0;
-			vectorPlotGeracoesFO.push_back(vectorPlotAuxFO);
 		}
 	}
-	/*double aux = 0;
+	double aux = 0;
+	for (int var = 0; var < geracoes; var++) {
+		vectorPlotFIT.at(var) /= execucoes;
+		//cout << vectorPlotFIT.at(var) << endl;
+	}
 
-	 for (int var = 0; var < entrada["geracoes"]; ++var) {
-	 for (int execucoes = 0; execucoes < entrada["execucoes"]; ++execucoes) {
-	 aux += vectorPlotGeracoesFO[execucoes].at(var);
-	 }
-	 aux = aux / execucoes;
-	 vectorPlotFO.push_back(aux);
-	 aux = 0;
-	 }
-
-	 gp << "plot" << gp.file1d(vectorPlotFO)
-	 << "title 'Media Geracoes' with lines linecolor rgb 'red' ," << gp.file1d(bestInd) <<"title 'Melhor execucoes' with lines linecolor rgb 'blue'" << endl;
-	 */
+	gp << "plot" << gp.file1d(vectorPlotFIT)
+			<< "title 'Media Geracoes' with lines linecolor rgb 'red'" << endl;
+	//gp << "plot" << gp.file1d(vectorPlotFIT) << endl;
 	return 0;
 }

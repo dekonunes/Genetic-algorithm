@@ -72,6 +72,7 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossover(int individuo1
 		newIndividuo1.setGenes(genesInd1);
 		newIndividuo2.setGenes(genesInd2);
 	}
+
 	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
 
 	return newIndividuosCrossover;
@@ -222,7 +223,8 @@ const PopulacaoReal PopulacaoReal::rollet() {
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
-	newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
+	if (this->eletismo == true)
+		newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
 	return newPop;
 }
 
@@ -266,7 +268,8 @@ const PopulacaoReal PopulacaoReal::tournament(int k) {
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
-	newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
+	if (this->eletismo == true)
+		newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
 	return newPop;
 }
 

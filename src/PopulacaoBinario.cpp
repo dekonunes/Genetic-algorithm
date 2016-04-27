@@ -136,8 +136,8 @@ const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossoverUnifor
 		newIndividuo1.setCromossomo(cromossomoNewInviduio1);
 		newIndividuo2.setCromossomo(cromossomoNewInviduio2);
 	}
-	if (this->eletismo == true)
-		newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
+
+	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
 
 	return newIndividuosCrossover;
 }
@@ -200,7 +200,8 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
-	newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
+	if (this->eletismo == true)
+		newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
 	return newPop;
 }
 
