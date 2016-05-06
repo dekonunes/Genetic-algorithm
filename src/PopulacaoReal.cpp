@@ -58,7 +58,7 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossover(int individuo1
 	vector<double> genesInd1 = this->populacao[individuo1].getGenes(), genesInd2 =
 			this->populacao[individuo2].getGenes();
 
-	if (this->chanceCrossover > a) {
+	if (this->chanceCrossover >= a) {
 		static uniform_int_distribution<int> numRandon(0, this->genesInicial.size() - 1);
 		a = numRandon(mt);
 		for (var = 0; var < a; ++var) {
@@ -182,6 +182,7 @@ const PopulacaoReal PopulacaoReal::rollet() {
 	static mt19937 mt(time(NULL));
 	pair<IndividuoReal, IndividuoReal> newIndivuos;
 	PopulacaoReal newPop;
+	newPop.populacao.clear();
 	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
 	double valorTotalFitness = 0.0;
 	double valorAcumuladoFitness = 0.0;
@@ -202,7 +203,6 @@ const PopulacaoReal PopulacaoReal::rollet() {
 			valorAcumuladoFitness = 0;
 			individuoParaCross[loop] = var;
 		}
-		//cout << this->tipoCrossover << endl;
 		switch (this->tipoCrossover) {
 		case 1:
 			newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
@@ -274,7 +274,7 @@ const PopulacaoReal PopulacaoReal::tournament(int k) {
 }
 
 int PopulacaoReal::getQtdIndividuos() const {
-	return this->populacao.size();
+	return this->populacao.size()/2;
 }
 
 void PopulacaoReal::mutacaoPopulacao() {

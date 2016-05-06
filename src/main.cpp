@@ -11,6 +11,8 @@
 using namespace std;
 using json = nlohmann::json;
 
+double calculoMediaIndv(PopulacaoReal);
+
 int main() {
 	ifstream texto("entrada.json");
 
@@ -20,10 +22,10 @@ int main() {
 	auto entrada = json::parse(buffer.str());
 
 	Gnuplot gp;
-	double mediaFITCadaGeracao = 0;
 	int geracoes = entrada["geracoes"];
 	int execucoes = entrada["execucoes"];
 	vector<double> vectorPlotFIT(geracoes, 0);
+	vector<double> vectorPlotMediaFIT(geracoes, 0);
 	for (int execucoes = 0; execucoes < entrada["execucoes"]; ++execucoes) {
 		if (entrada["codificacao"] == "binaria") {
 			vector<pair<int, int>> genes;
@@ -52,6 +54,7 @@ int main() {
 				}
 			}
 			cout << ind.getFuncaoObjetivo() << endl;
+			pop.print_populacao();
 		}
 		if (entrada["codificacao"] == "real") {
 			vector<pair<double, double>> genes;
@@ -62,7 +65,7 @@ int main() {
 			int aux;
 
 			for (int i = 0; i < geracoes; ++i) {
-				pop.mutacaoPopulacao();
+
 				aux = entrada["selecao"];
 				switch (aux) {
 				case 1:
@@ -74,28 +77,53 @@ int main() {
 				default:
 					break;
 				}
+				ind = pop.getIndividuo(0);
+				cout << ind.getFuncaoObjetivo() << "  ";
+				ind = newPop.getIndividuo(0);
+				cout << ind.getFuncaoObjetivo() << endl;
 
 				pop.setPopulacao(newPop.getPopulacao());
+				//pop.mutacaoPopulacao();
+				/*if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
+				 ind = pop.getBestIndividuo(); //best indiv ever
 
-				if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
-					ind = pop.getBestIndividuo(); //best indiv ever
-					//cout << ind.getFuncaoObjetivo() << endl;
-				}
+				 }*/
 				ind = pop.getBestIndividuo();
-
+				//cout << "---" <<ind.getFuncaoObjetivo() << endl;
 				vectorPlotFIT.at(i) += ind.getFitness();
+
+				vectorPlotMediaFIT.at(i) += calculoMediaIndv(pop);
+				//cout << calculoMediaIndv(pop) << endl;
+
 			}
-			mediaFITCadaGeracao = 0;
 		}
+
 	}
+
 	double aux = 0;
 	for (int var = 0; var < geracoes; var++) {
 		vectorPlotFIT.at(var) /= execucoes;
+		vectorPlotMediaFIT.at(var) /= execucoes;
 		//cout << vectorPlotFIT.at(var) << endl;
+		//cout << vectorPlotMediaFIT.at(var) << endl;
 	}
+	//gp << "set yrange [0:6]\n";
+	gp << "plot" << gp.file1d(vectorPlotFIT) << "with lines title 'Média melhor ind',"
+			<< gp.file1d(vectorPlotMediaFIT) << "with lines title 'Media das medias'" << endl;
 
-	gp << "plot" << gp.file1d(vectorPlotFIT)
-			<< "title 'Media Geracoes' with lines linecolor rgb 'red'" << endl;
-	//gp << "plot" << gp.file1d(vectorPlotFIT) << endl;
 	return 0;
+}
+
+double calculoMediaIndv(PopulacaoReal pop) {
+	double valorTotal = 0;
+	int qtdIndiv = pop.getQtdIndividuos();
+	IndividuoReal ind;
+
+	for (int var = 0; var < qtdIndiv; ++var) {
+		ind = pop.getIndividuo(var);
+		valorTotal += ind.getFitness();
+		//cout << "===" << ind.getFitness() << "   " << valorTotal << "pop:" << qtdIndiv << endl;
+	}
+	//cout << "===" << ind.getFitness() << "   " << valorTotal << "pop:" << qtdIndiv << endl;
+	return valorTotal / qtdIndiv;
 }

@@ -1,14 +1,14 @@
 {
   "codificacao": "real",
-  "tamPop": 50,
+  "tamPop": 20,
   "execucoes": 3,
-  "geracoes": 2000,
+  "geracoes": 200,
   "selecao": 1,
   "crossover": "padrao",
-  "tournament": 2,
-  "chanceCrossover": 95,
+  "tournament": 3,
+  "chanceCrossover": 90,
   "chanceMutacao": 5,
-  "qtdVariaveis": 5,
+  "qtdVariaveis": 10,
   "variaveis": [
     {
       "min": -20,
