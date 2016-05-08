@@ -78,17 +78,14 @@ double IndividuoBinario::calculoFitness() {
 		penalidade = 0;
 	else {
 		penalidade = (double) (qtdDisco - 120) / (double) maxExtrapolaFunc;
-		cout << "Valor de A: " << A << " Valor de B:" << B << endl;
-		cout << "valor penalidade: " << penalidade << endl;
+		//cout << "Valor de A: " << A << " Valor de B:" << B << endl;
+		//cout << "valor penalidade: " << penalidade << endl;
 	}
 
-	aux = calculoFucaoObjetivo() / (double) maxExtrapolaFO + (r * penalidade);
+	this->fitness = calculoFucaoObjetivo() / (double) maxExtrapolaFO + (r * penalidade);
 
-	if (aux < 0)
+	if (this->fitness < 0)
 		this->fitness = 0;
-	else
-		this->fitness = aux;
-
 	return this->fitness;
 }
 

@@ -147,6 +147,7 @@ const PopulacaoBinario PopulacaoBinario::tournament(int k) {
 	pair<IndividuoBinario, IndividuoBinario> newIndivuos;
 	IndividuoBinario indRand, indAux;
 	PopulacaoBinario newPop;
+	newPop.populacao.clear();
 	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
 
 	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
@@ -176,6 +177,7 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 	static mt19937 mt(time(NULL));
 	pair<IndividuoBinario, IndividuoBinario> newIndivuos;
 	PopulacaoBinario newPop;
+	newPop.populacao.clear();
 	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
 	double valorTotalFitness = 0.0;
 	double valorAcumuladoFitness = 0.0;

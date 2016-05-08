@@ -11,9 +11,11 @@
 using namespace std;
 using json = nlohmann::json;
 
-double calculoMediaIndv(PopulacaoReal);
+double calculoMediaIndvReal(PopulacaoReal);
+double calculoMediaIndvBinario(PopulacaoBinario);
 double desvioPadrao(PopulacaoReal pop, double media, int execucoes);
-void plot(vector<double>, vector<double>, int, int);
+void plotMedias(vector<double>, vector<double>, int, int);
+void plotDiversidade(vector<double>);
 void escreverArquivo(vector<double>);
 
 int main() {
@@ -31,7 +33,7 @@ int main() {
 	vector<double> vectorPlotMediaFIT(geracoes, 0);
 	vector<double> vectorPlotDiversidade;
 	for (int execucoes = 0; execucoes < entrada["execucoes"]; ++execucoes) {
-		if (entrada["codificacao"] == "binaria") {
+		if (entrada["codificacao"] == "binario") {
 			vector<pair<int, int>> genes;
 			pair<int, int> auxGenes;
 			IndividuoBinario ind;
@@ -52,13 +54,27 @@ int main() {
 					break;
 				}
 				pop.setPopulacao(newPop.getPopulacao());
-
-				if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
-					ind = pop.getBestIndividuo(); //best indiv ever
+				pop.mutacaoPopulacao();
+				ind = pop.getBestIndividuo();
+				vectorPlotFIT.at(i) += ind.getFitness();
+				vectorPlotMediaFIT.at(i) += calculoMediaIndvBinario(pop);
+				eucli = 0;
+				for (int x = 0; x < entrada["tamPop"]; ++x) {
+					ind = pop.getIndividuo(x);
+					fitnessInd1 = ind.getFitness();
+					for (int y = x + 1; y < entrada["tamPop"]; ++y) {
+						ind = pop.getIndividuo(y);
+						fitnessInd2 = ind.getFitness();
+						//cout << fitnessInd1 << "++" << fitnessInd2 << endl;
+						//cout << distanciaEuclid(fitnessInd1, fitnessInd2) << endl;
+						eucli += distanciaEuclid(fitnessInd1, fitnessInd2);
+					}
 				}
+				//cout << eucli << endl;
+				vectorPlotDiversidade.push_back(eucli);
 			}
 			cout << ind.getFuncaoObjetivo() << endl;
-			pop.print_populacao();
+			//pop.print_populacao();
 		}
 		if (entrada["codificacao"] == "real") {
 			vector<pair<double, double>> genes;
@@ -84,12 +100,12 @@ int main() {
 				pop.mutacaoPopulacao();
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += ind.getFitness();
-				vectorPlotMediaFIT.at(i) += calculoMediaIndv(pop);
+				vectorPlotMediaFIT.at(i) += calculoMediaIndvReal(pop);
 				eucli = 0;
 				for (int x = 0; x < entrada["tamPop"]; ++x) {
 					ind = pop.getIndividuo(x);
 					fitnessInd1 = ind.getFitness();
-					for (int y = x+1; y < entrada["tamPop"] ; ++y) {
+					for (int y = x + 1; y < entrada["tamPop"]; ++y) {
 						ind = pop.getIndividuo(y);
 						fitnessInd2 = ind.getFitness();
 						//cout << fitnessInd1 << "++" << fitnessInd2 << endl;
@@ -103,17 +119,14 @@ int main() {
 			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
 					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
 			cout << "Quantidade de dimensões: " << entrada["qtdVariaveis"] << endl;
-			cout << "Desvio: " << desvioPadrao(pop, calculoMediaIndv(pop), entrada["execucoes"])
+			cout << "Desvio: " << desvioPadrao(pop, calculoMediaIndvReal(pop), entrada["execucoes"])
 					<< endl;
 			cout << "FO: " << ind.getFuncaoObjetivo() << " Execução: " << execucoes << endl << endl;
 		}
 
 	}
-	//plot(vectorPlotFIT, vectorPlotMediaFIT, geracoes, entrada["execucoes"]);
-	Gnuplot gp;
-	gp << "plot" << gp.file1d(vectorPlotDiversidade) << "with lines title 'Média melhor ind',"
-			<< gp.file1d(vectorPlotMediaFIT) << "with lines title 'Média das médias'" << endl;
-
+	plotMedias(vectorPlotFIT, vectorPlotMediaFIT, geracoes, entrada["execucoes"]);
+	plotDiversidade(vectorPlotDiversidade);
 	//escreverArquivo(vectorPlotFIT);
 	return 0;
 }
@@ -127,7 +140,13 @@ void escreverArquivo(vector<double> vector) {
 	in.close();
 }
 
-void plot(vector<double> vectorPlotFIT, vector<double> vectorPlotMediaFIT, int geracoes,
+void plotDiversidade(vector<double> vectorPlotDiversidade) {
+	Gnuplot gp;
+	gp << "plot" << gp.file1d(vectorPlotDiversidade) << "with lines title 'Diversidade'" << endl;
+
+}
+
+void plotMedias(vector<double> vectorPlotFIT, vector<double> vectorPlotMediaFIT, int geracoes,
 		int execucoes) {
 	Gnuplot gp;
 	double aux = 0;
@@ -153,16 +172,24 @@ double desvioPadrao(PopulacaoReal pop, double media, int execucoes) {
 	return sqrt(valorDesvio / execucoes);
 }
 
-double calculoMediaIndv(PopulacaoReal pop) {
+double calculoMediaIndvBinario(PopulacaoBinario pop) {
 	double valorTotal = 0;
 	int qtdIndiv = pop.getQtdIndividuos();
-	IndividuoReal ind;
-
+	IndividuoBinario ind;
 	for (int var = 0; var < qtdIndiv; ++var) {
 		ind = pop.getIndividuo(var);
 		valorTotal += ind.getFitness();
-		//cout << "===" << ind.getFitness() << "   " << valorTotal << "pop:" << qtdIndiv << endl;
 	}
-	//cout << "===" << ind.getFitness() << "   " << valorTotal << "pop:" << qtdIndiv << endl;
+	return valorTotal / qtdIndiv;
+}
+
+double calculoMediaIndvReal(PopulacaoReal pop) {
+	double valorTotal = 0;
+	int qtdIndiv = pop.getQtdIndividuos();
+	IndividuoReal ind;
+	for (int var = 0; var < qtdIndiv; ++var) {
+		ind = pop.getIndividuo(var);
+		valorTotal += ind.getFitness();
+	}
 	return valorTotal / qtdIndiv;
 }
