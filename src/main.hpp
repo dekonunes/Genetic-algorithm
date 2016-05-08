@@ -15,6 +15,7 @@
 #include "gnuplot-iostream/gnuplot-iostream.h"
 #include "PopulacaoReal.hpp"
 #include "PopulacaoBinario.hpp"
+#include "Diversidade.hpp"
 #include "json.hpp"
 
 

@@ -219,7 +219,6 @@ const PopulacaoReal PopulacaoReal::rollet() {
 		default:
 			break;
 		}
-
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
@@ -233,6 +232,7 @@ const PopulacaoReal PopulacaoReal::tournament(int k) {
 	pair<IndividuoReal, IndividuoReal> newIndivuos;
 	IndividuoReal indRand, indAux;
 	PopulacaoReal newPop;
+	newPop.populacao.clear();
 	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
 
 	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
@@ -274,7 +274,7 @@ const PopulacaoReal PopulacaoReal::tournament(int k) {
 }
 
 int PopulacaoReal::getQtdIndividuos() const {
-	return this->populacao.size()/2;
+	return this->populacao.size();
 }
 
 void PopulacaoReal::mutacaoPopulacao() {

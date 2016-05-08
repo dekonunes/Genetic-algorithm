@@ -12,6 +12,9 @@ using namespace std;
 using json = nlohmann::json;
 
 double calculoMediaIndv(PopulacaoReal);
+double desvioPadrao(PopulacaoReal pop, double media, int execucoes);
+void plot(vector<double>, vector<double>, int, int);
+void escreverArquivo(vector<double>);
 
 int main() {
 	ifstream texto("entrada.json");
@@ -21,11 +24,12 @@ int main() {
 
 	auto entrada = json::parse(buffer.str());
 
-	Gnuplot gp;
 	int geracoes = entrada["geracoes"];
-	int execucoes = entrada["execucoes"];
+	int execucoes;
+	double fitnessInd1, fitnessInd2, eucli;
 	vector<double> vectorPlotFIT(geracoes, 0);
 	vector<double> vectorPlotMediaFIT(geracoes, 0);
+	vector<double> vectorPlotDiversidade;
 	for (int execucoes = 0; execucoes < entrada["execucoes"]; ++execucoes) {
 		if (entrada["codificacao"] == "binaria") {
 			vector<pair<int, int>> genes;
@@ -63,7 +67,6 @@ int main() {
 			PopulacaoReal pop;
 			PopulacaoReal newPop;
 			int aux;
-
 			for (int i = 0; i < geracoes; ++i) {
 
 				aux = entrada["selecao"];
@@ -77,41 +80,77 @@ int main() {
 				default:
 					break;
 				}
-				ind = pop.getIndividuo(0);
-				cout << ind.getFuncaoObjetivo() << "  ";
-				ind = newPop.getIndividuo(0);
-				cout << ind.getFuncaoObjetivo() << endl;
-
 				pop.setPopulacao(newPop.getPopulacao());
-				//pop.mutacaoPopulacao();
-				/*if (pop.getBestIndividuo().getFitness() > ind.getFitness()) {
-				 ind = pop.getBestIndividuo(); //best indiv ever
-
-				 }*/
+				pop.mutacaoPopulacao();
 				ind = pop.getBestIndividuo();
-				//cout << "---" <<ind.getFuncaoObjetivo() << endl;
 				vectorPlotFIT.at(i) += ind.getFitness();
-
 				vectorPlotMediaFIT.at(i) += calculoMediaIndv(pop);
-				//cout << calculoMediaIndv(pop) << endl;
-
+				eucli = 0;
+				for (int x = 0; x < entrada["tamPop"]; ++x) {
+					ind = pop.getIndividuo(x);
+					fitnessInd1 = ind.getFitness();
+					for (int y = x+1; y < entrada["tamPop"] ; ++y) {
+						ind = pop.getIndividuo(y);
+						fitnessInd2 = ind.getFitness();
+						//cout << fitnessInd1 << "++" << fitnessInd2 << endl;
+						cout << distanciaEuclid(fitnessInd1, fitnessInd2) << endl;
+						eucli += distanciaEuclid(fitnessInd1, fitnessInd2);
+					}
+				}
+				//cout << eucli << endl;
+				vectorPlotDiversidade.push_back(eucli);
 			}
+			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
+					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
+			cout << "Quantidade de dimensões: " << entrada["qtdVariaveis"] << endl;
+			cout << "Desvio: " << desvioPadrao(pop, calculoMediaIndv(pop), entrada["execucoes"])
+					<< endl;
+			cout << "FO: " << ind.getFuncaoObjetivo() << " Execução: " << execucoes << endl << endl;
 		}
 
 	}
+	//plot(vectorPlotFIT, vectorPlotMediaFIT, geracoes, entrada["execucoes"]);
+	Gnuplot gp;
+	gp << "plot" << gp.file1d(vectorPlotDiversidade) << "with lines title 'Média melhor ind',"
+			<< gp.file1d(vectorPlotMediaFIT) << "with lines title 'Média das médias'" << endl;
 
+	//escreverArquivo(vectorPlotFIT);
+	return 0;
+}
+
+void escreverArquivo(vector<double> vector) {
+	ofstream in;
+	in.open("a.txt");
+	for (int var = 0; var < vector.size(); ++var) {
+		in << vector.at(var) << endl;
+	}
+	in.close();
+}
+
+void plot(vector<double> vectorPlotFIT, vector<double> vectorPlotMediaFIT, int geracoes,
+		int execucoes) {
+	Gnuplot gp;
 	double aux = 0;
 	for (int var = 0; var < geracoes; var++) {
 		vectorPlotFIT.at(var) /= execucoes;
 		vectorPlotMediaFIT.at(var) /= execucoes;
-		//cout << vectorPlotFIT.at(var) << endl;
-		//cout << vectorPlotMediaFIT.at(var) << endl;
 	}
-	//gp << "set yrange [0:6]\n";
+	//gp << "set yrange [3985:4005]\n";
 	gp << "plot" << gp.file1d(vectorPlotFIT) << "with lines title 'Média melhor ind',"
-			<< gp.file1d(vectorPlotMediaFIT) << "with lines title 'Media das medias'" << endl;
+			<< gp.file1d(vectorPlotMediaFIT) << "with lines title 'Média das médias'" << endl;
 
-	return 0;
+}
+
+double desvioPadrao(PopulacaoReal pop, double media, int execucoes) {
+	double valorDesvio = 0;
+	int qtdIndiv = pop.getQtdIndividuos();
+	IndividuoReal ind;
+
+	for (int var = 0; var < qtdIndiv; ++var) {
+		ind = pop.getIndividuo(var);
+		valorDesvio += pow((ind.getFitness() - media), 2);
+	}
+	return sqrt(valorDesvio / execucoes);
 }
 
 double calculoMediaIndv(PopulacaoReal pop) {
