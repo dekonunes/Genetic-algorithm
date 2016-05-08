@@ -1,8 +1,8 @@
 {
   "codificacao": "binario",
-  "tamPop": 20,
-  "execucoes": 3,
-  "geracoes": 1000,
+  "tamPop": 50,
+  "execucoes": 1,
+  "geracoes": 200,
   "selecao": 1,
   "crossover": "padrao",
   "tournament": 3,

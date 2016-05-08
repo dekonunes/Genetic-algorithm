@@ -106,7 +106,7 @@ double IndividuoBinario::calculoFucaoObjetivo() {
 }
 
 void IndividuoBinario::mutacao() {
-	int numRand, probabilidade = 1;
+	int numRand;
 	static mt19937 mt(time(NULL));
 	string oldCromossomo = getCromossomo(), newCromossomo = getCromossomo();
 
@@ -116,7 +116,7 @@ void IndividuoBinario::mutacao() {
 
 		numRand = numRandom(mt);
 
-		if (numRand < probabilidade) {
+		if (numRand < this->probMutacao) {
 			if (this->cromossomo[loopCromossomos] == '1') {
 				this->cromossomo[loopCromossomos] = '0';
 			} else
