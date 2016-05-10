@@ -17,6 +17,7 @@ double desvioPadrao(PopulacaoReal pop, double media, int execucoes);
 void plotMedias(vector<double>, vector<double>, int, int);
 void plotDiversidade(vector<double>);
 void escreverArquivo(vector<double>);
+double distanciaBinario(PopulacaoBinario, int);
 
 int main() {
 	ifstream texto("entrada.json");
@@ -28,7 +29,6 @@ int main() {
 
 	int geracoes = entrada["geracoes"];
 	int execucoes;
-	double fitnessInd1, fitnessInd2, eucli;
 	vector<double> vectorPlotFIT(geracoes, 0);
 	vector<double> vectorPlotMediaFIT(geracoes, 0);
 	vector<double> vectorPlotDiversidade;
@@ -54,24 +54,11 @@ int main() {
 					break;
 				}
 				pop.setPopulacao(newPop.getPopulacao());
-				pop.mutacaoPopulacao();
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += ind.getFitness();
 				vectorPlotMediaFIT.at(i) += calculoMediaIndvBinario(pop);
-				eucli = 0;
-				for (int x = 0; x < entrada["tamPop"]; ++x) {
-					ind = pop.getIndividuo(x);
-					fitnessInd1 = ind.getFitness();
-					for (int y = x + 1; y < entrada["tamPop"]; ++y) {
-						ind = pop.getIndividuo(y);
-						fitnessInd2 = ind.getFitness();
-						//cout << fitnessInd1 << "++" << fitnessInd2 << endl;
-						//cout << distanciaEuclid(fitnessInd1, fitnessInd2) << endl;
-						eucli += distanciaEuclid(fitnessInd1, fitnessInd2);
-					}
-				}
-				//cout << eucli << endl;
-				vectorPlotDiversidade.push_back(eucli);
+				vectorPlotDiversidade.push_back(distanciaBinario(pop,1));
+				pop.mutacaoPopulacao();
 			}
 			cout << ind.getFuncaoObjetivo() << endl;
 			//pop.print_populacao();
@@ -79,8 +66,8 @@ int main() {
 		if (entrada["codificacao"] == "real") {
 			vector<pair<double, double>> genes;
 			vector<double> auxGenes;
-			IndividuoReal ind;
 			PopulacaoReal pop;
+			IndividuoReal ind;
 			PopulacaoReal newPop;
 			int aux;
 			for (int i = 0; i < geracoes; ++i) {
@@ -101,20 +88,7 @@ int main() {
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += ind.getFitness();
 				vectorPlotMediaFIT.at(i) += calculoMediaIndvReal(pop);
-				eucli = 0;
-				for (int x = 0; x < entrada["tamPop"]; ++x) {
-					ind = pop.getIndividuo(x);
-					fitnessInd1 = ind.getFitness();
-					for (int y = x + 1; y < entrada["tamPop"]; ++y) {
-						ind = pop.getIndividuo(y);
-						fitnessInd2 = ind.getFitness();
-						//cout << fitnessInd1 << "++" << fitnessInd2 << endl;
-						cout << distanciaEuclid(fitnessInd1, fitnessInd2) << endl;
-						eucli += distanciaEuclid(fitnessInd1, fitnessInd2);
-					}
-				}
-				//cout << eucli << endl;
-				vectorPlotDiversidade.push_back(eucli);
+				//vectorPlotDiversidade.push_back(eucli);
 			}
 			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
 					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
@@ -129,6 +103,31 @@ int main() {
 	plotDiversidade(vectorPlotDiversidade);
 	//escreverArquivo(vectorPlotFIT);
 	return 0;
+}
+
+double distanciaBinario(PopulacaoBinario pop, int tipoDistancia) {
+	IndividuoBinario ind1,ind2;
+	double fitnessInd1, fitnessInd2, dist = 0;
+	for (int x = 0; x < pop.getQtdIndividuos(); ++x) {
+		ind1 = pop.getIndividuo(x);
+		fitnessInd1 = ind1.getFitness();
+		for (int y = x + 1; y < pop.getQtdIndividuos(); ++y) {
+			ind2 = pop.getIndividuo(y);
+			fitnessInd2 = ind2.getFitness();
+			switch (tipoDistancia) {
+			case 1:
+				dist += hamming(ind1.getCromossomo(), ind2.getCromossomo());
+				break;
+			case 2:
+				dist += euclidiana(fitnessInd1, fitnessInd2);
+				break;
+			default:
+				break;
+			}
+
+		}
+	}
+	return dist;
 }
 
 void escreverArquivo(vector<double> vector) {
@@ -154,7 +153,6 @@ void plotMedias(vector<double> vectorPlotFIT, vector<double> vectorPlotMediaFIT,
 		vectorPlotFIT.at(var) /= execucoes;
 		vectorPlotMediaFIT.at(var) /= execucoes;
 	}
-	//gp << "set yrange [3985:4005]\n";
 	gp << "plot" << gp.file1d(vectorPlotFIT) << "with lines title 'Média melhor ind',"
 			<< gp.file1d(vectorPlotMediaFIT) << "with lines title 'Média das médias'" << endl;
 

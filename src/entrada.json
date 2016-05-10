@@ -1,14 +1,14 @@
 {
   "codificacao": "binario",
-  "tamPop": 50,
+  "tamPop": 20,
   "execucoes": 1,
-  "geracoes": 200,
+  "geracoes": 2000,
   "selecao": 1,
   "crossover": "padrao",
   "tournament": 3,
   "chanceCrossover": 90,
   "chanceMutacao": 1,
-  "qtdVariaveis": 10,
+  "qtdVariaveis": 2,
   "variaveis": [
     {
       "min": 0,

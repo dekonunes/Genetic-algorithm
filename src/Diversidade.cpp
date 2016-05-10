@@ -9,13 +9,17 @@
 
 namespace std {
 
-void hamming() {
-
+double hamming(string ind1, string ind2) {
+	double hamm = 0;
+	for (int var = 0; var < ind1.size(); ++var) {
+		if (ind1[var] != ind2[var])
+			hamm++;
+	}
+	return hamm;
 }
 
-double distanciaEuclid(double x, double y) {
+double euclidiana(double x, double y) {
 	return sqrt(pow(x - y, 2));
 }
-
 
 } /* namespace std */

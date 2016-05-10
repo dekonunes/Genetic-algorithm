@@ -9,10 +9,12 @@
 #define SRC_DIVERSIDADE_HPP_
 
 #include <cmath>
+#include <iostream>
 
 namespace std {
 
-	double distanciaEuclid(double x, double y);
+	double euclidiana(double , double );
+	double hamming(string , string );
 
 } /* namespace std */
 
