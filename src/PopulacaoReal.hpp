@@ -49,7 +49,6 @@ private:
 	vector<pair<double, double>> genesInicial;
 	IndividuoReal bestIndividuo;
 	IndividuoReal worseIndividuo;
-	int C; //Para o calculo do fitness escalonado;
 	json entrada;
 };
 

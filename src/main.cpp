@@ -46,6 +46,10 @@ int main() {
 				aux = entrada["selecao"];
 				switch (aux) {
 				case 1:
+					if (entrada["escalonado"]) {
+						newPop = pop.rolletEscalonada();
+						pop.incrementaC();
+					}
 					newPop = pop.rollet();
 					break;
 				case 2:
@@ -93,7 +97,7 @@ int main() {
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += ind.getFitness();
 				vectorPlotMediaFIT.at(i) += calculoMediaIndvReal(pop);
-				vectorPlotDiversidade.push_back(distanciaReal(pop,1));
+				vectorPlotDiversidade.push_back(distanciaReal(pop, 1));
 			}
 			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
 					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;

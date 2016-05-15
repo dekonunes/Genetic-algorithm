@@ -15,7 +15,6 @@ PopulacaoReal::PopulacaoReal() {
 	this->qtdIndividuos = this->entrada["tamPop"];
 	this->chanceCrossover = this->entrada["chanceMutacao"];
 	this->eletismo = this->entrada["elitismo"];
-	this->escalonado = this->entrada["escalonado"];
 	this->C = 1.2;
 
 	for (int var = 0; var < this->qtdIndividuos; ++var)
@@ -76,6 +75,7 @@ double PopulacaoReal::calculoFitnessEscalonado(double fitness) {
 void PopulacaoReal::incrementaC() {
 	int geracoes = this->entrada["geracoes"];
 	this->C += 0.8 / geracoes;
+	cout << this->C << endl;
 }
 
 pair<double, double> PopulacaoReal::calculoEscalonadoMenor() {

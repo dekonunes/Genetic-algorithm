@@ -20,6 +20,11 @@ class PopulacaoBinario: public Populacao {
 public:
 	PopulacaoBinario();
 	virtual ~PopulacaoBinario();
+	double calculoFitnessEscalonado(double fitness);
+	void incrementaC();
+	pair<double, double> calculoEscalonadoMenor();
+	pair<double, double> calculoEscalonadoMaior();
+	double mediaFitness();
 	const vector<IndividuoBinario>& getPopulacao() const;
 	void setPopulacao(const vector<IndividuoBinario>& populacao);
 	void print_populacao();
@@ -31,6 +36,7 @@ public:
 	const pair<IndividuoBinario, IndividuoBinario> crossover(int, int);
 	const pair<IndividuoBinario, IndividuoBinario> crossoverUniforme(int, int);
 	const PopulacaoBinario rollet();
+	const PopulacaoBinario rolletEscalonada();
 	const PopulacaoBinario tournament(int k);
 	int getQtdIndividuos() const;
 	void mutacaoPopulacao();

@@ -14,7 +14,7 @@ protected:
 	int tipoCrossover;
 	bool eletismo;
 	int qtdIndividuos;
-	bool escalonado;
+	float C; //Para o calculo do fitness escalonado;
 };
 
 #endif /* POPULACAO_HPP_ */
