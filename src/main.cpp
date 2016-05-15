@@ -57,7 +57,7 @@ int main() {
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += ind.getFitness();
 				vectorPlotMediaFIT.at(i) += calculoMediaIndvBinario(pop);
-				vectorPlotDiversidade.push_back(distanciaBinario(pop,1));
+				vectorPlotDiversidade.push_back(distanciaBinario(pop, 1));
 				pop.mutacaoPopulacao();
 			}
 			cout << ind.getFuncaoObjetivo() << endl;
@@ -75,6 +75,10 @@ int main() {
 				aux = entrada["selecao"];
 				switch (aux) {
 				case 1:
+					if (entrada["escalonado"]) {
+						newPop = pop.rolletEscalonada();
+						pop.incrementaC();
+					}
 					newPop = pop.rollet();
 					break;
 				case 2:
@@ -100,13 +104,13 @@ int main() {
 
 	}
 	plotMedias(vectorPlotFIT, vectorPlotMediaFIT, geracoes, entrada["execucoes"]);
-	plotDiversidade(vectorPlotDiversidade);
+	//plotDiversidade(vectorPlotDiversidade);
 	//escreverArquivo(vectorPlotFIT);
 	return 0;
 }
 
 double distanciaBinario(PopulacaoBinario pop, int tipoDistancia) {
-	IndividuoBinario ind1,ind2;
+	IndividuoBinario ind1, ind2;
 	double fitnessInd1, fitnessInd2, dist = 0;
 	for (int x = 0; x < pop.getQtdIndividuos(); ++x) {
 		ind1 = pop.getIndividuo(x);

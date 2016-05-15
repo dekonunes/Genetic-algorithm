@@ -22,7 +22,13 @@ class PopulacaoReal: public Populacao {
 public:
 	PopulacaoReal();
 	virtual ~PopulacaoReal();
+	double calculoFitnessEscalonado(double);
+	void incrementaC();
+	pair<double, double> calculoEscalonadoMenor();
+	pair<double, double> calculoEscalonadoMaior();
+	double mediaFitness();
 	const PopulacaoReal rollet();
+	const PopulacaoReal rolletEscalonada();
 	const PopulacaoReal tournament(int k);
 	virtual const vector<IndividuoReal>& getPopulacao() const;
 	void setPopulacao(const vector<IndividuoReal>& populacao);
@@ -43,6 +49,7 @@ private:
 	vector<pair<double, double>> genesInicial;
 	IndividuoReal bestIndividuo;
 	IndividuoReal worseIndividuo;
+	int C; //Para o calculo do fitness escalonado;
 	json entrada;
 };
 

@@ -14,6 +14,7 @@ protected:
 	int tipoCrossover;
 	bool eletismo;
 	int qtdIndividuos;
+	bool escalonado;
 };
 
 #endif /* POPULACAO_HPP_ */
