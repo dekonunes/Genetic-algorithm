@@ -12,9 +12,9 @@
 #include <iostream>
 
 namespace std {
-
-	double euclidiana(double , double );
 	double hamming(string , string );
+	double euclidiana(double , double );
+	double euclidianaNormalizada(double , double );
 
 } /* namespace std */
 

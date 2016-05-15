@@ -22,4 +22,8 @@ double euclidiana(double x, double y) {
 	return sqrt(pow(x - y, 2));
 }
 
+double euclidianaNormalizada(double x, double y) {
+	return sqrt(pow(x - y, 2));
+}
+
 } /* namespace std */
