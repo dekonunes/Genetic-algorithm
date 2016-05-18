@@ -14,8 +14,8 @@ using json = nlohmann::json;
 double calculoMediaIndvReal(PopulacaoReal);
 double calculoMediaIndvBinario(PopulacaoBinario);
 double desvioPadrao(PopulacaoReal pop, double media, int execucoes);
-void plotMedias(vector<double>, vector<double>, int, int);
-void plotDiversidade(vector<double>);
+void plot(vector<double>, string);
+void plot(vector<double>, vector<double>, string, string);
 void escreverArquivo(vector<double>);
 double distanciaBinario(PopulacaoBinario, int);
 double distanciaReal(PopulacaoReal pop, int tipoDistancia);
@@ -108,8 +108,8 @@ int main() {
 		}
 
 	}
-	plotMedias(vectorPlotFIT, vectorPlotMediaFIT, geracoes, entrada["execucoes"]);
-	plotDiversidade(vectorPlotDiversidade);
+	plot(vectorPlotFIT, vectorPlotMediaFIT, "Média do melhor ind","Média das médias");
+	plot(vectorPlotDiversidade, "diversidade");
 	//escreverArquivo(vectorPlotFIT);
 	return 0;
 }
@@ -173,21 +173,17 @@ void escreverArquivo(vector<double> vector) {
 	in.close();
 }
 
-void plotDiversidade(vector<double> vectorPlotDiversidade) {
+void plot(vector<double> vectorPlot, string titulo) {
 	Gnuplot gp;
-	gp << "plot" << gp.file1d(vectorPlotDiversidade) << "with lines title 'Diversidade'" << endl;
+	gp << "plot" << gp.file1d(vectorPlot) << "with lines title '" << titulo << "'" << endl;
 
 }
 
-void plotMedias(vector<double> vectorPlotFIT, vector<double> vectorPlotMediaFIT, int geracoes,
-		int execucoes) {
+void plot(vector<double> vectorPlot1, vector<double> vectorPlot2, string titulo1,
+		string titulo2) {
 	Gnuplot gp;
-	/*for (int var = 0; var < geracoes; var++) {
-	 vectorPlotFIT.at(var) /= execucoes;
-	 vectorPlotMediaFIT.at(var) /= execucoes;
-	 }*/
-	gp << "plot" << gp.file1d(vectorPlotFIT) << "with lines title 'Média melhor ind',"
-			<< gp.file1d(vectorPlotMediaFIT) << "with lines title 'Média das médias'" << endl;
+	gp << "plot" << gp.file1d(vectorPlot1) << "with lines title '" << titulo1 << "',"
+			<< gp.file1d(vectorPlot2) << "with lines title '" << titulo2 << "'" << endl;
 
 }
 

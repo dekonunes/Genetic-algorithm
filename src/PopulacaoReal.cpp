@@ -68,7 +68,6 @@ double PopulacaoReal::calculoFitnessEscalonado(double fitness) {
 	if (fitnessEscalonado < 0)
 		fitnessEscalonado = 0;
 
-	//cout << "===" << this->funcaoObjetivo << endl;
 	return fitnessEscalonado;
 }
 

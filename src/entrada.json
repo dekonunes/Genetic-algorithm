@@ -62,5 +62,6 @@
     }
   ],
   "elitismo": true,
-  "escalonado": true
+  "escalonado": true,
+  "GAP": true
 }
