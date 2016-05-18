@@ -15,6 +15,8 @@ PopulacaoBinario::PopulacaoBinario() {
 	this->qtdIndividuos = this->entrada["tamPop"];
 	this->chanceCrossover = this->entrada["chanceMutacao"];
 	this->eletismo = this->entrada["elitismo"];
+	this->k = this->entrada["tournament"];
+	this->fitnessEscalonado = this->entrada["escalonado"];
 	this->C = 1.2;
 
 	for (int var = 0; var < this->qtdIndividuos; ++var)
@@ -50,8 +52,8 @@ double PopulacaoBinario::calculoFitnessEscalonado(double fitness) {
 
 void PopulacaoBinario::incrementaC() {
 	int geracoes = this->entrada["geracoes"];
+	geracoes = geracoes * 0.9;
 	this->C += 0.8 / geracoes;
-	cout << this->C << endl;
 }
 
 pair<double, double> PopulacaoBinario::calculoEscalonadoMenor() {
@@ -211,7 +213,7 @@ const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossoverUnifor
 	return newIndividuosCrossover;
 }
 
-const PopulacaoBinario PopulacaoBinario::tournament(int k) {
+const PopulacaoBinario PopulacaoBinario::tournament() {
 	static mt19937 mt(time(NULL));
 	pair<IndividuoBinario, IndividuoBinario> newIndivuos;
 	IndividuoBinario indRand, indAux;
@@ -224,7 +226,7 @@ const PopulacaoBinario PopulacaoBinario::tournament(int k) {
 			static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
 			indvDoTournament = numeroRandom(mt);
 			indAux = this->populacao[indvDoTournament]; //Já encontra o primeiro indv aleatório, já o primeiro k
-			for (int var = 0; var < k - 1; ++var) { //k-1 pois o primeiro individuo veio da linha acima
+			for (int var = 0; var < this->k - 1; ++var) { //k-1 pois o primeiro individuo veio da linha acima
 				static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
 				indvDoTournament = numeroRandom(mt);
 				indRand = this->populacao[indvDoTournament];
@@ -251,50 +253,22 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 	double valorTotalFitness = 0.0;
 	double valorAcumuladoFitness = 0.0;
 	for (var = 0; var < this->qtdIndividuos; ++var) {
-		valorTotalFitness += this->populacao[var].getFitness();
+		if (this->fitnessEscalonado)
+			valorTotalFitness += calculoFitnessEscalonado(this->populacao[var].getFitness());
+		else
+			valorTotalFitness += this->populacao[var].getFitness();
 	}
 	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
 		for (int loop = 0; loop < 2; ++loop) {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
 			valorDaRollet = numeroRandom(mt);
 			for (var = 0; var < this->qtdIndividuos - 1; ++var) {
-
-				valorAcumuladoFitness += ((double) this->populacao[var].getFitness()
-						/ valorTotalFitness) * 100;
-				if (valorDaRollet < valorAcumuladoFitness)
-					break;
-			}
-			valorAcumuladoFitness = 0;
-			individuoParaCross[loop] = var;
-		}
-		newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
-		newPop.insertIndividuo(newIndivuos.first);
-		newPop.insertIndividuo(newIndivuos.second);
-	}
-	if (this->eletismo == true)
-		newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
-	return newPop;
-}
-
-const PopulacaoBinario PopulacaoBinario::rolletEscalonada() {
-	static mt19937 mt(time(NULL));
-	pair<IndividuoBinario, IndividuoBinario> newIndivuos;
-	PopulacaoBinario newPop;
-	newPop.populacao.clear();
-	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
-	double valorTotalFitness = 0.0;
-	double valorAcumuladoFitness = 0.0;
-	for (var = 0; var < this->qtdIndividuos; ++var) {
-		valorTotalFitness += calculoFitnessEscalonado(this->populacao[var].getFitness());
-	}
-	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
-		for (int loop = 0; loop < 2; ++loop) {
-			static uniform_int_distribution<int> numeroRandom(0, 100);
-			valorDaRollet = numeroRandom(mt);
-			for (var = 0; var < this->qtdIndividuos - 1; ++var) {
-
-				valorAcumuladoFitness += ((double) calculoFitnessEscalonado(this->populacao[var].getFitness())
-						/ valorTotalFitness) * 100;
+				if (this->fitnessEscalonado)
+					valorAcumuladoFitness += ((double) calculoFitnessEscalonado(
+							this->populacao[var].getFitness()) / valorTotalFitness) * 100;
+				else
+					valorAcumuladoFitness += ((double) this->populacao[var].getFitness()
+							/ valorTotalFitness) * 100;
 				if (valorDaRollet < valorAcumuladoFitness)
 					break;
 			}

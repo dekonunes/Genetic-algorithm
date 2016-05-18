@@ -1,7 +1,7 @@
 {
   "codificacao": "real",
   "tamPop": 20,
-  "execucoes": 3,
+  "execucoes": 1,
   "geracoes": 200,
   "selecao": 1,
   "crossover": "padrao",
@@ -63,5 +63,5 @@
   ],
   "elitismo": true,
   "escalonado": true,
-  "GAP": true
+  "GAP": 80
 }

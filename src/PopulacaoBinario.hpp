@@ -36,8 +36,7 @@ public:
 	const pair<IndividuoBinario, IndividuoBinario> crossover(int, int);
 	const pair<IndividuoBinario, IndividuoBinario> crossoverUniforme(int, int);
 	const PopulacaoBinario rollet();
-	const PopulacaoBinario rolletEscalonada();
-	const PopulacaoBinario tournament(int k);
+	const PopulacaoBinario tournament();
 	int getQtdIndividuos() const;
 	void mutacaoPopulacao();
 	void openJson();

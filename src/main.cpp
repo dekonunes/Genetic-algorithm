@@ -46,11 +46,8 @@ int main() {
 				aux = entrada["selecao"];
 				switch (aux) {
 				case 1:
-					if (entrada["escalonado"]) {
-						newPop = pop.rolletEscalonada();
-						if (i < geracoes * 0.9)
-							pop.incrementaC();
-					}
+					if (i < geracoes * 0.9)
+						pop.incrementaC();
 					newPop = pop.rollet();
 					break;
 				case 2:
@@ -99,11 +96,13 @@ int main() {
 			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
 					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
 			cout << "Quantidade de dimensões: " << entrada["qtdVariaveis"] << endl;
+			cout << "Tipo Crossover:" << entrada["crossover"] << endl;
 			cout << "Desvio: " << desvioPadrao(pop, calculoMediaIndvReal(pop), entrada["execucoes"])
 					<< endl;
-			cout << "FO: " << ind.getFuncaoObjetivo() << " Execução: " << execucoes << endl;
-			cout << "Eletismo: " << entrada["eletismo"] << " Fitness Escalonado: "
-					<< entrada["escalonado"] << endl << endl;
+			cout << "FO: " << ind.getFuncaoObjetivo() << endl;
+			cout << "Execução: " << execucoes << endl;
+			cout << "Elitismo: " << entrada["elitismo"] << endl;
+			cout << "Fitness Escalonado: " << entrada["escalonado"] << endl << endl;
 		}
 
 	}

@@ -15,6 +15,7 @@ PopulacaoReal::PopulacaoReal() {
 	this->qtdIndividuos = this->entrada["tamPop"];
 	this->chanceCrossover = this->entrada["chanceMutacao"];
 	this->eletismo = this->entrada["elitismo"];
+	this->k = this->entrada["tournament"];
 	this->fitnessEscalonado = this->entrada["escalonado"];
 	this->C = 1.2;
 
@@ -210,12 +211,9 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverUniformAverage(
 				newIndividuo1.setGenes(genesInd1);
 				newIndividuo2.setGenes(genesInd2);
 			}
-
 		}
-
 	}
 	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
-
 	return newIndividuosCrossover;
 }
 
@@ -254,15 +252,15 @@ const PopulacaoReal PopulacaoReal::rollet() {
 	PopulacaoReal newPop;
 	newPop.populacao.clear();
 	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
-	double valorTotalFitness = 0.0;
-	double valorAcumuladoFitness = 0.0;
+	double valorTotalFitness = 0.0, valorAcumuladoFitness = 0.0;
 	for (var = 0; var < this->qtdIndividuos; ++var) {
 		if (this->fitnessEscalonado)
 			valorTotalFitness += calculoFitnessEscalonado(this->populacao[var].getFitness());
 		else
 			valorTotalFitness += this->populacao[var].getFitness();
 	}
-	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
+	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos * (this->gap / 100)) / 2;
+			++loopNovosIndiv) {
 		for (int loop = 0; loop < 2; ++loop) {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
 			valorDaRollet = numeroRandom(mt);
@@ -279,22 +277,7 @@ const PopulacaoReal PopulacaoReal::rollet() {
 			valorAcumuladoFitness = 0;
 			individuoParaCross[loop] = var;
 		}
-		switch (this->tipoCrossover) {
-		case 1:
-			newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
-			break;
-		case 2:
-			newIndivuos = crossoverArithmetic(individuoParaCross[0], individuoParaCross[1]);
-			break;
-		case 3:
-			newIndivuos = crossoverUniformAverage(individuoParaCross[0], individuoParaCross[1]);
-			break;
-		case 4:
-			newIndivuos = crossoverBLX(individuoParaCross[0], individuoParaCross[1]);
-			break;
-		default:
-			break;
-		}
+		newIndivuos = enviaCrossover(individuoParaCross[0], individuoParaCross[1]);
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
@@ -303,20 +286,19 @@ const PopulacaoReal PopulacaoReal::rollet() {
 	return newPop;
 }
 
-const PopulacaoReal PopulacaoReal::tournament(int k) {
+const PopulacaoReal PopulacaoReal::tournament() {
 	static mt19937 mt(time(NULL));
 	pair<IndividuoReal, IndividuoReal> newIndivuos;
 	IndividuoReal indRand, indAux;
 	PopulacaoReal newPop;
 	newPop.populacao.clear();
 	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
-
 	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
 		for (int qtdIndvParaCross = 0; qtdIndvParaCross < 2; ++qtdIndvParaCross) {
 			static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
 			indvDoTournament = numeroRandom(mt);
 			indAux = this->populacao[indvDoTournament]; //Já encontra o primeiro indv aleatório, já o primeiro k
-			for (int var = 0; var < k - 1; ++var) { //k-1 pois o primeiro individuo veio da linha acima
+			for (int var = 0; var < this->k - 1; ++var) { //k-1 pois o primeiro individuo veio da linha acima
 				static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
 				indvDoTournament = numeroRandom(mt);
 				indRand = this->populacao[indvDoTournament];
@@ -325,28 +307,34 @@ const PopulacaoReal PopulacaoReal::tournament(int k) {
 				}
 			}
 		}
-		switch (this->tipoCrossover) {
-		case 1:
-			newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
-			break;
-		case 2:
-			newIndivuos = crossoverArithmetic(individuoParaCross[0], individuoParaCross[1]);
-			break;
-		case 3:
-			newIndivuos = crossoverUniformAverage(individuoParaCross[0], individuoParaCross[1]);
-			break;
-		case 4:
-			newIndivuos = crossoverBLX(individuoParaCross[0], individuoParaCross[1]);
-			break;
-		default:
-			break;
-		}
+		newIndivuos = enviaCrossover(individuoParaCross[0], individuoParaCross[1]);
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
 	if (this->eletismo == true)
 		newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
 	return newPop;
+}
+
+pair<IndividuoReal, IndividuoReal> PopulacaoReal::enviaCrossover(int indiv1, int indiv2) {
+	pair<IndividuoReal, IndividuoReal> newIndivuos;
+	switch (this->tipoCrossover) {
+	case 1:
+		newIndivuos = crossover(indiv1, indiv2);
+		break;
+	case 2:
+		newIndivuos = crossoverArithmetic(indiv1, indiv2);
+		break;
+	case 3:
+		newIndivuos = crossoverUniformAverage(indiv1, indiv2);
+		break;
+	case 4:
+		newIndivuos = crossoverBLX(indiv1, indiv2);
+		break;
+	default:
+		break;
+	}
+	return newIndivuos;
 }
 
 int PopulacaoReal::getQtdIndividuos() const {

@@ -28,7 +28,8 @@ public:
 	pair<double, double> calculoEscalonadoMaior();
 	double mediaFitness();
 	const PopulacaoReal rollet();
-	const PopulacaoReal tournament(int k);
+	const PopulacaoReal tournament();
+	pair<IndividuoReal, IndividuoReal> enviaCrossover(int, int);
 	virtual const vector<IndividuoReal>& getPopulacao() const;
 	void setPopulacao(const vector<IndividuoReal>& populacao);
 	void insertIndividuo(IndividuoReal newIndividuo);

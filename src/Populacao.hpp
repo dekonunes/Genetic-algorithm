@@ -12,8 +12,10 @@ class Populacao {
 protected:
 	int chanceCrossover;
 	int tipoCrossover;
-	bool eletismo;
 	int qtdIndividuos;
+	int k; //valor do tournament
+	int gap;
+	bool eletismo;
 	bool fitnessEscalonado;
 	float C; //Para o calculo do fitness escalonado;
 };
