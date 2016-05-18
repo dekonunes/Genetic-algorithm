@@ -29,10 +29,10 @@ int main() {
 	auto entrada = json::parse(buffer.str());
 
 	int geracoes = entrada["geracoes"];
-	int execucoes;
+	int execucoesEntrada = entrada["execucoes"];
 	vector<double> vectorPlotFIT(geracoes, 0);
 	vector<double> vectorPlotMediaFIT(geracoes, 0);
-	vector<double> vectorPlotDiversidade;
+	vector<double> vectorPlotDiversidade(geracoes, 0);
 	for (int execucoes = 0; execucoes < entrada["execucoes"]; ++execucoes) {
 		if (entrada["codificacao"] == "binario") {
 			vector<pair<int, int>> genes;
@@ -48,7 +48,8 @@ int main() {
 				case 1:
 					if (entrada["escalonado"]) {
 						newPop = pop.rolletEscalonada();
-						pop.incrementaC();
+						if (i < geracoes * 0.9)
+							pop.incrementaC();
 					}
 					newPop = pop.rollet();
 					break;
@@ -60,10 +61,9 @@ int main() {
 				}
 				pop.setPopulacao(newPop.getPopulacao());
 				ind = pop.getBestIndividuo();
-				vectorPlotFIT.at(i) += ind.getFitness();
-				vectorPlotMediaFIT.at(i) += calculoMediaIndvBinario(pop);
-				vectorPlotDiversidade.push_back(distanciaBinario(pop, 1));
-				pop.mutacaoPopulacao();
+				vectorPlotFIT.at(i) += ind.getFitness() / execucoesEntrada;
+				vectorPlotMediaFIT.at(i) += calculoMediaIndvBinario(pop) / execucoesEntrada;
+				vectorPlotDiversidade.at(i) += distanciaBinario(pop, 1) / execucoesEntrada;
 			}
 			cout << ind.getFuncaoObjetivo() << endl;
 			//pop.print_populacao();
@@ -76,13 +76,14 @@ int main() {
 			PopulacaoReal newPop;
 			int aux;
 			for (int i = 0; i < geracoes; ++i) {
-
+				pop.mutacaoPopulacao();
 				aux = entrada["selecao"];
 				switch (aux) {
 				case 1:
 					if (entrada["escalonado"]) {
 						newPop = pop.rolletEscalonada();
-						pop.incrementaC();
+						if (i < geracoes * 0.9)
+							pop.incrementaC();
 					}
 					newPop = pop.rollet();
 					break;
@@ -93,11 +94,10 @@ int main() {
 					break;
 				}
 				pop.setPopulacao(newPop.getPopulacao());
-				pop.mutacaoPopulacao();
 				ind = pop.getBestIndividuo();
-				vectorPlotFIT.at(i) += ind.getFitness();
-				vectorPlotMediaFIT.at(i) += calculoMediaIndvReal(pop);
-				vectorPlotDiversidade.push_back(distanciaReal(pop, 1));
+				vectorPlotFIT.at(i) += (ind.getFitness() / execucoesEntrada);
+				vectorPlotMediaFIT.at(i) += (calculoMediaIndvReal(pop) / execucoesEntrada);
+				vectorPlotDiversidade.at(i) += (distanciaReal(pop, 1) / execucoesEntrada);
 			}
 			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
 					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
@@ -182,11 +182,10 @@ void plotDiversidade(vector<double> vectorPlotDiversidade) {
 void plotMedias(vector<double> vectorPlotFIT, vector<double> vectorPlotMediaFIT, int geracoes,
 		int execucoes) {
 	Gnuplot gp;
-	double aux = 0;
-	for (int var = 0; var < geracoes; var++) {
-		vectorPlotFIT.at(var) /= execucoes;
-		vectorPlotMediaFIT.at(var) /= execucoes;
-	}
+	/*for (int var = 0; var < geracoes; var++) {
+	 vectorPlotFIT.at(var) /= execucoes;
+	 vectorPlotMediaFIT.at(var) /= execucoes;
+	 }*/
 	gp << "plot" << gp.file1d(vectorPlotFIT) << "with lines title 'Média melhor ind',"
 			<< gp.file1d(vectorPlotMediaFIT) << "with lines title 'Média das médias'" << endl;
 

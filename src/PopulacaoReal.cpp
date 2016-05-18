@@ -74,8 +74,8 @@ double PopulacaoReal::calculoFitnessEscalonado(double fitness) {
 
 void PopulacaoReal::incrementaC() {
 	int geracoes = this->entrada["geracoes"];
+	geracoes = geracoes*0.9;
 	this->C += 0.8 / geracoes;
-	cout << this->C << endl;
 }
 
 pair<double, double> PopulacaoReal::calculoEscalonadoMenor() {
