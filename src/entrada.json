@@ -1,7 +1,7 @@
 {
   "codificacao": "real",
   "tamPop": 20,
-  "execucoes": 1,
+  "execucoes": 3,
   "geracoes": 200,
   "selecao": 1,
   "crossover": "padrao",

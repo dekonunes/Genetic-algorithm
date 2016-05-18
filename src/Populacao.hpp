@@ -14,6 +14,7 @@ protected:
 	int tipoCrossover;
 	bool eletismo;
 	int qtdIndividuos;
+	bool fitnessEscalonado;
 	float C; //Para o calculo do fitness escalonado;
 };
 

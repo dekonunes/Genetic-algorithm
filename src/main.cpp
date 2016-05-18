@@ -80,11 +80,8 @@ int main() {
 				aux = entrada["selecao"];
 				switch (aux) {
 				case 1:
-					if (entrada["escalonado"]) {
-						newPop = pop.rolletEscalonada();
-						if (i < geracoes * 0.9)
-							pop.incrementaC();
-					}
+					if (i < geracoes * 0.9)
+						pop.incrementaC();
 					newPop = pop.rollet();
 					break;
 				case 2:
@@ -104,11 +101,13 @@ int main() {
 			cout << "Quantidade de dimensões: " << entrada["qtdVariaveis"] << endl;
 			cout << "Desvio: " << desvioPadrao(pop, calculoMediaIndvReal(pop), entrada["execucoes"])
 					<< endl;
-			cout << "FO: " << ind.getFuncaoObjetivo() << " Execução: " << execucoes << endl << endl;
+			cout << "FO: " << ind.getFuncaoObjetivo() << " Execução: " << execucoes << endl;
+			cout << "Eletismo: " << entrada["eletismo"] << " Fitness Escalonado: "
+					<< entrada["escalonado"] << endl << endl;
 		}
 
 	}
-	plot(vectorPlotFIT, vectorPlotMediaFIT, "Média do melhor ind","Média das médias");
+	plot(vectorPlotFIT, vectorPlotMediaFIT, "Média do melhor ind", "Média das médias");
 	plot(vectorPlotDiversidade, "diversidade");
 	//escreverArquivo(vectorPlotFIT);
 	return 0;
@@ -179,8 +178,7 @@ void plot(vector<double> vectorPlot, string titulo) {
 
 }
 
-void plot(vector<double> vectorPlot1, vector<double> vectorPlot2, string titulo1,
-		string titulo2) {
+void plot(vector<double> vectorPlot1, vector<double> vectorPlot2, string titulo1, string titulo2) {
 	Gnuplot gp;
 	gp << "plot" << gp.file1d(vectorPlot1) << "with lines title '" << titulo1 << "',"
 			<< gp.file1d(vectorPlot2) << "with lines title '" << titulo2 << "'" << endl;

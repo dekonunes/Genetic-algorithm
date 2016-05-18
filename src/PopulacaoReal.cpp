@@ -15,6 +15,7 @@ PopulacaoReal::PopulacaoReal() {
 	this->qtdIndividuos = this->entrada["tamPop"];
 	this->chanceCrossover = this->entrada["chanceMutacao"];
 	this->eletismo = this->entrada["elitismo"];
+	this->fitnessEscalonado = this->entrada["escalonado"];
 	this->C = 1.2;
 
 	for (int var = 0; var < this->qtdIndividuos; ++var)
@@ -73,7 +74,7 @@ double PopulacaoReal::calculoFitnessEscalonado(double fitness) {
 
 void PopulacaoReal::incrementaC() {
 	int geracoes = this->entrada["geracoes"];
-	geracoes = geracoes*0.9;
+	geracoes = geracoes * 0.9;
 	this->C += 0.8 / geracoes;
 }
 
@@ -256,16 +257,22 @@ const PopulacaoReal PopulacaoReal::rollet() {
 	double valorTotalFitness = 0.0;
 	double valorAcumuladoFitness = 0.0;
 	for (var = 0; var < this->qtdIndividuos; ++var) {
-		valorTotalFitness += this->populacao[var].getFitness();
+		if (this->fitnessEscalonado)
+			valorTotalFitness += calculoFitnessEscalonado(this->populacao[var].getFitness());
+		else
+			valorTotalFitness += this->populacao[var].getFitness();
 	}
 	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
 		for (int loop = 0; loop < 2; ++loop) {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
 			valorDaRollet = numeroRandom(mt);
 			for (var = 0; var < this->qtdIndividuos - 1; ++var) {
-
-				valorAcumuladoFitness += ((double) this->populacao[var].getFitness()
-						/ valorTotalFitness) * 100;
+				if (this->fitnessEscalonado)
+					valorAcumuladoFitness += ((double) calculoFitnessEscalonado(
+							this->populacao[var].getFitness()) / valorTotalFitness) * 100;
+				else
+					valorAcumuladoFitness += ((double) this->populacao[var].getFitness()
+							/ valorTotalFitness) * 100;
 				if (valorDaRollet < valorAcumuladoFitness)
 					break;
 			}
@@ -291,56 +298,7 @@ const PopulacaoReal PopulacaoReal::rollet() {
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
-	if (this->eletismo == true)
-		newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
-	return newPop;
-}
-
-const PopulacaoReal PopulacaoReal::rolletEscalonada() {
-	static mt19937 mt(time(NULL));
-	pair<IndividuoReal, IndividuoReal> newIndivuos;
-	PopulacaoReal newPop;
-	newPop.populacao.clear();
-	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
-	double valorTotalFitness = 0.0;
-	double valorAcumuladoFitness = 0.0;
-	for (var = 0; var < this->qtdIndividuos; ++var) {
-		valorTotalFitness += calculoFitnessEscalonado(this->populacao[var].getFitness());
-	}
-	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
-		for (int loop = 0; loop < 2; ++loop) {
-			static uniform_int_distribution<int> numeroRandom(0, 100);
-			valorDaRollet = numeroRandom(mt);
-			for (var = 0; var < this->qtdIndividuos - 1; ++var) {
-
-				valorAcumuladoFitness += ((double) calculoFitnessEscalonado(this->populacao[var].getFitness())
-						/ valorTotalFitness) * 100;
-				if (valorDaRollet < valorAcumuladoFitness)
-					break;
-			}
-			valorAcumuladoFitness = 0;
-			individuoParaCross[loop] = var;
-		}
-		switch (this->tipoCrossover) {
-		case 1:
-			newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
-			break;
-		case 2:
-			newIndivuos = crossoverArithmetic(individuoParaCross[0], individuoParaCross[1]);
-			break;
-		case 3:
-			newIndivuos = crossoverUniformAverage(individuoParaCross[0], individuoParaCross[1]);
-			break;
-		case 4:
-			newIndivuos = crossoverBLX(individuoParaCross[0], individuoParaCross[1]);
-			break;
-		default:
-			break;
-		}
-		newPop.insertIndividuo(newIndivuos.first);
-		newPop.insertIndividuo(newIndivuos.second);
-	}
-	if (this->eletismo == true)
+	if (this->eletismo)
 		newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
 	return newPop;
 }
