@@ -1,16 +1,41 @@
 {
-  "codificacao": "real",
-  "tamPop": 20,
+  "codificacao": "binario",
+  "tamPop": 12,
   "execucoes": 1,
-  "geracoes": 200,
+  "geracoes": 100,
   "selecao": 1,
   "crossover": "padrao",
   "tournament": 3,
-  "chanceCrossover": 90,
-  "chanceMutacao": 2,
-  "qtdVariaveis": 4,
+  "chanceCrossover": 100,
+  "chanceMutacao": 10,
+  "qtdVariaveis": 2,
   "variaveis": [
     {
+      "min": 0,
+      "max": 50,
+      "precisao": 0
+    },
+    {
+      "min": 0,
+      "max": 60,
+      "precisao": 0
+    },
+    {
+      "min": -5,
+      "max": 5,
+      "precisao": 0
+    },
+    {
+      "min": -5,
+      "max": 5,
+      "precisao": 0
+    },
+    {
+      "min": -5,
+      "max": 5,
+      "precisao": 0
+    },
+    {
       "min": -5,
       "max": 5,
       "precisao": 0
@@ -31,37 +56,12 @@
       "precisao": 0
     },
     {
-      "min": -20,
-      "max": 20,
-      "precisao": 0
-    },
-    {
-      "min": -20,
-      "max": 20,
-      "precisao": 0
-    },
-    {
-      "min": -20,
-      "max": 20,
-      "precisao": 0
-    },
-    {
-      "min": -20,
-      "max": 20,
-      "precisao": 0
-    },
-    {
-      "min": -20,
-      "max": 20,
-      "precisao": 0
-    },
-    {
-      "min": -20,
-      "max": 20,
+      "min": -5,
+      "max": 5,
       "precisao": 0
     }
   ],
   "elitismo": true,
-  "escalonado": true,
-  "GAP": 80
+  "escalonado": false,
+  "gap": 100
 }

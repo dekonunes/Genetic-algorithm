@@ -15,7 +15,7 @@ protected:
 	int qtdIndividuos;
 	int k; //valor do tournament
 	int gap;
-	bool eletismo;
+	bool elitismo;
 	bool fitnessEscalonado;
 	float C; //Para o calculo do fitness escalonado;
 };

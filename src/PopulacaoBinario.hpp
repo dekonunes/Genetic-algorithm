@@ -27,9 +27,11 @@ public:
 	double mediaFitness();
 	const vector<IndividuoBinario>& getPopulacao() const;
 	void setPopulacao(const vector<IndividuoBinario>& populacao);
+	void setIndividuo(int, IndividuoBinario);
 	void print_populacao();
 	void print_individuo(int id);
 	void insertIndividuo(IndividuoBinario newIndividuo);
+	void insertIndividuo(IndividuoBinario newIndividuo, int posicao);
 	const IndividuoBinario getIndividuo(int index);
 	IndividuoBinario getBestIndividuo();
 	const IndividuoBinario getWorseIndividuo();
@@ -40,7 +42,6 @@ public:
 	int getQtdIndividuos() const;
 	void mutacaoPopulacao();
 	void openJson();
-	void atualizaPiorIndvNaPopulacao(const IndividuoBinario& newIndividuo);
 
 private:
 	vector<IndividuoBinario> populacao;

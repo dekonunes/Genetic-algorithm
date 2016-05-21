@@ -14,7 +14,7 @@ PopulacaoBinario::PopulacaoBinario() {
 
 	this->qtdIndividuos = this->entrada["tamPop"];
 	this->chanceCrossover = this->entrada["chanceMutacao"];
-	this->eletismo = this->entrada["elitismo"];
+	this->elitismo = this->entrada["elitismo"];
 	this->k = this->entrada["tournament"];
 	this->fitnessEscalonado = this->entrada["escalonado"];
 	this->C = 1.2;
@@ -109,6 +109,10 @@ void PopulacaoBinario::insertIndividuo(IndividuoBinario newIndividuo) {
 	this->populacao.push_back(newIndividuo);
 }
 
+void PopulacaoBinario::insertIndividuo(IndividuoBinario newIndividuo, int posicao) {
+	this->populacao[posicao] = newIndividuo;
+}
+
 const vector<IndividuoBinario>& PopulacaoBinario::getPopulacao() const {
 	return populacao;
 }
@@ -150,21 +154,16 @@ const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossover(int i
 	pair<IndividuoBinario, IndividuoBinario> newIndividuosCrossover;
 	IndividuoBinario newIndividuo1 = this->populacao[individuo1];
 	IndividuoBinario newIndividuo2 = this->populacao[individuo2];
-
 	if (this->chanceCrossover > a) {
-
 		string cromossomoNewInviduio1;
 		string cromossomoNewInviduio2;
-
 		static uniform_int_distribution<int> numRandon(0, qtdBits - 1);
 		a = numRandon(mt);
-
 		for (var = 0; var < a; ++var) {
 			cromossomoNewInviduio1 = cromossomoNewInviduio1
 					+ this->populacao[individuo1].getCromossomo()[var];
 			cromossomoNewInviduio2 = cromossomoNewInviduio2
 					+ this->populacao[individuo2].getCromossomo()[var];
-
 		}
 		for (; var < qtdBits; ++var) {
 			cromossomoNewInviduio1 = cromossomoNewInviduio1
@@ -213,45 +212,13 @@ const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossoverUnifor
 	return newIndividuosCrossover;
 }
 
-const PopulacaoBinario PopulacaoBinario::tournament() {
-	static mt19937 mt(time(NULL));
-	pair<IndividuoBinario, IndividuoBinario> newIndivuos;
-	IndividuoBinario indRand, indAux;
-	PopulacaoBinario newPop;
-	newPop.populacao.clear();
-	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
-
-	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
-		for (int qtdIndvParaCross = 0; qtdIndvParaCross < 2; ++qtdIndvParaCross) {
-			static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
-			indvDoTournament = numeroRandom(mt);
-			indAux = this->populacao[indvDoTournament]; //Já encontra o primeiro indv aleatório, já o primeiro k
-			for (int var = 0; var < this->k - 1; ++var) { //k-1 pois o primeiro individuo veio da linha acima
-				static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
-				indvDoTournament = numeroRandom(mt);
-				indRand = this->populacao[indvDoTournament];
-				if (indRand.getFitness() > indAux.getFitness()) {
-					individuoParaCross[qtdIndvParaCross] = indvDoTournament;
-				}
-			}
-		}
-		newIndivuos = crossoverUniforme(individuoParaCross[0], individuoParaCross[1]);
-		newPop.insertIndividuo(newIndivuos.first);
-		newPop.insertIndividuo(newIndivuos.second);
-	}
-	if (this->eletismo == true)
-		newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
-	return newPop;
-}
-
 const PopulacaoBinario PopulacaoBinario::rollet() {
 	static mt19937 mt(time(NULL));
 	pair<IndividuoBinario, IndividuoBinario> newIndivuos;
-	PopulacaoBinario newPop;
+	static PopulacaoBinario newPop;
 	newPop.populacao.clear();
 	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
-	double valorTotalFitness = 0.0;
-	double valorAcumuladoFitness = 0.0;
+	double valorTotalFitness = 0.0, valorAcumuladoFitness = 0.0;
 	for (var = 0; var < this->qtdIndividuos; ++var) {
 		if (this->fitnessEscalonado)
 			valorTotalFitness += calculoFitnessEscalonado(this->populacao[var].getFitness());
@@ -279,8 +246,41 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
-	if (this->eletismo == true)
-		newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
+	newPop.mutacaoPopulacao();
+	if (this->elitismo == true)
+		newPop.insertIndividuo(this->getBestIndividuo(), 1);
+	return newPop;
+}
+
+const PopulacaoBinario PopulacaoBinario::tournament() {
+	static mt19937 mt(time(NULL));
+	pair<IndividuoBinario, IndividuoBinario> newIndivuos;
+	IndividuoBinario indRand, indAux, ind;
+	PopulacaoBinario newPop;
+	newPop.populacao.clear();
+	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
+
+	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
+		for (int qtdIndvParaCross = 0; qtdIndvParaCross < 2; ++qtdIndvParaCross) {
+			static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
+			indvDoTournament = numeroRandom(mt);
+			indAux = this->populacao[indvDoTournament]; //Já encontra o primeiro indv aleatório, já o primeiro k
+			for (int var = 0; var < this->k - 1; ++var) { //k-1 pois o primeiro individuo veio da linha acima
+				static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
+				indvDoTournament = numeroRandom(mt);
+				indRand = this->populacao[indvDoTournament];
+				if (indRand.getFitness() > indAux.getFitness()) {
+					individuoParaCross[qtdIndvParaCross] = indvDoTournament;
+				}
+			}
+		}
+		newIndivuos = crossoverUniforme(individuoParaCross[0], individuoParaCross[1]);
+		newPop.insertIndividuo(newIndivuos.first);
+		newPop.insertIndividuo(newIndivuos.second);
+	}
+	newPop.mutacaoPopulacao();
+		if (this->elitismo == true)
+			newPop.insertIndividuo(this->getBestIndividuo(), 1);
 	return newPop;
 }
 
@@ -297,22 +297,9 @@ void PopulacaoBinario::mutacaoPopulacao() {
 void PopulacaoBinario::openJson() {
 	using json = nlohmann::json;
 	ifstream texto("entrada.json");
-
 	stringstream buffer;
 	buffer << texto.rdbuf();
-
 	this->entrada = json::parse(buffer.str());
-}
-
-void PopulacaoBinario::atualizaPiorIndvNaPopulacao(const IndividuoBinario& newIndividuo) {
-	int posicaoDoPiorIndiv = 0;
-	this->worseIndividuo = this->populacao[0];
-	for (int var = 0; var < this->populacao.size(); ++var) {
-		if (this->worseIndividuo.getFitness() > this->populacao[var].getFitness()) {
-			posicaoDoPiorIndiv = var;
-		}
-	}
-	this->populacao[posicaoDoPiorIndiv] = newIndividuo;
 }
 
 } /* namespace std */

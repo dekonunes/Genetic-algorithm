@@ -33,6 +33,7 @@ public:
 	virtual const vector<IndividuoReal>& getPopulacao() const;
 	void setPopulacao(const vector<IndividuoReal>& populacao);
 	void insertIndividuo(IndividuoReal newIndividuo);
+	void insertIndividuo(IndividuoReal newIndividuo, int posicao);
 	int getQtdIndividuos() const;
 	void mutacaoPopulacao();
 	const IndividuoReal getIndividuo(int index);

@@ -14,9 +14,10 @@ PopulacaoReal::PopulacaoReal() {
 	openJson();
 	this->qtdIndividuos = this->entrada["tamPop"];
 	this->chanceCrossover = this->entrada["chanceMutacao"];
-	this->eletismo = this->entrada["elitismo"];
+	this->elitismo = this->entrada["elitismo"];
 	this->k = this->entrada["tournament"];
 	this->fitnessEscalonado = this->entrada["escalonado"];
+	this->gap = this->entrada["gap"];
 	this->C = 1.2;
 
 	for (int var = 0; var < this->qtdIndividuos; ++var)
@@ -75,8 +76,9 @@ double PopulacaoReal::calculoFitnessEscalonado(double fitness) {
 
 void PopulacaoReal::incrementaC() {
 	int geracoes = this->entrada["geracoes"];
-	geracoes = geracoes * 0.9;
+	geracoes = geracoes * 0.8;
 	this->C += 0.8 / geracoes;
+	//cout << this->C << endl;
 }
 
 pair<double, double> PopulacaoReal::calculoEscalonadoMenor() {
@@ -251,7 +253,7 @@ const PopulacaoReal PopulacaoReal::rollet() {
 	pair<IndividuoReal, IndividuoReal> newIndivuos;
 	PopulacaoReal newPop;
 	newPop.populacao.clear();
-	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
+	int var, i = 0, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
 	double valorTotalFitness = 0.0, valorAcumuladoFitness = 0.0;
 	for (var = 0; var < this->qtdIndividuos; ++var) {
 		if (this->fitnessEscalonado)
@@ -259,7 +261,8 @@ const PopulacaoReal PopulacaoReal::rollet() {
 		else
 			valorTotalFitness += this->populacao[var].getFitness();
 	}
-	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos * (this->gap / 100)) / 2;
+	//cout << this->gap << endl;
+	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos) / 2; // * (this->gap / 100)
 			++loopNovosIndiv) {
 		for (int loop = 0; loop < 2; ++loop) {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
@@ -281,8 +284,9 @@ const PopulacaoReal PopulacaoReal::rollet() {
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
-	if (this->eletismo)
-		newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
+	newPop.mutacaoPopulacao();
+	if (this->elitismo == true)
+		newPop.insertIndividuo(this->getBestIndividuo(), 1);
 	return newPop;
 }
 
@@ -311,8 +315,9 @@ const PopulacaoReal PopulacaoReal::tournament() {
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
-	if (this->eletismo == true)
-		newPop.atualizaPiorIndvNaPopulacao(this->getBestIndividuo());
+	newPop.mutacaoPopulacao();
+	if (this->elitismo == true)
+		newPop.insertIndividuo(this->getBestIndividuo(), 1);
 	return newPop;
 }
 
@@ -359,6 +364,10 @@ void PopulacaoReal::insertIndividuo(IndividuoReal newIndividuo) {
 	this->populacao.push_back(newIndividuo);
 }
 
+void PopulacaoReal::insertIndividuo(IndividuoReal newIndividuo, int posicao) {
+	this->populacao[posicao] = newIndividuo;
+}
+
 const IndividuoReal PopulacaoReal::getIndividuo(int index) {
 	return this->populacao[index];
 }
@@ -381,17 +390,6 @@ const IndividuoReal PopulacaoReal::getWorseIndividuo() {
 		}
 	}
 	return this->worseIndividuo;
-}
-
-void PopulacaoReal::atualizaPiorIndvNaPopulacao(const IndividuoReal& newIndividuo) {
-	int posicaoDoPiorIndiv = 0;
-	this->worseIndividuo = this->populacao[0];
-	for (int var = 0; var < this->populacao.size(); ++var) {
-		if (this->worseIndividuo.getFitness() > this->populacao[var].getFitness()) {
-			posicaoDoPiorIndiv = var;
-		}
-	}
-	this->populacao[posicaoDoPiorIndiv] = newIndividuo;
 }
 
 void PopulacaoReal::openJson() {

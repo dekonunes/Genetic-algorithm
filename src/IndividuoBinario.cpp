@@ -42,7 +42,6 @@ IndividuoBinario::IndividuoBinario() {
 
 IndividuoBinario::~IndividuoBinario() {
 	// TODO Auto-generated constructor stub
-
 }
 
 const string& IndividuoBinario::getCromossomo() const {
@@ -163,10 +162,6 @@ string IndividuoBinario::decToBin(int number) {
 }
 
 int IndividuoBinario::binToDec(string number) {
-	/*int result = 0, pow = 1;
-	 for (int i = number.length() - 1; i >= 0; --i, pow <<= 1)
-	 result += (number[i] - '0') * pow;
-	 return result;//stoi(number,nullptr,2);*/
 	return stoi(number, nullptr, 2);
 }
 

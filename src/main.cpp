@@ -13,7 +13,8 @@ using json = nlohmann::json;
 
 double calculoMediaIndvReal(PopulacaoReal);
 double calculoMediaIndvBinario(PopulacaoBinario);
-double desvioPadrao(PopulacaoReal pop, double media, int execucoes);
+double desvioPadraoBinario(PopulacaoBinario pop, double media, int execucoes);
+double desvioPadraoReal(PopulacaoReal pop, double media, int execucoes);
 void plot(vector<double>, string);
 void plot(vector<double>, vector<double>, string, string);
 void escreverArquivo(vector<double>);
@@ -39,31 +40,37 @@ int main() {
 			pair<int, int> auxGenes;
 			IndividuoBinario ind;
 			PopulacaoBinario pop;
-			PopulacaoBinario newPop;
 			int aux;
 			for (int i = 0; i < entrada["geracoes"]; ++i) {
-				pop.mutacaoPopulacao();
 				aux = entrada["selecao"];
 				switch (aux) {
 				case 1:
-					if (i < geracoes * 0.9)
+					if ((i < geracoes * 0.9) && (i > geracoes * 0.1))
 						pop.incrementaC();
-					newPop = pop.rollet();
+					pop = pop.rollet();
 					break;
 				case 2:
-					newPop = pop.tournament(entrada["tournament"]);
+					pop = pop.tournament();
 					break;
 				default:
 					break;
 				}
-				pop.setPopulacao(newPop.getPopulacao());
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += ind.getFitness() / execucoesEntrada;
 				vectorPlotMediaFIT.at(i) += calculoMediaIndvBinario(pop) / execucoesEntrada;
 				vectorPlotDiversidade.at(i) += distanciaBinario(pop, 1) / execucoesEntrada;
+
 			}
-			cout << ind.getFuncaoObjetivo() << endl;
-			//pop.print_populacao();
+			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
+					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
+			cout << "Quantidade de dimensões: " << entrada["qtdVariaveis"] << endl;
+			cout << "Tipo Crossover:" << entrada["crossover"] << endl;
+			cout << "Desvio: " << desvioPadraoBinario(pop, calculoMediaIndvBinario(pop), entrada["execucoes"])
+					<< endl;
+			cout << "FO: " << ind.getFuncaoObjetivo() << endl;
+			cout << "Execução: " << execucoes << endl;
+			cout << "Elitismo: " << entrada["elitismo"] << endl;
+			cout << "Fitness Escalonado: " << entrada["escalonado"] << endl << endl;
 		}
 		if (entrada["codificacao"] == "real") {
 			vector<pair<double, double>> genes;
@@ -77,18 +84,19 @@ int main() {
 				aux = entrada["selecao"];
 				switch (aux) {
 				case 1:
-					if (i < geracoes * 0.9)
+					if ((i < geracoes * 0.9) && (i > geracoes * 0.1))
 						pop.incrementaC();
 					newPop = pop.rollet();
 					break;
 				case 2:
-					newPop = pop.tournament(entrada["tournament"]);
+					newPop = pop.tournament();
 					break;
 				default:
 					break;
 				}
 				pop.setPopulacao(newPop.getPopulacao());
 				ind = pop.getBestIndividuo();
+				cout << ind.getFitness() << endl;
 				vectorPlotFIT.at(i) += (ind.getFitness() / execucoesEntrada);
 				vectorPlotMediaFIT.at(i) += (calculoMediaIndvReal(pop) / execucoesEntrada);
 				vectorPlotDiversidade.at(i) += (distanciaReal(pop, 1) / execucoesEntrada);
@@ -97,14 +105,13 @@ int main() {
 					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
 			cout << "Quantidade de dimensões: " << entrada["qtdVariaveis"] << endl;
 			cout << "Tipo Crossover:" << entrada["crossover"] << endl;
-			cout << "Desvio: " << desvioPadrao(pop, calculoMediaIndvReal(pop), entrada["execucoes"])
+			cout << "Desvio: " << desvioPadraoReal(pop, calculoMediaIndvReal(pop), entrada["execucoes"])
 					<< endl;
 			cout << "FO: " << ind.getFuncaoObjetivo() << endl;
 			cout << "Execução: " << execucoes << endl;
 			cout << "Elitismo: " << entrada["elitismo"] << endl;
 			cout << "Fitness Escalonado: " << entrada["escalonado"] << endl << endl;
 		}
-
 	}
 	plot(vectorPlotFIT, vectorPlotMediaFIT, "Média do melhor ind", "Média das médias");
 	plot(vectorPlotDiversidade, "diversidade");
@@ -184,7 +191,19 @@ void plot(vector<double> vectorPlot1, vector<double> vectorPlot2, string titulo1
 
 }
 
-double desvioPadrao(PopulacaoReal pop, double media, int execucoes) {
+double desvioPadraoBinario(PopulacaoBinario pop, double media, int execucoes) {
+	double valorDesvio = 0;
+	int qtdIndiv = pop.getQtdIndividuos();
+	IndividuoBinario ind;
+
+	for (int var = 0; var < qtdIndiv; ++var) {
+		ind = pop.getIndividuo(var);
+		valorDesvio += pow((ind.getFitness() - media), 2);
+	}
+	return sqrt(valorDesvio / execucoes);
+}
+
+double desvioPadraoReal(PopulacaoReal pop, double media, int execucoes) {
 	double valorDesvio = 0;
 	int qtdIndiv = pop.getQtdIndividuos();
 	IndividuoReal ind;
