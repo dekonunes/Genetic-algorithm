@@ -36,6 +36,7 @@ IndividuoBinario::IndividuoBinario() {
 		}
 	}
 	this->probMutacao = this->entrada["chanceMutacao"];
+	this->funcaoObjetivo = 0.0;
 	this->fitness = 0.0;
 	calculoFitness();
 }
@@ -58,38 +59,39 @@ double IndividuoBinario::getFitness() {
 }
 
 double IndividuoBinario::calculoFitness() {
-	int A, B, qtdDisco, maxExtrapolaFunc;
-	double penalidade, aux, r = -1.0, maxExtrapolaFO;
-	string stringGene[10];
-	for (int var2 = 0; var2 < this->genes.size(); ++var2) {
-		for (int var = 0; var < this->qtdBits[var2]; ++var) {
-			stringGene[var2] = stringGene[var2] + this->cromossomo[posGeneNoCromosso(var2) + var];
-		}
+	/*int A, B, qtdDisco, maxExtrapolaFunc;
+	 double penalidade, aux, r = -1.0, maxExtrapolaFO;
+	 string stringGene[10];
+	 for (int var2 = 0; var2 < this->genes.size(); ++var2) {
+	 for (int var = 0; var < this->qtdBits[var2]; ++var) {
+	 stringGene[var2] = stringGene[var2] + this->cromossomo[posGeneNoCromosso(var2) + var];
+	 }
 
-	}
-	A = (int) decodificaCromossomo(60, 0, stringGene[0]);
-	B = (int) decodificaCromossomo(50, 0, stringGene[1]);
-	qtdDisco = A + (2 * B);
-	maxExtrapolaFunc = 40;
-	maxExtrapolaFO = 60 * 180 + 50 * 300;
+	 }
+	 A = (int) decodificaCromossomo(60, 0, stringGene[0]);
+	 B = (int) decodificaCromossomo(50, 0, stringGene[1]);
+	 qtdDisco = A + (2 * B);
+	 maxExtrapolaFunc = 40;
+	 maxExtrapolaFO = 60 * 180 + 50 * 300;
 
-	if (qtdDisco <= 120)
-		penalidade = 0;
-	else {
-		penalidade = (double) (qtdDisco - 120) / (double) maxExtrapolaFunc;
-		//cout << "Valor de A: " << A << " Valor de B:" << B << endl;
-		//cout << "valor penalidade: " << penalidade << endl;
-	}
+	 if (qtdDisco <= 120)
+	 penalidade = 0;
+	 else {
+	 penalidade = (double) (qtdDisco - 120) / (double) maxExtrapolaFunc;
+	 //cout << "Valor de A: " << A << " Valor de B:" << B << endl;
+	 //cout << "valor penalidade: " << penalidade << endl;
+	 }
 
-	this->fitness = calculoFucaoObjetivo() / (double) maxExtrapolaFO + (r * penalidade);
-
+	 this->fitness = calculoFucaoObjetivo() / (double) maxExtrapolaFO + (r * penalidade);*/
+	this->fitness = calculoFucaoObjetivo();
 	if (this->fitness < 0)
 		this->fitness = 0;
 	return this->fitness;
 }
 
 double IndividuoBinario::calculoFucaoObjetivo() {
-	int A, B;
+	this->funcaoObjetivo = 0.0;
+	/*int A, B;
 	string stringGene[10];
 	for (int var2 = 0; var2 < this->genes.size(); ++var2) {
 		for (int var = 0; var < this->qtdBits[var2]; ++var) {
@@ -100,7 +102,12 @@ double IndividuoBinario::calculoFucaoObjetivo() {
 	A = (int) decodificaCromossomo(60, 0, stringGene[0]);
 	B = (int) decodificaCromossomo(50, 0, stringGene[1]);
 
-	this->funcaoObjetivo = A * 180 + B * 300;
+	this->funcaoObjetivo = A * 180 + B * 300;*/
+
+	for (int var = 1; var < this->qtdBits[0]; ++var) {
+		if (this->cromossomo[var] != this->cromossomo[var - 1])
+			this->funcaoObjetivo++;
+	}
 	return this->funcaoObjetivo;
 }
 

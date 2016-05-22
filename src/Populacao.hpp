@@ -14,7 +14,7 @@ protected:
 	int tipoCrossover;
 	int qtdIndividuos;
 	int k; //valor do tournament
-	int gap;
+	float gap;
 	bool elitismo;
 	bool fitnessEscalonado;
 	float C; //Para o calculo do fitness escalonado;

@@ -42,9 +42,9 @@ double IndividuoReal::calculoFitness() {
 
 double IndividuoReal::calculoFucaoObjetivo() {
 	this->funcaoObjetivo = 0.0;
-	for (int var = 0; var < this->genes.size() - 1; ++var) {
-		this->funcaoObjetivo += (this->genes[var] * this->genes[var]);
-	}
+	/*for (int var = 0; var < this->genes.size() - 1; ++var) {
+	 this->funcaoObjetivo += (this->genes[var] * this->genes[var]);
+	 }*/
 	/*for (int var = 0; var < this->genes.size() - 1; ++var) {
 	 this->funcaoObjetivo += pow(
 	 cos((double) (2 * this->genes[var] * this->genes[var])) - 0.11e1, 0.2e1)
@@ -53,23 +53,23 @@ double IndividuoReal::calculoFucaoObjetivo() {
 	 0.2e1) + pow(sin(0.5e0 * (double) this->genes[var + 1]) - 0.12e1, 0.2e1);
 	 }*/
 	//this->funcaoObjetivo = cos(20 * this->genes[0]) - (abs(this->genes[0]) / 2) + ((this->genes[0] * this->genes[0] * this->genes[0]) / 4);
-	/*for (int var = 0; var < this->genes.size() - 1; ++var) {
-	 this->funcaoObjetivo += pow(pow(this->genes[var], 2) + pow(this->genes[var + 1], 2), 0.25)
-	 * (pow(
-	 sin(
-	 50.0
-	 * pow(
-	 pow(this->genes[var], 2)
-	 + pow(this->genes[var + 1], 2),
-	 (double) 0.1)), 2)
-	 * (pow(
-	 sin(
-	 50.0
-	 * pow(
-	 pow(this->genes[var], 2)
-	 + pow(this->genes[var + 1], 2),
-	 (double) 0.1)), 2) + 1));
-	 }*/
+	for (int var = 0; var < this->genes.size() - 1; ++var) {
+		this->funcaoObjetivo += pow(pow(this->genes[var], 2) + pow(this->genes[var + 1], 2), 0.25)
+				* (pow(
+						sin(
+								50.0
+										* pow(
+												pow(this->genes[var], 2)
+														+ pow(this->genes[var + 1], 2),
+												(double) 0.1)), 2)
+						* (pow(
+								sin(
+										50.0
+												* pow(
+														pow(this->genes[var], 2)
+																+ pow(this->genes[var + 1], 2),
+														(double) 0.1)), 2) + 1));
+	}
 	//cout << "++" << this->funcaoObjetivo << endl;
 	return this->funcaoObjetivo;
 }

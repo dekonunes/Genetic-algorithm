@@ -225,7 +225,7 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 		else
 			valorTotalFitness += this->populacao[var].getFitness();
 	}
-	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
+	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos*this->gap); ++loopNovosIndiv) {
 		for (int loop = 0; loop < 2; ++loop) {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
 			valorDaRollet = numeroRandom(mt);
@@ -246,6 +246,8 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
+	for (int count = newPop.getQtdIndividuos(); count < this->qtdIndividuos; ++count)
+			newPop.insertIndividuo(this->populacao[count]);
 	newPop.mutacaoPopulacao();
 	if (this->elitismo == true)
 		newPop.insertIndividuo(this->getBestIndividuo(), 1);
@@ -260,7 +262,7 @@ const PopulacaoBinario PopulacaoBinario::tournament() {
 	newPop.populacao.clear();
 	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
 
-	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
+	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos*this->gap); ++loopNovosIndiv) {
 		for (int qtdIndvParaCross = 0; qtdIndvParaCross < 2; ++qtdIndvParaCross) {
 			static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
 			indvDoTournament = numeroRandom(mt);
@@ -278,6 +280,8 @@ const PopulacaoBinario PopulacaoBinario::tournament() {
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
+	for (int count = newPop.getQtdIndividuos(); count < this->qtdIndividuos; ++count)
+			newPop.insertIndividuo(this->populacao[count]);
 	newPop.mutacaoPopulacao();
 		if (this->elitismo == true)
 			newPop.insertIndividuo(this->getBestIndividuo(), 1);

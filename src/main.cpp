@@ -19,7 +19,8 @@ void plot(vector<double>, string);
 void plot(vector<double>, vector<double>, string, string);
 void escreverArquivo(vector<double>);
 double distanciaBinario(PopulacaoBinario, int);
-double distanciaReal(PopulacaoReal pop, int tipoDistancia);
+double distanciaRealGenotipica(PopulacaoReal pop, int tipoDistancia);
+double distanciaRealFenotipica(PopulacaoReal pop, int tipoDistancia);
 
 int main() {
 	ifstream texto("entrada.json");
@@ -59,15 +60,16 @@ int main() {
 				vectorPlotFIT.at(i) += ind.getFitness() / execucoesEntrada;
 				vectorPlotMediaFIT.at(i) += calculoMediaIndvBinario(pop) / execucoesEntrada;
 				vectorPlotDiversidade.at(i) += distanciaBinario(pop, 1) / execucoesEntrada;
-
 			}
 			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
 					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
 			cout << "Quantidade de dimensões: " << entrada["qtdVariaveis"] << endl;
 			cout << "Tipo Crossover:" << entrada["crossover"] << endl;
-			cout << "Desvio: " << desvioPadraoBinario(pop, calculoMediaIndvBinario(pop), entrada["execucoes"])
+			cout << "Desvio: "
+					<< desvioPadraoBinario(pop, calculoMediaIndvBinario(pop), entrada["execucoes"])
 					<< endl;
 			cout << "FO: " << ind.getFuncaoObjetivo() << endl;
+			cout << "Cromossomo: " << ind.getCromossomo() << endl;
 			cout << "Execução: " << execucoes << endl;
 			cout << "Elitismo: " << entrada["elitismo"] << endl;
 			cout << "Fitness Escalonado: " << entrada["escalonado"] << endl << endl;
@@ -96,16 +98,16 @@ int main() {
 				}
 				pop.setPopulacao(newPop.getPopulacao());
 				ind = pop.getBestIndividuo();
-				cout << ind.getFitness() << endl;
 				vectorPlotFIT.at(i) += (ind.getFitness() / execucoesEntrada);
 				vectorPlotMediaFIT.at(i) += (calculoMediaIndvReal(pop) / execucoesEntrada);
-				vectorPlotDiversidade.at(i) += (distanciaReal(pop, 1) / execucoesEntrada);
+				vectorPlotDiversidade.at(i) += (distanciaRealGenotipica(pop, 1) / execucoesEntrada);
 			}
 			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
 					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
 			cout << "Quantidade de dimensões: " << entrada["qtdVariaveis"] << endl;
 			cout << "Tipo Crossover:" << entrada["crossover"] << endl;
-			cout << "Desvio: " << desvioPadraoReal(pop, calculoMediaIndvReal(pop), entrada["execucoes"])
+			cout << "Desvio: "
+					<< desvioPadraoReal(pop, calculoMediaIndvReal(pop), entrada["execucoes"])
 					<< endl;
 			cout << "FO: " << ind.getFuncaoObjetivo() << endl;
 			cout << "Execução: " << execucoes << endl;
@@ -135,6 +137,9 @@ double distanciaBinario(PopulacaoBinario pop, int tipoDistancia) {
 			case 2:
 				dist += euclidiana(fitnessInd1, fitnessInd2);
 				break;
+			case 3:
+				dist += euclidianaNormalizada(fitnessInd1, fitnessInd2);
+				break;
 			default:
 				break;
 			}
@@ -144,13 +149,41 @@ double distanciaBinario(PopulacaoBinario pop, int tipoDistancia) {
 	return dist;
 }
 
-double distanciaReal(PopulacaoReal pop, int tipoDistancia) {
+double distanciaRealGenotipica(PopulacaoReal pop, int tipoDistancia) {
+	IndividuoReal ind1, ind2;
+	vector<double> genesIndividuo1, genesIndividuo2;
+	double dist = 0;
+	for (int x = 0; x < pop.getQuantidadeIndividuos(); ++x) {
+		ind1 = pop.getIndividuo(x);
+		genesIndividuo1 = ind1.getGenes();
+		for (int y = x + 1; y < pop.getQuantidadeIndividuos(); ++y) {
+			ind2 = pop.getIndividuo(y);
+			genesIndividuo2 = ind2.getGenes();
+			switch (tipoDistancia) {
+			case 1:
+				for (int var = 0; var < pop.getQuantidadeGenes(); ++var) {
+					dist += (euclidiana(genesIndividuo1.at(var), genesIndividuo2.at(var))/(x*y));
+				}
+				break;
+			case 2:
+				//dist += euclidianaNormalizada(fitnessInd1, fitnessInd2);
+				break;
+			default:
+				break;
+			}
+
+		}
+	}
+	return dist;
+}
+
+double distanciaRealFenotipica(PopulacaoReal pop, int tipoDistancia) {
 	IndividuoReal ind1, ind2;
 	double fitnessInd1, fitnessInd2, dist = 0;
-	for (int x = 0; x < pop.getQtdIndividuos(); ++x) {
+	for (int x = 0; x < pop.getQuantidadeIndividuos(); ++x) {
 		ind1 = pop.getIndividuo(x);
 		fitnessInd1 = ind1.getFitness();
-		for (int y = x + 1; y < pop.getQtdIndividuos(); ++y) {
+		for (int y = x + 1; y < pop.getQuantidadeIndividuos(); ++y) {
 			ind2 = pop.getIndividuo(y);
 			fitnessInd2 = ind2.getFitness();
 			switch (tipoDistancia) {
@@ -205,7 +238,7 @@ double desvioPadraoBinario(PopulacaoBinario pop, double media, int execucoes) {
 
 double desvioPadraoReal(PopulacaoReal pop, double media, int execucoes) {
 	double valorDesvio = 0;
-	int qtdIndiv = pop.getQtdIndividuos();
+	int qtdIndiv = pop.getQuantidadeIndividuos();
 	IndividuoReal ind;
 
 	for (int var = 0; var < qtdIndiv; ++var) {
@@ -228,7 +261,7 @@ double calculoMediaIndvBinario(PopulacaoBinario pop) {
 
 double calculoMediaIndvReal(PopulacaoReal pop) {
 	double valorTotal = 0;
-	int qtdIndiv = pop.getQtdIndividuos();
+	int qtdIndiv = pop.getQuantidadeIndividuos();
 	IndividuoReal ind;
 	for (int var = 0; var < qtdIndiv; ++var) {
 		ind = pop.getIndividuo(var);

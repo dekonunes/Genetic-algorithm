@@ -52,35 +52,6 @@ PopulacaoReal::~PopulacaoReal() {
 	// TODO Auto-generated destructor stub
 }
 
-double PopulacaoReal::calculoFitnessEscalonado(double fitness) {
-	IndividuoReal indMin = getWorseIndividuo();
-	IndividuoReal indMax = getBestIndividuo();
-	double media = mediaFitness(), alpha, beta, max = indMax.getFitness(), min =
-			indMin.getFitness(), fitnessEscalonado, teste;
-	pair<double, double> pares;
-	teste = (this->C * media - max) / (this->C - 1);
-	if (teste > min)
-		pares = calculoEscalonadoMaior();
-	else
-		pares = calculoEscalonadoMenor();
-
-	alpha = pares.first;
-	beta = pares.second;
-
-	fitnessEscalonado = alpha * fitness + beta;
-	if (fitnessEscalonado < 0)
-		fitnessEscalonado = 0;
-
-	return fitnessEscalonado;
-}
-
-void PopulacaoReal::incrementaC() {
-	int geracoes = this->entrada["geracoes"];
-	geracoes = geracoes * 0.8;
-	this->C += 0.8 / geracoes;
-	//cout << this->C << endl;
-}
-
 pair<double, double> PopulacaoReal::calculoEscalonadoMenor() {
 	pair<double, double> pares;
 	IndividuoReal indMin = getWorseIndividuo();
@@ -111,14 +82,26 @@ pair<double, double> PopulacaoReal::calculoEscalonadoMaior() {
 	return pares;
 }
 
-double PopulacaoReal::mediaFitness() {
-	double media = 0;
-	IndividuoReal ind;
-	for (int var = 0; var < this->populacao.size(); ++var) {
-		ind = this->populacao[var];
-		media += ind.getFitness();
-	}
-	return media / this->populacao.size();
+double PopulacaoReal::calculoFitnessEscalonado(double fitness) {
+	IndividuoReal indMin = getWorseIndividuo();
+	IndividuoReal indMax = getBestIndividuo();
+	double media = mediaFitness(), alpha, beta, max = indMax.getFitness(), min =
+			indMin.getFitness(), fitnessEscalonado, teste;
+	pair<double, double> pares;
+	teste = (this->C * media - max) / (this->C - 1);
+	if (teste > min)
+		pares = calculoEscalonadoMaior();
+	else
+		pares = calculoEscalonadoMenor();
+
+	alpha = pares.first;
+	beta = pares.second;
+
+	fitnessEscalonado = alpha * fitness + beta;
+	if (fitnessEscalonado < 0)
+		fitnessEscalonado = 0;
+
+	return fitnessEscalonado;
 }
 
 const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossover(int individuo1, int individuo2) {
@@ -148,6 +131,35 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossover(int individuo1
 
 	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
 
+	return newIndividuosCrossover;
+}
+
+const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverArithmetic(int individuo1,
+		int individuo2) {
+	static mt19937 mt(time(NULL));
+	static uniform_int_distribution<int> bit(0, 99);
+	int probCross = bit(mt);
+	double a = 0.7;
+	pair<IndividuoReal, IndividuoReal> newIndividuosCrossover;
+	IndividuoReal newIndividuo1 = this->populacao[individuo1];
+	IndividuoReal newIndividuo2 = this->populacao[individuo2];
+	vector<double> genesInd1, genesInd2;
+
+	if (this->chanceCrossover < probCross) {
+		for (int var = 0; var < this->genesInicial.size(); ++var) {
+			genesInd1.push_back(
+					(a * this->populacao[individuo1].getGenes().at(var))
+							+ ((1 - a) * this->populacao[individuo2].getGenes().at(var)));
+			genesInd2.push_back(
+					((1 - a) * this->populacao[individuo1].getGenes().at(var))
+							+ (a * this->populacao[individuo2].getGenes().at(var)));
+
+		}
+		newIndividuo1.setGenes(genesInd1);
+		newIndividuo2.setGenes(genesInd2);
+	}
+
+	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
 	return newIndividuosCrossover;
 }
 
@@ -219,33 +231,81 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverUniformAverage(
 	return newIndividuosCrossover;
 }
 
-const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverArithmetic(int individuo1,
-		int individuo2) {
-	static mt19937 mt(time(NULL));
-	static uniform_int_distribution<int> bit(0, 99);
-	int probCross = bit(mt);
-	double a = 0.7;
-	pair<IndividuoReal, IndividuoReal> newIndividuosCrossover;
-	IndividuoReal newIndividuo1 = this->populacao[individuo1];
-	IndividuoReal newIndividuo2 = this->populacao[individuo2];
-	vector<double> genesInd1, genesInd2;
-
-	if (this->chanceCrossover < probCross) {
-		for (int var = 0; var < this->genesInicial.size(); ++var) {
-			genesInd1.push_back(
-					(a * this->populacao[individuo1].getGenes().at(var))
-							+ ((1 - a) * this->populacao[individuo2].getGenes().at(var)));
-			genesInd2.push_back(
-					((1 - a) * this->populacao[individuo1].getGenes().at(var))
-							+ (a * this->populacao[individuo2].getGenes().at(var)));
-
+IndividuoReal PopulacaoReal::getBestIndividuo() {
+	this->bestIndividuo = this->populacao[0];
+	for (int var = 0; var < this->populacao.size(); ++var) {
+		if (this->bestIndividuo.getFitness() < this->populacao[var].getFitness()) {
+			this->bestIndividuo = this->populacao[var];
 		}
-		newIndividuo1.setGenes(genesInd1);
-		newIndividuo2.setGenes(genesInd2);
 	}
+	return this->bestIndividuo;
+}
 
-	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
-	return newIndividuosCrossover;
+const IndividuoReal PopulacaoReal::getIndividuo(int index) {
+	return this->populacao[index];
+}
+
+const vector<IndividuoReal>& PopulacaoReal::getPopulacao() const {
+	return this->populacao;
+}
+
+const int PopulacaoReal::getQuantidadeGenes(){
+	return this->genesInicial.size();
+}
+
+int PopulacaoReal::getQuantidadeIndividuos() const {
+	return this->populacao.size();
+}
+
+const IndividuoReal PopulacaoReal::getWorseIndividuo() {
+	this->worseIndividuo = this->populacao[0];
+	for (int var = 0; var < this->populacao.size(); ++var) {
+		if (this->worseIndividuo.getFitness() > this->populacao[var].getFitness()) {
+			this->worseIndividuo = this->populacao[var];
+		}
+	}
+	return this->worseIndividuo;
+}
+
+void PopulacaoReal::incrementaC() {
+	int geracoes = this->entrada["geracoes"];
+	geracoes = geracoes * 0.8;
+	this->C += 0.8 / geracoes;
+	//cout << this->C << endl;
+}
+
+void PopulacaoReal::insertIndividuo(IndividuoReal newIndividuo) {
+	this->populacao.push_back(newIndividuo);
+}
+
+void PopulacaoReal::insertIndividuo(IndividuoReal newIndividuo, int posicao) {
+	this->populacao[posicao] = newIndividuo;
+}
+
+double PopulacaoReal::mediaFitness() {
+	double media = 0;
+	IndividuoReal ind;
+	for (int var = 0; var < this->populacao.size(); ++var) {
+		ind = this->populacao[var];
+		media += ind.getFitness();
+	}
+	return media / this->populacao.size();
+}
+
+void PopulacaoReal::mutacaoPopulacao() {
+	for (int var = 0; var < this->qtdIndividuos; ++var) {
+		this->populacao[var].mutacao();
+	}
+}
+
+void PopulacaoReal::openJson() {
+	using json = nlohmann::json;
+	ifstream texto("entrada.json");
+
+	stringstream buffer;
+	buffer << texto.rdbuf();
+
+	this->entrada = json::parse(buffer.str());
 }
 
 const PopulacaoReal PopulacaoReal::rollet() {
@@ -253,7 +313,7 @@ const PopulacaoReal PopulacaoReal::rollet() {
 	pair<IndividuoReal, IndividuoReal> newIndivuos;
 	PopulacaoReal newPop;
 	newPop.populacao.clear();
-	int var, i = 0, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
+	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
 	double valorTotalFitness = 0.0, valorAcumuladoFitness = 0.0;
 	for (var = 0; var < this->qtdIndividuos; ++var) {
 		if (this->fitnessEscalonado)
@@ -261,8 +321,7 @@ const PopulacaoReal PopulacaoReal::rollet() {
 		else
 			valorTotalFitness += this->populacao[var].getFitness();
 	}
-	//cout << this->gap << endl;
-	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos) / 2; // * (this->gap / 100)
+	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos * this->gap) / 2; // * (this->gap / 100)
 			++loopNovosIndiv) {
 		for (int loop = 0; loop < 2; ++loop) {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
@@ -280,48 +339,19 @@ const PopulacaoReal PopulacaoReal::rollet() {
 			valorAcumuladoFitness = 0;
 			individuoParaCross[loop] = var;
 		}
-		newIndivuos = enviaCrossover(individuoParaCross[0], individuoParaCross[1]);
+		newIndivuos = sendCrossover(individuoParaCross[0], individuoParaCross[1]);
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
+	for (int count = newPop.getQuantidadeIndividuos(); count < this->qtdIndividuos; ++count)
+		newPop.insertIndividuo(this->populacao[count]);
 	newPop.mutacaoPopulacao();
 	if (this->elitismo == true)
 		newPop.insertIndividuo(this->getBestIndividuo(), 1);
 	return newPop;
 }
 
-const PopulacaoReal PopulacaoReal::tournament() {
-	static mt19937 mt(time(NULL));
-	pair<IndividuoReal, IndividuoReal> newIndivuos;
-	IndividuoReal indRand, indAux;
-	PopulacaoReal newPop;
-	newPop.populacao.clear();
-	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
-	for (int loopNovosIndiv = 0; loopNovosIndiv < this->qtdIndividuos / 2; ++loopNovosIndiv) {
-		for (int qtdIndvParaCross = 0; qtdIndvParaCross < 2; ++qtdIndvParaCross) {
-			static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
-			indvDoTournament = numeroRandom(mt);
-			indAux = this->populacao[indvDoTournament]; //Já encontra o primeiro indv aleatório, já o primeiro k
-			for (int var = 0; var < this->k - 1; ++var) { //k-1 pois o primeiro individuo veio da linha acima
-				static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
-				indvDoTournament = numeroRandom(mt);
-				indRand = this->populacao[indvDoTournament];
-				if (indRand.getFitness() > indAux.getFitness()) {
-					individuoParaCross[qtdIndvParaCross] = indvDoTournament;
-				}
-			}
-		}
-		newIndivuos = enviaCrossover(individuoParaCross[0], individuoParaCross[1]);
-		newPop.insertIndividuo(newIndivuos.first);
-		newPop.insertIndividuo(newIndivuos.second);
-	}
-	newPop.mutacaoPopulacao();
-	if (this->elitismo == true)
-		newPop.insertIndividuo(this->getBestIndividuo(), 1);
-	return newPop;
-}
-
-pair<IndividuoReal, IndividuoReal> PopulacaoReal::enviaCrossover(int indiv1, int indiv2) {
+pair<IndividuoReal, IndividuoReal> PopulacaoReal::sendCrossover(int indiv1, int indiv2) {
 	pair<IndividuoReal, IndividuoReal> newIndivuos;
 	switch (this->tipoCrossover) {
 	case 1:
@@ -342,64 +372,42 @@ pair<IndividuoReal, IndividuoReal> PopulacaoReal::enviaCrossover(int indiv1, int
 	return newIndivuos;
 }
 
-int PopulacaoReal::getQtdIndividuos() const {
-	return this->populacao.size();
-}
-
-void PopulacaoReal::mutacaoPopulacao() {
-	for (int var = 0; var < this->qtdIndividuos; ++var) {
-		this->populacao[var].mutacao();
-	}
-}
-
-const vector<IndividuoReal>& PopulacaoReal::getPopulacao() const {
-	return this->populacao;
-}
-
 void PopulacaoReal::setPopulacao(const vector<IndividuoReal>& populacao) {
 	this->populacao = populacao;
 }
 
-void PopulacaoReal::insertIndividuo(IndividuoReal newIndividuo) {
-	this->populacao.push_back(newIndividuo);
-}
-
-void PopulacaoReal::insertIndividuo(IndividuoReal newIndividuo, int posicao) {
-	this->populacao[posicao] = newIndividuo;
-}
-
-const IndividuoReal PopulacaoReal::getIndividuo(int index) {
-	return this->populacao[index];
-}
-
-IndividuoReal PopulacaoReal::getBestIndividuo() {
-	this->bestIndividuo = this->populacao[0];
-	for (int var = 0; var < this->populacao.size(); ++var) {
-		if (this->bestIndividuo.getFitness() < this->populacao[var].getFitness()) {
-			this->bestIndividuo = this->populacao[var];
+const PopulacaoReal PopulacaoReal::tournament() {
+	static mt19937 mt(time(NULL));
+	pair<IndividuoReal, IndividuoReal> newIndivuos;
+	IndividuoReal indRand, indAux;
+	PopulacaoReal newPop;
+	newPop.populacao.clear();
+	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
+	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos * this->gap);
+			++loopNovosIndiv) {
+		for (int qtdIndvParaCross = 0; qtdIndvParaCross < 2; ++qtdIndvParaCross) {
+			static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
+			indvDoTournament = numeroRandom(mt);
+			indAux = this->populacao[indvDoTournament]; //Já encontra o primeiro indv aleatório, já o primeiro k
+			for (int var = 0; var < this->k - 1; ++var) { //k-1 pois o primeiro individuo veio da linha acima
+				static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
+				indvDoTournament = numeroRandom(mt);
+				indRand = this->populacao[indvDoTournament];
+				if (indRand.getFitness() > indAux.getFitness()) {
+					individuoParaCross[qtdIndvParaCross] = indvDoTournament;
+				}
+			}
 		}
+		newIndivuos = sendCrossover(individuoParaCross[0], individuoParaCross[1]);
+		newPop.insertIndividuo(newIndivuos.first);
+		newPop.insertIndividuo(newIndivuos.second);
 	}
-	return this->bestIndividuo;
-}
-
-const IndividuoReal PopulacaoReal::getWorseIndividuo() {
-	this->worseIndividuo = this->populacao[0];
-	for (int var = 0; var < this->populacao.size(); ++var) {
-		if (this->worseIndividuo.getFitness() > this->populacao[var].getFitness()) {
-			this->worseIndividuo = this->populacao[var];
-		}
-	}
-	return this->worseIndividuo;
-}
-
-void PopulacaoReal::openJson() {
-	using json = nlohmann::json;
-	ifstream texto("entrada.json");
-
-	stringstream buffer;
-	buffer << texto.rdbuf();
-
-	this->entrada = json::parse(buffer.str());
+	for (int count = newPop.getQuantidadeIndividuos(); count < this->qtdIndividuos; ++count)
+		newPop.insertIndividuo(this->populacao[count]);
+	newPop.mutacaoPopulacao();
+	if (this->elitismo == true)
+		newPop.insertIndividuo(this->getBestIndividuo(), 1);
+	return newPop;
 }
 
 } /* namespace std */
