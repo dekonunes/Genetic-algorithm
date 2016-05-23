@@ -1,67 +1,67 @@
 {
   "codificacao": "real",
   "tamPop": 20,
-  "execucoes": 3,
-  "geracoes": 500,
+  "execucoes": 2,
+  "geracoes": 1000,
   "selecao": 1,
   "crossover": "padrao",
   "tournament": 3,
   "chanceCrossover": 100,
   "chanceMutacao": 1,
-  "qtdVariaveis": 10,
+  "qtdVariaveis": 5,
   "variaveis": [
     {
-      "min": -20,
-      "max": 20,
+      "min": -5,
+      "max": 5,
       "precisao": 0
     },
     {
-      "min": -20,
-      "max": 20,
+      "min": -5,
+      "max": 5,
       "precisao": 0
     },
     {
-      "min": -20,
-      "max": 20,
+      "min": -5,
+      "max": 5,
       "precisao": 0
     },
     {
-      "min": -20,
-      "max": 20,
+     "min": -5,
+      "max": 5,
       "precisao": 0
     },
     {
-      "min": -20,
-      "max": 20,
+      "min": -5,
+      "max": 5,
       "precisao": 0
     },
     {
-      "min": -20,
-      "max": 20,
+      "min": -5,
+      "max": 5,
       "precisao": 0
     },
     {
-      "min": -20,
-      "max": 20,
+      "min": -5,
+      "max": 5,
       "precisao": 0
     },
     {
-      "min": -20,
-      "max": 20,
+      "min": -5,
+      "max": 5,
       "precisao": 0
     },
     {
-      "min": -20,
-      "max": 20,
+      "min": -5,
+      "max": 5,
       "precisao": 0
     },
     {
-      "min": -20,
-      "max": 20,
+      "min": -5,
+      "max": 5,
       "precisao": 0
     }
   ],
   "elitismo": true,
   "escalonado": true,
-  "gap": 0.8
+  "gap": 1
 }

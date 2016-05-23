@@ -13,7 +13,7 @@ PopulacaoReal::PopulacaoReal() {
 	// TODO Auto-generated constructor stub
 	openJson();
 	this->qtdIndividuos = this->entrada["tamPop"];
-	this->chanceCrossover = this->entrada["chanceMutacao"];
+	this->chanceCrossover = this->entrada["chanceCrossover"];
 	this->elitismo = this->entrada["elitismo"];
 	this->k = this->entrada["tournament"];
 	this->fitnessEscalonado = this->entrada["escalonado"];
@@ -111,7 +111,6 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossover(int individuo1
 	IndividuoReal newIndividuo2 = this->populacao[individuo2];
 	vector<double> genesInd1 = this->populacao[individuo1].getGenes(), genesInd2 =
 			this->populacao[individuo2].getGenes();
-
 	if (this->chanceCrossover >= a) {
 		static uniform_int_distribution<int> numRandon(0, this->genesInicial.size() - 1);
 		a = numRandon(mt);
@@ -126,9 +125,7 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossover(int individuo1
 		newIndividuo1.setGenes(genesInd1);
 		newIndividuo2.setGenes(genesInd2);
 	}
-
 	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
-
 	return newIndividuosCrossover;
 }
 
@@ -247,7 +244,7 @@ const vector<IndividuoReal>& PopulacaoReal::getPopulacao() const {
 	return this->populacao;
 }
 
-const int PopulacaoReal::getQuantidadeGenes(){
+const int PopulacaoReal::getQuantidadeGenes() {
 	return this->genesInicial.size();
 }
 
@@ -391,9 +388,8 @@ const PopulacaoReal PopulacaoReal::tournament() {
 				static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
 				indvDoTournament = numeroRandom(mt);
 				indRand = this->populacao[indvDoTournament];
-				if (indRand.getFitness() > indAux.getFitness()) {
+				if (indRand.getFitness() > indAux.getFitness())
 					individuoParaCross[qtdIndvParaCross] = indvDoTournament;
-				}
 			}
 		}
 		newIndivuos = sendCrossover(individuoParaCross[0], individuoParaCross[1]);

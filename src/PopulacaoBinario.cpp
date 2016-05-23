@@ -13,11 +13,12 @@ PopulacaoBinario::PopulacaoBinario() {
 	openJson();
 
 	this->qtdIndividuos = this->entrada["tamPop"];
-	this->chanceCrossover = this->entrada["chanceMutacao"];
+	this->chanceCrossover = this->entrada["chanceCrossover"];
 	this->elitismo = this->entrada["elitismo"];
 	this->k = this->entrada["tournament"];
 	this->fitnessEscalonado = this->entrada["escalonado"];
 	this->C = 1.2;
+	this->gap = this->entrada["gap"];
 
 	for (int var = 0; var < this->qtdIndividuos; ++var)
 		this->populacao.push_back(IndividuoBinario());
@@ -182,15 +183,13 @@ const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossover(int i
 const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossoverUniforme(int individuo1,
 		int individuo2) {
 	static mt19937 mt(time(NULL));
-	static uniform_int_distribution<int> bit(0, 100);
+	static uniform_int_distribution<int> bit(1, 99);
 	int var, a = bit(mt);
 	int qtdBits = this->populacao[individuo1].getCromossomo().size();
 	pair<IndividuoBinario, IndividuoBinario> newIndividuosCrossover;
 	IndividuoBinario newIndividuo1 = this->populacao[individuo1];
 	IndividuoBinario newIndividuo2 = this->populacao[individuo2];
-
 	if (this->chanceCrossover > a) {
-
 		string cromossomoNewInviduio1 = this->populacao[individuo1].getCromossomo();
 		string cromossomoNewInviduio2 = this->populacao[individuo2].getCromossomo();
 		for (int var = 0; var < this->populacao[individuo1].getCromossomo().size(); ++var) {
@@ -225,7 +224,8 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 		else
 			valorTotalFitness += this->populacao[var].getFitness();
 	}
-	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos*this->gap); ++loopNovosIndiv) {
+	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos * this->gap)/2;
+			++loopNovosIndiv) {
 		for (int loop = 0; loop < 2; ++loop) {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
 			valorDaRollet = numeroRandom(mt);
@@ -236,18 +236,19 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 				else
 					valorAcumuladoFitness += ((double) this->populacao[var].getFitness()
 							/ valorTotalFitness) * 100;
+
 				if (valorDaRollet < valorAcumuladoFitness)
 					break;
 			}
 			valorAcumuladoFitness = 0;
 			individuoParaCross[loop] = var;
 		}
-		newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
+		newIndivuos = crossoverUniforme(individuoParaCross[0], individuoParaCross[1]);
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
 	for (int count = newPop.getQtdIndividuos(); count < this->qtdIndividuos; ++count)
-			newPop.insertIndividuo(this->populacao[count]);
+		newPop.insertIndividuo(this->populacao[count]);
 	newPop.mutacaoPopulacao();
 	if (this->elitismo == true)
 		newPop.insertIndividuo(this->getBestIndividuo(), 1);
@@ -262,7 +263,8 @@ const PopulacaoBinario PopulacaoBinario::tournament() {
 	newPop.populacao.clear();
 	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
 
-	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos*this->gap); ++loopNovosIndiv) {
+	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos * this->gap);
+			++loopNovosIndiv) {
 		for (int qtdIndvParaCross = 0; qtdIndvParaCross < 2; ++qtdIndvParaCross) {
 			static uniform_int_distribution<int> numeroRandom(0, this->qtdIndividuos - 1);
 			indvDoTournament = numeroRandom(mt);
@@ -276,15 +278,15 @@ const PopulacaoBinario PopulacaoBinario::tournament() {
 				}
 			}
 		}
-		newIndivuos = crossoverUniforme(individuoParaCross[0], individuoParaCross[1]);
+		newIndivuos = crossover(individuoParaCross[0], individuoParaCross[1]);
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
 	for (int count = newPop.getQtdIndividuos(); count < this->qtdIndividuos; ++count)
-			newPop.insertIndividuo(this->populacao[count]);
+		newPop.insertIndividuo(this->populacao[count]);
 	newPop.mutacaoPopulacao();
-		if (this->elitismo == true)
-			newPop.insertIndividuo(this->getBestIndividuo(), 1);
+	if (this->elitismo == true)
+		newPop.insertIndividuo(this->getBestIndividuo(), 1);
 	return newPop;
 }
 

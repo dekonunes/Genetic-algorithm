@@ -41,6 +41,7 @@ int main() {
 			pair<int, int> auxGenes;
 			IndividuoBinario ind;
 			PopulacaoBinario pop;
+			PopulacaoBinario popNew;
 			int aux;
 			for (int i = 0; i < entrada["geracoes"]; ++i) {
 				aux = entrada["selecao"];
@@ -78,8 +79,8 @@ int main() {
 			vector<pair<double, double>> genes;
 			vector<double> auxGenes;
 			PopulacaoReal pop;
+			//PopulacaoReal popNew;
 			IndividuoReal ind;
-			PopulacaoReal newPop;
 			int aux;
 			for (int i = 0; i < geracoes; ++i) {
 				aux = entrada["selecao"];
@@ -87,15 +88,14 @@ int main() {
 				case 1:
 					if ((i < geracoes * 0.9) && (i > geracoes * 0.1))
 						pop.incrementaC();
-					newPop = pop.rollet();
+					pop = pop.rollet();
 					break;
 				case 2:
-					newPop = pop.tournament();
+					pop = pop.tournament();
 					break;
 				default:
 					break;
 				}
-				pop.setPopulacao(newPop.getPopulacao());
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += (ind.getFitness() / execucoesEntrada);
 				vectorPlotMediaFIT.at(i) += (calculoMediaIndvReal(pop) / execucoesEntrada);
@@ -161,7 +161,8 @@ double distanciaRealGenotipica(PopulacaoReal pop, int tipoDistancia) {
 			switch (tipoDistancia) {
 			case 1:
 				for (int var = 0; var < pop.getQuantidadeGenes(); ++var) {
-					dist += (euclidiana(genesIndividuo1.at(var), genesIndividuo2.at(var))/(x*y));
+					dist +=
+							(euclidiana(genesIndividuo1.at(var), genesIndividuo2.at(var)) / (x * y));
 				}
 				break;
 			case 2:
