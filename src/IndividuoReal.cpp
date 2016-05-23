@@ -89,7 +89,7 @@ void IndividuoReal::mutacao() {
 	pair<double, double> genesIniciais = this->genesFInicial[0];
 	static uniform_real_distribution<double> numRandomDelta(genesIniciais.first,
 			genesIniciais.second);
-	double delta = numRandomDelta(mt) / 100;
+	double delta = numRandomDelta(mt) / 10;
 	static uniform_int_distribution<int> numRandom(0, 100);
 	int numRand = numRandom(mt);
 	if (numRand < this->probMutacao) {

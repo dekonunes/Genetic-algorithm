@@ -82,7 +82,6 @@ int main() {
 			PopulacaoReal newPop;
 			int aux;
 			for (int i = 0; i < geracoes; ++i) {
-				pop.mutacaoPopulacao();
 				aux = entrada["selecao"];
 				switch (aux) {
 				case 1:
@@ -100,7 +99,7 @@ int main() {
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += (ind.getFitness() / execucoesEntrada);
 				vectorPlotMediaFIT.at(i) += (calculoMediaIndvReal(pop) / execucoesEntrada);
-				vectorPlotDiversidade.at(i) += (distanciaRealGenotipica(pop, 1) / execucoesEntrada);
+				vectorPlotDiversidade.at(i) += (distanciaRealFenotipica(pop, 1) / execucoesEntrada);
 			}
 			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
 					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;

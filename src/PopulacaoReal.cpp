@@ -73,10 +73,8 @@ pair<double, double> PopulacaoReal::calculoEscalonadoMaior() {
 	IndividuoReal indMax = getBestIndividuo();
 	double media = mediaFitness(), alpha, beta, max = indMax.getFitness(), min =
 			indMin.getFitness();
-
 	alpha = media / (media - min);
 	beta = (-min * media) / (media - min);
-
 	pares.first = alpha;
 	pares.second = beta;
 	return pares;

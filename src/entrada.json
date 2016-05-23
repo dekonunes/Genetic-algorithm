@@ -11,57 +11,57 @@
   "qtdVariaveis": 10,
   "variaveis": [
     {
-   "min": -5,
-      "max": 5,
+      "min": -20,
+      "max": 20,
       "precisao": 0
     },
     {
-      "min": -5,
-      "max": 5,
+      "min": -20,
+      "max": 20,
       "precisao": 0
     },
     {
-      "min": -5,
-      "max": 5,
+      "min": -20,
+      "max": 20,
       "precisao": 0
     },
     {
-      "min": -5,
-      "max": 5,
+      "min": -20,
+      "max": 20,
       "precisao": 0
     },
     {
-      "min": -5,
-      "max": 5,
+      "min": -20,
+      "max": 20,
       "precisao": 0
     },
     {
-      "min": -5,
-      "max": 5,
+      "min": -20,
+      "max": 20,
       "precisao": 0
     },
     {
-      "min": -5,
-      "max": 5,
+      "min": -20,
+      "max": 20,
       "precisao": 0
     },
     {
-      "min": -5,
-      "max": 5,
+      "min": -20,
+      "max": 20,
       "precisao": 0
     },
     {
-      "min": -5,
-      "max": 5,
+      "min": -20,
+      "max": 20,
       "precisao": 0
     },
     {
-      "min": -5,
-      "max": 5,
+      "min": -20,
+      "max": 20,
       "precisao": 0
     }
   ],
   "elitismo": true,
-  "escalonado": false,
+  "escalonado": true,
   "gap": 0.8
 }
