@@ -7,6 +7,7 @@
 
 #ifndef MAIN_HPP_
 #define MAIN_HPP_
+
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -17,7 +18,5 @@
 #include "PopulacaoBinario.hpp"
 #include "Diversidade.hpp"
 #include "json.hpp"
-
-
 
 #endif /* MAIN_HPP_ */

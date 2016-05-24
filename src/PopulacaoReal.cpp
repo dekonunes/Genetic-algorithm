@@ -13,10 +13,15 @@ PopulacaoReal::PopulacaoReal() {
 	// TODO Auto-generated constructor stub
 	openJson();
 	this->qtdIndividuos = this->entrada["tamPop"];
+	this->cCrowding = this->entrada["crowding"];
 	this->chanceCrossover = this->entrada["chanceCrossover"];
 	this->elitismo = this->entrada["elitismo"];
 	this->k = this->entrada["tournament"];
 	this->fitnessEscalonado = this->entrada["escalonado"];
+	this->fitnessSharing = this->entrada["sharring"];
+	this->sharingSigma = this->entrada["sigma"];
+	this->sharingAlpha = this->entrada["alpha"];
+
 	this->gap = this->entrada["gap"];
 	this->C = 1.2;
 
@@ -45,7 +50,6 @@ PopulacaoReal::PopulacaoReal() {
 	if (entrada["crossover"] == "BLX") {
 		this->tipoCrossover = 4;
 	}
-
 }
 
 PopulacaoReal::~PopulacaoReal() {
@@ -100,6 +104,10 @@ double PopulacaoReal::calculoFitnessEscalonado(double fitness) {
 		fitnessEscalonado = 0;
 
 	return fitnessEscalonado;
+}
+
+double PopulacaoReal::calculoFitnessSharring(double fitness) {
+	return fitness / summationDistanceGenotipica(); //Onde aplica a segunda formula?
 }
 
 const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossover(int individuo1, int individuo2) {
@@ -226,6 +234,46 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverUniformAverage(
 	return newIndividuosCrossover;
 }
 
+const IndividuoReal PopulacaoReal::crowding(int individuoCrowding) {
+	static uniform_int_distribution<int> numRandon(0, this->qtdIndividuos);
+	IndividuoReal individuoAuxiliar;
+	int numeroAleatorio;
+
+	for (int var = 0; var < this->cCrowding; ++var) {
+		numeroAleatorio = numRandon(mt);
+		if (euclidiana(this->populacao[individuoCrowding].getFitness(),
+				this->populacao[numeroAleatorio].getFitness()))
+			;
+		//Não entendi quando subtitui, como assim substitui na população antiga?
+	}
+	return individuoAuxiliar;
+}
+
+double distanciaRealFenotipica() {
+	IndividuoReal ind1, ind2;
+	double fitnessInd1, fitnessInd2, dist = 0;
+	for (int x = 0; x < pop.getQuantidadeIndividuos(); ++x) {
+		ind1 = pop.getIndividuo(x);
+		fitnessInd1 = ind1.getFitness();
+		for (int y = x + 1; y < pop.getQuantidadeIndividuos(); ++y) {
+			ind2 = pop.getIndividuo(y);
+			fitnessInd2 = ind2.getFitness();
+			switch (tipoDistancia) {
+			case 1:
+				dist += euclidiana(fitnessInd1, fitnessInd2);
+				break;
+			case 2:
+				dist += euclidianaNormalizada(fitnessInd1, fitnessInd2);
+				break;
+			default:
+				break;
+			}
+
+		}
+	}
+	return dist;
+}
+
 IndividuoReal PopulacaoReal::getBestIndividuo() {
 	this->bestIndividuo = this->populacao[0];
 	for (int var = 0; var < this->populacao.size(); ++var) {
@@ -266,7 +314,7 @@ void PopulacaoReal::incrementaC() {
 	int geracoes = this->entrada["geracoes"];
 	geracoes = geracoes * 0.8;
 	this->C += 0.8 / geracoes;
-	//cout << this->C << endl;
+//cout << this->C << endl;
 }
 
 void PopulacaoReal::insertIndividuo(IndividuoReal newIndividuo) {
@@ -369,6 +417,42 @@ pair<IndividuoReal, IndividuoReal> PopulacaoReal::sendCrossover(int indiv1, int 
 
 void PopulacaoReal::setPopulacao(const vector<IndividuoReal>& populacao) {
 	this->populacao = populacao;
+}
+
+double PopulacaoReal::summationDistanceFenotipica() {
+	IndividuoReal ind1, ind2;
+	double fitnessInd1, fitnessInd2, distancia = 0;
+	for (int x = 0; x < this->qtdIndividuos; ++x) {
+		ind1 = this->populacao[x];
+		fitnessInd1 = ind1.getFitness();
+		for (int y = x + 1; y < this->qtdIndividuos; ++y) {
+			ind2 = this->populacao[y];
+			fitnessInd2 = ind2.getFitness();
+			for (int var = 0; var < this->getQuantidadeGenes(); ++var) {
+				distancia += euclidiana(fitnessInd1, fitnessInd2);
+			}
+		}
+	}
+	return distancia;
+}
+
+double PopulacaoReal::summationDistanceGenotipica() {
+	IndividuoReal ind1, ind2;
+	vector<double> genesIndividuo1, genesIndividuo2;
+	double distancia = 0;
+	for (int x = 0; x < this->qtdIndividuos; ++x) {
+		ind1 = this->populacao[x];
+		genesIndividuo1 = ind1.getGenes();
+		for (int y = x + 1; y < this->qtdIndividuos; ++y) {
+			ind2 = this->populacao[y];
+			genesIndividuo2 = ind2.getGenes();
+			for (int var = 0; var < this->getQuantidadeGenes(); ++var) {
+				distancia +=
+						(euclidiana(genesIndividuo1.at(var), genesIndividuo2.at(var)) / (x * y));
+			}
+		}
+	}
+	return distancia;
 }
 
 const PopulacaoReal PopulacaoReal::tournament() {

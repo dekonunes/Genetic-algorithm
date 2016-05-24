@@ -8,6 +8,13 @@
   "tournament": 3,
   "chanceCrossover": 100,
   "chanceMutacao": 1,
+  "elitismo": true,
+  "escalonado": true,
+  "gap": 1,
+  "sharring": false,
+  "sigma": 1,
+  "alpha": 1,
+  "crowding": 3,
   "qtdVariaveis": 5,
   "variaveis": [
     {
@@ -60,8 +67,5 @@
       "max": 5,
       "precisao": 0
     }
-  ],
-  "elitismo": true,
-  "escalonado": true,
-  "gap": 1
+  ]
 }

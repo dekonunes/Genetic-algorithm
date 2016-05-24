@@ -10,14 +10,18 @@
 
 class Populacao {
 protected:
+	float C; //Para o calculo do fitness escalonado;
 	int chanceCrossover;
-	int tipoCrossover;
-	int qtdIndividuos;
-	int k; //valor do tournament
-	float gap;
+	int cCrowding;
 	bool elitismo;
 	bool fitnessEscalonado;
-	float C; //Para o calculo do fitness escalonado;
+	bool fitnessSharing;
+	float gap;
+	int k; //valor do tournament
+	int qtdIndividuos;
+	float sharingAlpha;
+	float sharingSigma;
+	int tipoCrossover;
 };
 
 #endif /* POPULACAO_HPP_ */

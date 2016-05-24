@@ -7,14 +7,12 @@
 
 #ifndef POPULACAOREAL_HPP_
 #define POPULACAOREAL_HPP_
+
+#include <utility>
+#include <vector>
+
 #include "IndividuoReal.hpp"
 #include "Populacao.hpp"
-#include "json.hpp"
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <random>
-#include <utility>
 
 namespace std {
 
@@ -25,10 +23,12 @@ public:
 	pair<double, double> calculoEscalonadoMenor();
 	pair<double, double> calculoEscalonadoMaior();
 	double calculoFitnessEscalonado(double);
+	double calculoFitnessSharring(double);
 	const pair<IndividuoReal, IndividuoReal> crossover(int, int);
 	const pair<IndividuoReal, IndividuoReal> crossoverArithmetic(int, int);
 	const pair<IndividuoReal, IndividuoReal> crossoverBLX(int, int);
 	const pair<IndividuoReal, IndividuoReal> crossoverUniformAverage(int, int);
+	const IndividuoReal crowding();
 	IndividuoReal getBestIndividuo();
 	const IndividuoReal getIndividuo(int index);
 	virtual const vector<IndividuoReal>& getPopulacao() const;
@@ -36,14 +36,16 @@ public:
 	int getQuantidadeIndividuos() const;
 	const IndividuoReal getWorseIndividuo();
 	void incrementaC();
-	void insertIndividuo(IndividuoReal newIndividuo);
-	void insertIndividuo(IndividuoReal newIndividuo, int posicao);
+	void insertIndividuo(IndividuoReal);
+	void insertIndividuo(IndividuoReal, int);
 	double mediaFitness();
 	void mutacaoPopulacao();
 	void openJson();
 	const PopulacaoReal rollet();
 	pair<IndividuoReal, IndividuoReal> sendCrossover(int, int);
 	void setPopulacao(const vector<IndividuoReal>& populacao);
+	double summationDistanceFenotipica();
+	double summationDistanceGenotipica();
 	const PopulacaoReal tournament();
 private:
 	vector<IndividuoReal> populacao;

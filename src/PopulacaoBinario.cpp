@@ -13,10 +13,14 @@ PopulacaoBinario::PopulacaoBinario() {
 	openJson();
 
 	this->qtdIndividuos = this->entrada["tamPop"];
+	this->cCrowding = this->entrada["crowding"];
 	this->chanceCrossover = this->entrada["chanceCrossover"];
 	this->elitismo = this->entrada["elitismo"];
 	this->k = this->entrada["tournament"];
 	this->fitnessEscalonado = this->entrada["escalonado"];
+	this->fitnessSharing = this->entrada["sharring"];
+	this->sharingSigma = this->entrada["sigma"];
+	this->sharingAlpha = this->entrada["alpha"];
 	this->C = 1.2;
 	this->gap = this->entrada["gap"];
 
