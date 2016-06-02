@@ -235,6 +235,7 @@ const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossoverUniformAverage(
 }
 
 const IndividuoReal PopulacaoReal::crowding(int individuoCrowding) {
+	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> numRandon(0, this->qtdIndividuos);
 	IndividuoReal individuoAuxiliar;
 	int numeroAleatorio;
@@ -249,26 +250,16 @@ const IndividuoReal PopulacaoReal::crowding(int individuoCrowding) {
 	return individuoAuxiliar;
 }
 
-double distanciaRealFenotipica() {
+double PopulacaoReal::distanciaRealFenotipica() {
 	IndividuoReal ind1, ind2;
 	double fitnessInd1, fitnessInd2, dist = 0;
-	for (int x = 0; x < pop.getQuantidadeIndividuos(); ++x) {
-		ind1 = pop.getIndividuo(x);
+	for (int x = 0; x < this->populacao.size(); ++x) {
+		ind1 = this->populacao[x];
 		fitnessInd1 = ind1.getFitness();
-		for (int y = x + 1; y < pop.getQuantidadeIndividuos(); ++y) {
-			ind2 = pop.getIndividuo(y);
+		for (int y = x + 1; y < this->populacao.size(); ++y) {
+			ind2 = this->populacao[y];
 			fitnessInd2 = ind2.getFitness();
-			switch (tipoDistancia) {
-			case 1:
-				dist += euclidiana(fitnessInd1, fitnessInd2);
-				break;
-			case 2:
-				dist += euclidianaNormalizada(fitnessInd1, fitnessInd2);
-				break;
-			default:
-				break;
-			}
-
+			dist += euclidiana(fitnessInd1, fitnessInd2);
 		}
 	}
 	return dist;

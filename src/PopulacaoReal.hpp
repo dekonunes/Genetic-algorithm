@@ -13,6 +13,7 @@
 
 #include "IndividuoReal.hpp"
 #include "Populacao.hpp"
+#include "Diversidade.hpp"
 
 namespace std {
 
@@ -28,7 +29,8 @@ public:
 	const pair<IndividuoReal, IndividuoReal> crossoverArithmetic(int, int);
 	const pair<IndividuoReal, IndividuoReal> crossoverBLX(int, int);
 	const pair<IndividuoReal, IndividuoReal> crossoverUniformAverage(int, int);
-	const IndividuoReal crowding();
+	const IndividuoReal crowding(int);
+	double distanciaRealFenotipica();
 	IndividuoReal getBestIndividuo();
 	const IndividuoReal getIndividuo(int index);
 	virtual const vector<IndividuoReal>& getPopulacao() const;

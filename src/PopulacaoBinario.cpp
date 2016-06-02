@@ -193,6 +193,7 @@ const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossoverUnifor
 	pair<IndividuoBinario, IndividuoBinario> newIndividuosCrossover;
 	IndividuoBinario newIndividuo1 = this->populacao[individuo1];
 	IndividuoBinario newIndividuo2 = this->populacao[individuo2];
+
 	if (this->chanceCrossover > a) {
 		string cromossomoNewInviduio1 = this->populacao[individuo1].getCromossomo();
 		string cromossomoNewInviduio2 = this->populacao[individuo2].getCromossomo();
@@ -222,17 +223,22 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 	newPop.populacao.clear();
 	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
 	double valorTotalFitness = 0.0, valorAcumuladoFitness = 0.0;
+
+	newPop.mutacaoPopulacao();
+
 	for (var = 0; var < this->qtdIndividuos; ++var) {
 		if (this->fitnessEscalonado)
 			valorTotalFitness += calculoFitnessEscalonado(this->populacao[var].getFitness());
 		else
 			valorTotalFitness += this->populacao[var].getFitness();
 	}
-	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos * this->gap)/2;
+	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos * this->gap) / 2;
 			++loopNovosIndiv) {
 		for (int loop = 0; loop < 2; ++loop) {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
+
 			valorDaRollet = numeroRandom(mt);
+
 			for (var = 0; var < this->qtdIndividuos - 1; ++var) {
 				if (this->fitnessEscalonado)
 					valorAcumuladoFitness += ((double) calculoFitnessEscalonado(
@@ -251,11 +257,15 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
 	}
+
 	for (int count = newPop.getQtdIndividuos(); count < this->qtdIndividuos; ++count)
 		newPop.insertIndividuo(this->populacao[count]);
-	newPop.mutacaoPopulacao();
+
+
+
 	if (this->elitismo == true)
 		newPop.insertIndividuo(this->getBestIndividuo(), 1);
+
 	return newPop;
 }
 

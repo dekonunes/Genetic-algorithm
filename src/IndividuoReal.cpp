@@ -42,7 +42,7 @@ double IndividuoReal::calculoFitness() {
 
 double IndividuoReal::calculoFucaoObjetivo() {
 	this->funcaoObjetivo = 0.0;
-	for (int var = 0; var < this->genes.size() - 1; ++var) {
+	for (int var = 0; var < this->genes.size() ; ++var) {
 		this->funcaoObjetivo += (this->genes[var] * this->genes[var]);
 	}
 	/*for (int var = 0; var < this->genes.size() - 1; ++var) {

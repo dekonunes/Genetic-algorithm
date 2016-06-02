@@ -37,15 +37,12 @@ int main() {
 	vector<double> vectorPlotDiversidade(geracoes, 0);
 	for (int execucoes = 0; execucoes < entrada["execucoes"]; ++execucoes) {
 		if (entrada["codificacao"] == "binario") {
-			vector<pair<int, int>> genes;
-			pair<int, int> auxGenes;
 			IndividuoBinario ind;
 			PopulacaoBinario pop;
-			PopulacaoBinario popNew;
-			int aux;
+			int selecao;
 			for (int i = 0; i < entrada["geracoes"]; ++i) {
-				aux = entrada["selecao"];
-				switch (aux) {
+				selecao = entrada["selecao"];
+				switch (selecao) {
 				case 1:
 					if ((i < geracoes * 0.9) && (i > geracoes * 0.1))
 						pop.incrementaC();
@@ -79,7 +76,6 @@ int main() {
 			vector<pair<double, double>> genes;
 			vector<double> auxGenes;
 			PopulacaoReal pop;
-			//PopulacaoReal popNew;
 			IndividuoReal ind;
 			int aux;
 			for (int i = 0; i < geracoes; ++i) {
@@ -199,7 +195,7 @@ double distanciaRealFenotipica(PopulacaoReal pop, int tipoDistancia) {
 
 		}
 	}
-	return dist;
+	return dist/500;
 }
 
 void escreverArquivo(vector<double> vector) {
