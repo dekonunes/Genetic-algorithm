@@ -261,8 +261,6 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 	for (int count = newPop.getQtdIndividuos(); count < this->qtdIndividuos; ++count)
 		newPop.insertIndividuo(this->populacao[count]);
 
-
-
 	if (this->elitismo == true)
 		newPop.insertIndividuo(this->getBestIndividuo(), 1);
 

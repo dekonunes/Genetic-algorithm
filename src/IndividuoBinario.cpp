@@ -13,7 +13,7 @@ IndividuoBinario::IndividuoBinario() {
 	// TODO Auto-generated constructor stub
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 1);
-	string aux,gene;
+	string aux;
 	openJson();
 	pair<int, int> auxGenes;
 
@@ -32,11 +32,8 @@ IndividuoBinario::IndividuoBinario() {
 	for (int var = 0; var < this->genes.size(); ++var) {
 		for (int i = 0; i < this->qtdBits[var]; i++) {
 			aux = static_cast<ostringstream*>(&(ostringstream() << bit(mt)))->str();
-			gene = gene + aux;
 			this->cromossomo = this->cromossomo + aux;
 		}
-		this->genesIndividuo.push_back(gene);
-		gene.erase();
 	}
 	this->probMutacao = this->entrada["chanceMutacao"];
 	this->funcaoObjetivo = 0.0;
@@ -94,28 +91,18 @@ double IndividuoBinario::calculoFitness() {
 }
 
 double IndividuoBinario::calculoFucaoObjetivo() {
+	int var2 = 0;
 	this->funcaoObjetivo = 0.0;
-	/*int A, B;
-	 string stringGene[10];
-	 for (int var2 = 0; var2 < this->genes.size(); ++var2) {
-	 for (int var = 0; var < this->qtdBits[var2]; ++var) {
-	 stringGene[var2] = stringGene[var2] + this->cromossomo[posGeneNoCromosso(var2) + var];
-	 }
-
-	 }
-	 A = (int) decodificaCromossomo(60, 0, stringGene[0]);
-	 B = (int) decodificaCromossomo(50, 0, stringGene[1]);
-
-	 this->funcaoObjetivo = A * 180 + B * 300;*/
-	/*for (int var = 0; var < getNumeroBitsTotal() - 1; ++var)
-	 if (this->cromossomo[var] != this->cromossomo[var + 1])
-	 this->funcaoObjetivo++;*/
-
+	string gene;
 	for (int count = 0; count < this->genes.size(); ++count) {
-		//cout << this->funcaoObjetivo << endl;
-		this->funcaoObjetivo += fullyDeceptiveF3(this->genesIndividuo.at(count));
-	}
+		for (int var = 0; var < this->qtdBits[count]; ++var) {
+			gene = gene + this->cromossomo[var2];
+			var2++;
+		}
 
+		this->funcaoObjetivo += fullyDeceptiveF3(gene);
+		gene.clear();
+	}
 	return this->funcaoObjetivo;
 }
 
@@ -144,6 +131,7 @@ int IndividuoBinario::fullyDeceptiveF3(string bits) {
 	if (bits == "111") {
 		return 30;
 	}
+	return 0;
 }
 
 void IndividuoBinario::mutacao() {

@@ -45,7 +45,6 @@ public:
 private:
 	string cromossomo;
 	vector<pair<int, int>> genes;
-	vector<string> genesIndividuo;
 	int qtdBits[100];
 	json entrada;
 };
