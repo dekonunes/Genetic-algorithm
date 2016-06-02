@@ -35,6 +35,7 @@ IndividuoBinario::IndividuoBinario() {
 			this->cromossomo = this->cromossomo + aux;
 		}
 	}
+
 	this->probMutacao = this->entrada["chanceMutacao"];
 	this->funcaoObjetivo = 0.0;
 	this->fitness = 0.0;
@@ -59,32 +60,7 @@ double IndividuoBinario::getFitness() {
 }
 
 double IndividuoBinario::calculoFitness() {
-	/*int A, B, qtdDisco, maxExtrapolaFunc;
-	 double penalidade, aux, r = -1.0, maxExtrapolaFO;
-	 string stringGene[10];
-	 for (int var2 = 0; var2 < this->genes.size(); ++var2) {
-	 for (int var = 0; var < this->qtdBits[var2]; ++var) {
-	 stringGene[var2] = stringGene[var2] + this->cromossomo[posGeneNoCromosso(var2) + var];
-	 }
-
-	 }
-	 A = (int) decodificaCromossomo(60, 0, stringGene[0]);
-	 B = (int) decodificaCromossomo(50, 0, stringGene[1]);
-	 qtdDisco = A + (2 * B);
-	 maxExtrapolaFunc = 40;
-	 maxExtrapolaFO = 60 * 180 + 50 * 300;
-
-	 if (qtdDisco <= 120)
-	 penalidade = 0;
-	 else {
-	 penalidade = (double) (qtdDisco - 120) / (double) maxExtrapolaFunc;
-	 //cout << "Valor de A: " << A << " Valor de B:" << B << endl;
-	 //cout << "valor penalidade: " << penalidade << endl;
-	 }
-
-	 this->fitness = calculoFucaoObjetivo() / (double) maxExtrapolaFO + (r * penalidade);*/
 	this->fitness = calculoFucaoObjetivo();
-	//cout << this->fitness << endl;
 	if (this->fitness < 0)
 		this->fitness = 0;
 	return this->fitness;
@@ -94,15 +70,18 @@ double IndividuoBinario::calculoFucaoObjetivo() {
 	int var2 = 0;
 	this->funcaoObjetivo = 0.0;
 	string gene;
+
 	for (int count = 0; count < this->genes.size(); ++count) {
 		for (int var = 0; var < this->qtdBits[count]; ++var) {
 			gene = gene + this->cromossomo[var2];
 			var2++;
 		}
-
-		this->funcaoObjetivo += fullyDeceptiveF3(gene);
+		//this->funcaoObjetivo += fullyDeceptiveF3(gene);
+		this->funcaoObjetivo += deceptive(gene);
 		gene.clear();
 	}
+
+	//cout << this->cromossomo << endl;
 	return this->funcaoObjetivo;
 }
 
@@ -132,6 +111,17 @@ int IndividuoBinario::fullyDeceptiveF3(string bits) {
 		return 30;
 	}
 	return 0;
+}
+
+
+int IndividuoBinario::deceptive(string bits) {
+	int resultado = 0;
+	for (int count = 0; count < 4; ++count)
+		if(bits[count] == '1')
+			resultado++;
+	if (resultado == 0)
+		resultado = 5;
+	return resultado;
 }
 
 void IndividuoBinario::mutacao() {

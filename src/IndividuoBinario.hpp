@@ -33,6 +33,7 @@ public:
 	double calculoFitness();
 	double calculoFucaoObjetivo();
 	int fullyDeceptiveF3(string);
+	int deceptive(string);
 	void mutacao();
 	const double decodificaCromossomo(int max, int min, string gene);
 	double getFuncaoObjetivo();
@@ -42,6 +43,7 @@ public:
 	string decToBin(int number);
 	int binToDec(string number);
 	void openJson();
+
 private:
 	string cromossomo;
 	vector<pair<int, int>> genes;

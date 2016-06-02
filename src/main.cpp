@@ -39,9 +39,9 @@ int main() {
 		if (entrada["codificacao"] == "binario") {
 			IndividuoBinario ind;
 			PopulacaoBinario pop;
-			int selecao;
+			int selecao = entrada["selecao"];
 			for (int i = 0; i < entrada["geracoes"]; ++i) {
-				selecao = entrada["selecao"];
+				//cout << i << endl;
 				switch (selecao) {
 				case 1:
 					if ((i < geracoes * 0.9) && (i > geracoes * 0.1))
@@ -58,6 +58,7 @@ int main() {
 				vectorPlotFIT.at(i) += ind.getFitness() / execucoesEntrada;
 				vectorPlotMediaFIT.at(i) += calculoMediaIndvBinario(pop) / execucoesEntrada;
 				vectorPlotDiversidade.at(i) += distanciaBinario(pop, 1) / execucoesEntrada;
+
 			}
 			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
 					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
