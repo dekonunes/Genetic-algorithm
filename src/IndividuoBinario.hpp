@@ -9,15 +9,17 @@
 #define INDIVIDUOBINARIO_H_
 
 #include "Individuo.hpp"
-#include "json.hpp"
 #include <iostream>
-#include <stdio.h>
-#include <string.h>
+#include <vector>
+#include <iostream>
+#include <unistd.h>
+#include <cstring>
+#include <cstdio>
+#include <random>
 #include <ctime>
 #include <sstream>
 #include <sys/types.h>
-#include <unistd.h>
-#include <random>
+#include "json.hpp"
 #include <fstream>
 
 using json = nlohmann::json;
@@ -27,8 +29,8 @@ class IndividuoBinario: public Individuo {
 public:
 	IndividuoBinario();
 	virtual ~IndividuoBinario();
-	const string& getCromossomo() const;
-	void setCromossomo(const string& cromossomo);
+	string getCromossomo() const;
+	void setCromossomo(string cromossomo);
 	double getFitness();
 	double calculoFitness();
 	double calculoFucaoObjetivo();
@@ -43,11 +45,10 @@ public:
 	string decToBin(int number);
 	int binToDec(string number);
 	void openJson();
-
 private:
-	string cromossomo;
 	vector<pair<int, int>> genes;
-	int qtdBits[100];
+	string cromossomo;
+	vector<int> quantidadeBitsCadaGene;
 	json entrada;
 };
 

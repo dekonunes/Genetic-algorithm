@@ -14,25 +14,26 @@ IndividuoBinario::IndividuoBinario() {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(0, 1);
 	string aux;
-	openJson();
 	pair<int, int> auxGenes;
 
-	for (int i = 0; i < entrada["qtdVariaveis"]; i++) {
-		auxGenes.first = this->entrada["variaveis"][i]["min"];
-		auxGenes.second = this->entrada["variaveis"][i]["max"];
+	openJson();
+	this->cromossomo.clear();
+	for (int count = 0; count < this->entrada["qtdVariaveis"]; ++count) {
+		auxGenes.first = this->entrada["variaveis"][count]["min"];
+		auxGenes.second = this->entrada["variaveis"][count]["max"];
 		this->genes.push_back(auxGenes);
 	}
 
-	for (int var = 0; var < this->genes.size(); ++var) {
-		this->qtdBits[var] = getNumeroBits(this->entrada["variaveis"][var]["max"],
-				this->entrada["variaveis"][var]["min"],
-				this->entrada["variaveis"][var]["precisao"]);
+	for (int count = 0; count < this->genes.size(); ++count) {
+		this->quantidadeBitsCadaGene.push_back(
+				getNumeroBits(this->entrada["variaveis"][count]["max"],
+						this->entrada["variaveis"][count]["min"],
+						this->entrada["variaveis"][count]["precisao"]));
 	}
 
 	for (int var = 0; var < this->genes.size(); ++var) {
-		for (int i = 0; i < this->qtdBits[var]; i++) {
-			aux = static_cast<ostringstream*>(&(ostringstream() << bit(mt)))->str();
-			this->cromossomo = this->cromossomo + aux;
+		for (int i = 0; i < this->quantidadeBitsCadaGene.at(var); i++) {
+			this->cromossomo += static_cast<ostringstream*>(&(ostringstream() << bit(mt)))->str();
 		}
 	}
 
@@ -46,11 +47,11 @@ IndividuoBinario::~IndividuoBinario() {
 	// TODO Auto-generated constructor stub
 }
 
-const string& IndividuoBinario::getCromossomo() const {
-	return cromossomo;
+string IndividuoBinario::getCromossomo() const {
+	return this->cromossomo;
 }
 
-void IndividuoBinario::setCromossomo(const string& cromossomo) {
+void IndividuoBinario::setCromossomo(string cromossomo) {
 	this->cromossomo = cromossomo;
 }
 
@@ -72,7 +73,7 @@ double IndividuoBinario::calculoFucaoObjetivo() {
 	string gene;
 
 	for (int count = 0; count < this->genes.size(); ++count) {
-		for (int var = 0; var < this->qtdBits[count]; ++var) {
+		for (int var = 0; var < this->quantidadeBitsCadaGene.at(count); ++var) {
 			gene = gene + this->cromossomo[var2];
 			var2++;
 		}
@@ -81,7 +82,6 @@ double IndividuoBinario::calculoFucaoObjetivo() {
 		gene.clear();
 	}
 
-	//cout << this->cromossomo << endl;
 	return this->funcaoObjetivo;
 }
 
@@ -113,11 +113,10 @@ int IndividuoBinario::fullyDeceptiveF3(string bits) {
 	return 0;
 }
 
-
 int IndividuoBinario::deceptive(string bits) {
 	int resultado = 0;
 	for (int count = 0; count < 4; ++count)
-		if(bits[count] == '1')
+		if (bits[count] == '1')
 			resultado++;
 	if (resultado == 0)
 		resultado = 5;
@@ -127,18 +126,13 @@ int IndividuoBinario::deceptive(string bits) {
 void IndividuoBinario::mutacao() {
 	int numRand;
 	static mt19937 mt(time(NULL));
-	string oldCromossomo = getCromossomo(), newCromossomo = getCromossomo();
-
 	for (int loopCromossomos = 0; loopCromossomos < this->cromossomo.size(); ++loopCromossomos) {
-
 		static uniform_int_distribution<int> numRandom(0, 100);
-
 		numRand = numRandom(mt);
-
 		if (numRand < this->probMutacao) {
-			if (this->cromossomo[loopCromossomos] == '1') {
+			if (this->cromossomo[loopCromossomos] == '1')
 				this->cromossomo[loopCromossomos] = '0';
-			} else
+			else
 				this->cromossomo[loopCromossomos] = '1';
 		}
 	}
@@ -165,7 +159,7 @@ int IndividuoBinario::getNumeroBits(double x_max, double x_min, int precisao) {
 const int IndividuoBinario::posGeneNoCromosso(int posGene) {
 	int posicao = 0;
 	for (int var = 0; var < posGene; ++var) {
-		posicao += this->qtdBits[var];
+		posicao += this->quantidadeBitsCadaGene.at(var);
 	}
 	return posicao;
 }
@@ -188,18 +182,19 @@ int IndividuoBinario::binToDec(string number) {
 const int IndividuoBinario::getNumeroBitsTotal() {
 	int quantidadeTotalBits = 0;
 	for (int count = 0; count < this->genes.size(); ++count)
-		quantidadeTotalBits += this->qtdBits[count];
+		quantidadeTotalBits += this->quantidadeBitsCadaGene.at(count);
 	return quantidadeTotalBits;
 }
 
 void IndividuoBinario::openJson() {
 	using json = nlohmann::json;
 	ifstream texto("entrada.json");
-
+	if (!texto)
+		cout << "dont open" << endl;
 	stringstream buffer;
 	buffer << texto.rdbuf();
-
 	this->entrada = json::parse(buffer.str());
+	texto.close();
 }
 
 } /* namespace std */

@@ -335,11 +335,10 @@ void PopulacaoReal::mutacaoPopulacao() {
 void PopulacaoReal::openJson() {
 	using json = nlohmann::json;
 	ifstream texto("entrada.json");
-
 	stringstream buffer;
 	buffer << texto.rdbuf();
-
 	this->entrada = json::parse(buffer.str());
+	texto.close();
 }
 
 const PopulacaoReal PopulacaoReal::rollet() {

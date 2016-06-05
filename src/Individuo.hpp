@@ -11,7 +11,7 @@
 class Individuo {
 protected:
 	double fitness;
-	double probMutacao;
+	float probMutacao;
 	double funcaoObjetivo;
 };
 

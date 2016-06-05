@@ -42,7 +42,7 @@ double IndividuoReal::calculoFitness() {
 
 double IndividuoReal::calculoFucaoObjetivo() {
 	this->funcaoObjetivo = 0.0;
-	for (int var = 0; var < this->genes.size() ; ++var) {
+	for (int var = 0; var < this->genes.size(); ++var) {
 		this->funcaoObjetivo += (this->genes[var] * this->genes[var]);
 	}
 	/*for (int var = 0; var < this->genes.size() - 1; ++var) {
@@ -110,11 +110,10 @@ void IndividuoReal::setGenes(const vector<double>& genes) {
 void IndividuoReal::openJson() {
 	using json = nlohmann::json;
 	ifstream texto("entrada.json");
-
 	stringstream buffer;
 	buffer << texto.rdbuf();
-
 	this->entrada = json::parse(buffer.str());
+	texto.close();
 }
 
 } /* namespace std */

@@ -29,7 +29,7 @@ int main() {
 	buffer << texto.rdbuf();
 
 	auto entrada = json::parse(buffer.str());
-
+	texto.close();
 	int geracoes = entrada["geracoes"];
 	int execucoesEntrada = entrada["execucoes"];
 	vector<double> vectorPlotFIT(geracoes, 0);
@@ -41,7 +41,6 @@ int main() {
 			PopulacaoBinario pop;
 			int selecao = entrada["selecao"];
 			for (int i = 0; i < entrada["geracoes"]; ++i) {
-				//cout << i << endl;
 				switch (selecao) {
 				case 1:
 					if ((i < geracoes * 0.9) && (i > geracoes * 0.1))

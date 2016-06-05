@@ -1,8 +1,8 @@
 {
   "codificacao": "binario",
-  "tamPop": 30,
+  "tamPop": 10,
   "execucoes": 3,
-  "geracoes": 400,
+  "geracoes": 100,
   "selecao": 1,
   "crossover": "padrao",
   "tournament": 3,
@@ -10,12 +10,12 @@
   "chanceMutacao": 5,
   "elitismo": true,
   "escalonado": false,
-  "gap": 0.8,
+  "gap": 1,
   "sharring": false,
   "sigma": 1,
   "alpha": 1,
   "crowding": 3,
-  "qtdVariaveis": 2,
+  "qtdVariaveis": 10,
   "variaveis": [
     {
       "min": 0,
@@ -34,37 +34,37 @@
     },
     {
       "min": 0,
-      "max": 4,
+      "max": 8,
       "precisao": 0
     },
     {
       "min": 0,
-      "max": 4,
+      "max": 8,
       "precisao": 0
     },
     {
       "min": 0,
-      "max": 4,
+      "max": 8,
       "precisao": 0
     },
     {
       "min": 0,
-      "max": 4,
+      "max": 8,
       "precisao": 0
     },
     {
       "min": 0,
-      "max": 4,
+      "max": 8,
       "precisao": 0
     },
     {
       "min": 0,
-      "max": 4,
+      "max": 8,
       "precisao": 0
     },
     {
       "min": 0,
-      "max": 4,
+      "max": 8,
       "precisao": 0
     }
   ]

@@ -9,6 +9,8 @@
 #define SRC_POPULACAOBINARIO_HPP_
 
 #include <fstream>
+#include <string>
+#include <cstring>
 #include "IndividuoBinario.hpp"
 #include "Populacao.hpp"
 #include "json.hpp"

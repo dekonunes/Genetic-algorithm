@@ -189,7 +189,7 @@ const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossoverUnifor
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> bit(1, 99);
 	int var, a = bit(mt);
-	int qtdBits = this->populacao[individuo1].getCromossomo().size();
+
 	pair<IndividuoBinario, IndividuoBinario> newIndividuosCrossover;
 	IndividuoBinario newIndividuo1 = this->populacao[individuo1];
 	IndividuoBinario newIndividuo2 = this->populacao[individuo2];
@@ -197,10 +197,10 @@ const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossoverUnifor
 	if (this->chanceCrossover > a) {
 		string cromossomoNewInviduio1 = this->populacao[individuo1].getCromossomo();
 		string cromossomoNewInviduio2 = this->populacao[individuo2].getCromossomo();
+
 		for (int var = 0; var < this->populacao[individuo1].getCromossomo().size(); ++var) {
 			static uniform_int_distribution<int> numRandon(0, 1);
 			a = numRandon(mt);
-
 			if (a == 1) {
 				cromossomoNewInviduio1[var] = this->populacao[individuo2].getCromossomo()[var];
 				cromossomoNewInviduio2[var] = this->populacao[individuo1].getCromossomo()[var];
@@ -212,26 +212,23 @@ const pair<IndividuoBinario, IndividuoBinario> PopulacaoBinario::crossoverUnifor
 	}
 
 	newIndividuosCrossover = make_pair(newIndividuo1, newIndividuo2);
-
 	return newIndividuosCrossover;
 }
 
 const PopulacaoBinario PopulacaoBinario::rollet() {
-	static mt19937 mt(time(NULL));
 	pair<IndividuoBinario, IndividuoBinario> newIndivuos;
+	static mt19937 mt(time(NULL));
 	static PopulacaoBinario newPop;
 	newPop.populacao.clear();
 	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
 	double valorTotalFitness = 0.0, valorAcumuladoFitness = 0.0;
-
-	newPop.mutacaoPopulacao();
-
 	for (var = 0; var < this->qtdIndividuos; ++var) {
 		if (this->fitnessEscalonado)
 			valorTotalFitness += calculoFitnessEscalonado(this->populacao[var].getFitness());
 		else
 			valorTotalFitness += this->populacao[var].getFitness();
 	}
+
 	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos * this->gap) / 2;
 			++loopNovosIndiv) {
 		for (int loop = 0; loop < 2; ++loop) {
@@ -260,6 +257,8 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 
 	for (int count = newPop.getQtdIndividuos(); count < this->qtdIndividuos; ++count)
 		newPop.insertIndividuo(this->populacao[count]);
+
+	newPop.mutacaoPopulacao();
 
 	if (this->elitismo == true)
 		newPop.insertIndividuo(this->getBestIndividuo(), 1);
@@ -318,6 +317,7 @@ void PopulacaoBinario::openJson() {
 	stringstream buffer;
 	buffer << texto.rdbuf();
 	this->entrada = json::parse(buffer.str());
+	texto.close();
 }
 
 } /* namespace std */
