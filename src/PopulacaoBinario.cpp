@@ -55,6 +55,31 @@ double PopulacaoBinario::calculoFitnessEscalonado(double fitness) {
 	return fitnessEscalonado;
 }
 
+double PopulacaoBinario::calculoFitnessSharring(int individuo) {
+	double distanceIndividuo = 0;
+	double maxFitnessPopulacao = this->getBestIndividuo().getFitness();
+
+	for (int count = 0; count < getQtdIndividuos(); ++count)
+	distanceIndividuo += euclidiana(this->populacao[individuo].getFitness()/maxFitnessPopulacao,
+			this->populacao[count].getFitness()/maxFitnessPopulacao);
+
+	double somatorioS = 1 - pow(distanceIndividuo / this->sharingSigma, this->sharingAlpha);
+	return this->populacao[individuo].getFitness() / somatorioS;
+}
+
+double PopulacaoBinario::calculoTotalFitnessSharring() {
+	double valorTotalFitnessSharring = 0.0;
+	double maxFitnessPopulacao = this->getBestIndividuo().getFitness();
+	for (int count = 0; count < getQtdIndividuos() - 1; ++count) {
+		double distanceIndividuos = euclidiana(this->populacao[count].getFitness()/maxFitnessPopulacao,
+				this->populacao[count + 1].getFitness()/maxFitnessPopulacao);
+		double somatorioS = 1 - pow(distanceIndividuos / this->sharingSigma, this->sharingAlpha);
+		valorTotalFitnessSharring = this->populacao[count].getFitness() / somatorioS;
+	}
+	//cout << valorTotalFitnessSharring << endl;
+	return valorTotalFitnessSharring;
+}
+
 void PopulacaoBinario::incrementaC() {
 	int geracoes = this->entrada["geracoes"];
 	geracoes = geracoes * 0.9;
@@ -225,6 +250,8 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 	for (var = 0; var < this->qtdIndividuos; ++var) {
 		if (this->fitnessEscalonado)
 			valorTotalFitness += calculoFitnessEscalonado(this->populacao[var].getFitness());
+		if (this->fitnessSharing)
+			valorTotalFitness += calculoTotalFitnessSharring();
 		else
 			valorTotalFitness += this->populacao[var].getFitness();
 	}
@@ -240,6 +267,8 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 				if (this->fitnessEscalonado)
 					valorAcumuladoFitness += ((double) calculoFitnessEscalonado(
 							this->populacao[var].getFitness()) / valorTotalFitness) * 100;
+				if (this->fitnessSharing)
+					valorAcumuladoFitness += (calculoFitnessSharring(var)) * 100;
 				else
 					valorAcumuladoFitness += ((double) this->populacao[var].getFitness()
 							/ valorTotalFitness) * 100;

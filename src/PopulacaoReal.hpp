@@ -24,7 +24,7 @@ public:
 	pair<double, double> calculoEscalonadoMenor();
 	pair<double, double> calculoEscalonadoMaior();
 	double calculoFitnessEscalonado(double);
-	double calculoFitnessSharring(double);
+	double calculoFitnessSharring(int, int);
 	const pair<IndividuoReal, IndividuoReal> crossover(int, int);
 	const pair<IndividuoReal, IndividuoReal> crossoverArithmetic(int, int);
 	const pair<IndividuoReal, IndividuoReal> crossoverBLX(int, int);
@@ -32,7 +32,7 @@ public:
 	const IndividuoReal crowding(int);
 	double distanciaRealFenotipica();
 	IndividuoReal getBestIndividuo();
-	const IndividuoReal getIndividuo(int index);
+	const IndividuoReal getIndividuo(int);
 	virtual const vector<IndividuoReal>& getPopulacao() const;
 	const int getQuantidadeGenes();
 	int getQuantidadeIndividuos() const;

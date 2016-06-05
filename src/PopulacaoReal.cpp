@@ -106,8 +106,11 @@ double PopulacaoReal::calculoFitnessEscalonado(double fitness) {
 	return fitnessEscalonado;
 }
 
-double PopulacaoReal::calculoFitnessSharring(double fitness) {
-	return fitness / summationDistanceGenotipica(); //Onde aplica a segunda formula?
+double PopulacaoReal::calculoFitnessSharring(int individuo1, int individuo2) {
+	double distanceIndividuos = euclidiana(this->populacao[individuo1].getFitness(),
+			this->populacao[individuo2].getFitness());
+	double somatorioS = 1- pow(distanceIndividuos/ this->sharingSigma, this->sharingAlpha);
+	return this->populacao[individuo1].getFitness() / somatorioS;
 }
 
 const pair<IndividuoReal, IndividuoReal> PopulacaoReal::crossover(int individuo1, int individuo2) {

@@ -12,6 +12,7 @@
 #include <string>
 #include <cstring>
 #include "IndividuoBinario.hpp"
+#include "Diversidade.hpp"
 #include "Populacao.hpp"
 #include "json.hpp"
 
@@ -23,6 +24,8 @@ public:
 	PopulacaoBinario();
 	virtual ~PopulacaoBinario();
 	double calculoFitnessEscalonado(double fitness);
+	double calculoFitnessSharring(int);
+	double calculoTotalFitnessSharring();
 	void incrementaC();
 	pair<double, double> calculoEscalonadoMenor();
 	pair<double, double> calculoEscalonadoMaior();

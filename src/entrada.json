@@ -2,7 +2,7 @@
   "codificacao": "binario",
   "tamPop": 10,
   "execucoes": 3,
-  "geracoes": 100,
+  "geracoes": 1000,
   "selecao": 1,
   "crossover": "padrao",
   "tournament": 3,
@@ -10,46 +10,46 @@
   "chanceMutacao": 5,
   "elitismo": true,
   "escalonado": false,
-  "gap": 1,
-  "sharring": false,
+  "gap": 1.0,
+  "sharring": true,
   "sigma": 1,
   "alpha": 1,
   "crowding": 3,
-  "qtdVariaveis": 10,
+  "qtdVariaveis": 5,
   "variaveis": [
     {
       "min": 0,
-      "max": 8,
+      "max": 4,
       "precisao": 0
     },
     {
       "min": 0,
-      "max": 8,
+      "max": 4,
       "precisao": 0
     },
     {
       "min": 0,
-      "max": 8,
+      "max": 4,
       "precisao": 0
     },
     {
       "min": 0,
-      "max": 8,
+      "max": 4,
       "precisao": 0
     },
     {
       "min": 0,
-      "max": 8,
+      "max": 4,
       "precisao": 0
     },
     {
       "min": 0,
-      "max": 8,
+      "max": 4,
       "precisao": 0
     },
     {
       "min": 0,
-      "max": 8,
+      "max": 4,
       "precisao": 0
     },
     {
