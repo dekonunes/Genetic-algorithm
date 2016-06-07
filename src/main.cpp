@@ -17,10 +17,12 @@ double desvioPadraoBinario(PopulacaoBinario pop, double media, int execucoes);
 double desvioPadraoReal(PopulacaoReal pop, double media, int execucoes);
 void plot(vector<double>, string);
 void plot(vector<double>, vector<double>, string, string);
+void plot(vector<double> , vector<double> , vector<double> ,
+		string , string , string );
 void escreverArquivo(vector<double>);
-double distanciaBinario(PopulacaoBinario, int);
-double distanciaRealGenotipica(PopulacaoReal pop, int tipoDistancia);
-double distanciaRealFenotipica(PopulacaoReal pop, int tipoDistancia);
+double distanciaBinario(PopulacaoBinario, int, int);
+double distanciaRealGenotipica(PopulacaoReal , int , int);
+double distanciaRealFenotipica(PopulacaoReal , int ,int);
 
 int main() {
 	ifstream texto("entrada.json");
@@ -56,7 +58,7 @@ int main() {
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += ind.getFitness() / execucoesEntrada;
 				vectorPlotMediaFIT.at(i) += calculoMediaIndvBinario(pop) / execucoesEntrada;
-				vectorPlotDiversidade.at(i) += distanciaBinario(pop, 1) / execucoesEntrada;
+				vectorPlotDiversidade.at(i) += distanciaBinario(pop, 1, geracoes) / execucoesEntrada;
 
 			}
 			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
@@ -95,7 +97,7 @@ int main() {
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += (ind.getFitness() / execucoesEntrada);
 				vectorPlotMediaFIT.at(i) += (calculoMediaIndvReal(pop) / execucoesEntrada);
-				vectorPlotDiversidade.at(i) += (distanciaRealFenotipica(pop, 1) / execucoesEntrada);
+				vectorPlotDiversidade.at(i) += (distanciaRealFenotipica(pop, 1, geracoes) / execucoesEntrada);
 			}
 			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
 					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
@@ -110,13 +112,12 @@ int main() {
 			cout << "Fitness Escalonado: " << entrada["escalonado"] << endl << endl;
 		}
 	}
-	plot(vectorPlotFIT, vectorPlotMediaFIT, "Média do melhor ind", "Média das médias");
-	plot(vectorPlotDiversidade, "diversidade");
+	plot(vectorPlotFIT, vectorPlotMediaFIT,vectorPlotDiversidade, "Média do melhor ind", "Média das médias","diversidade");
 	//escreverArquivo(vectorPlotFIT);
 	return 0;
 }
 
-double distanciaBinario(PopulacaoBinario pop, int tipoDistancia) {
+double distanciaBinario(PopulacaoBinario pop, int tipoDistancia, int geracoes) {
 	IndividuoBinario ind1, ind2;
 	double fitnessInd1, fitnessInd2, dist = 0;
 	for (int x = 0; x < pop.getQtdIndividuos(); ++x) {
@@ -141,10 +142,10 @@ double distanciaBinario(PopulacaoBinario pop, int tipoDistancia) {
 
 		}
 	}
-	return dist;
+	return dist/(geracoes/100);
 }
 
-double distanciaRealGenotipica(PopulacaoReal pop, int tipoDistancia) {
+double distanciaRealGenotipica(PopulacaoReal pop, int tipoDistancia, int geracoes) {
 	IndividuoReal ind1, ind2;
 	vector<double> genesIndividuo1, genesIndividuo2;
 	double dist = 0;
@@ -170,10 +171,10 @@ double distanciaRealGenotipica(PopulacaoReal pop, int tipoDistancia) {
 
 		}
 	}
-	return dist;
+	return dist / (geracoes/100);
 }
 
-double distanciaRealFenotipica(PopulacaoReal pop, int tipoDistancia) {
+double distanciaRealFenotipica(PopulacaoReal pop, int tipoDistancia, int geracoes) {
 	IndividuoReal ind1, ind2;
 	double fitnessInd1, fitnessInd2, dist = 0;
 	for (int x = 0; x < pop.getQuantidadeIndividuos(); ++x) {
@@ -195,7 +196,7 @@ double distanciaRealFenotipica(PopulacaoReal pop, int tipoDistancia) {
 
 		}
 	}
-	return dist/500;
+	return dist / (geracoes/100);
 }
 
 void escreverArquivo(vector<double> vector) {
@@ -210,14 +211,20 @@ void escreverArquivo(vector<double> vector) {
 void plot(vector<double> vectorPlot, string titulo) {
 	Gnuplot gp;
 	gp << "plot" << gp.file1d(vectorPlot) << "with lines title '" << titulo << "'" << endl;
-
 }
 
 void plot(vector<double> vectorPlot1, vector<double> vectorPlot2, string titulo1, string titulo2) {
 	Gnuplot gp;
 	gp << "plot" << gp.file1d(vectorPlot1) << "with lines title '" << titulo1 << "',"
 			<< gp.file1d(vectorPlot2) << "with lines title '" << titulo2 << "'" << endl;
+}
 
+void plot(vector<double> vectorPlot1, vector<double> vectorPlot2, vector<double> vectorPlot3,
+		string titulo1, string titulo2, string titulo3) {
+	Gnuplot gp;
+	gp << "plot" << gp.file1d(vectorPlot1) << "with lines title '" << titulo1 << "',"
+			<< gp.file1d(vectorPlot2) << "with lines title '" << titulo2 << "',"
+			<< gp.file1d(vectorPlot3) << "with lines title '" << titulo3 << "'" << endl;
 }
 
 double desvioPadraoBinario(PopulacaoBinario pop, double media, int execucoes) {
