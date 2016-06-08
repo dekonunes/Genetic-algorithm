@@ -12,10 +12,11 @@ class Populacao {
 protected:
 	float C; //Para o calculo do fitness escalonado;
 	int chanceCrossover;
-	int cCrowding;
 	bool elitismo;
 	bool fitnessEscalonado;
 	bool fitnessSharing;
+	bool isCrowding;
+	int cCrowding;
 	float gap;
 	int k; //valor do tournament
 	int qtdIndividuos;

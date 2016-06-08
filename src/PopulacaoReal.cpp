@@ -13,7 +13,8 @@ PopulacaoReal::PopulacaoReal() {
 	// TODO Auto-generated constructor stub
 	openJson();
 	this->qtdIndividuos = this->entrada["tamPop"];
-	this->cCrowding = this->entrada["crowding"];
+	this->isCrowding = this->entrada["crowding"];
+	this->cCrowding = this->entrada["crowdingQuantidade"];
 	this->chanceCrossover = this->entrada["chanceCrossover"];
 	this->elitismo = this->entrada["elitismo"];
 	this->k = this->entrada["tournament"];
@@ -109,7 +110,7 @@ double PopulacaoReal::calculoFitnessEscalonado(double fitness) {
 double PopulacaoReal::calculoFitnessSharring(int individuo1, int individuo2) {
 	double distanceIndividuos = euclidiana(this->populacao[individuo1].getFitness(),
 			this->populacao[individuo2].getFitness());
-	double somatorioS = 1- pow(distanceIndividuos/ this->sharingSigma, this->sharingAlpha);
+	double somatorioS = 1 - pow(distanceIndividuos / this->sharingSigma, this->sharingAlpha);
 	return this->populacao[individuo1].getFitness() / somatorioS;
 }
 
@@ -241,15 +242,19 @@ const IndividuoReal PopulacaoReal::crowding(int individuoCrowding) {
 	static mt19937 mt(time(NULL));
 	static uniform_int_distribution<int> numRandon(0, this->qtdIndividuos);
 	IndividuoReal individuoAuxiliar;
-	int numeroAleatorio;
+	int numeroAleatorio, individuoMenorDistancia = 0;
+	double menorDistancia = 9999999, distancia;
 
 	for (int var = 0; var < this->cCrowding; ++var) {
 		numeroAleatorio = numRandon(mt);
-		if (euclidiana(this->populacao[individuoCrowding].getFitness(),
-				this->populacao[numeroAleatorio].getFitness()))
-			;
-		//Não entendi quando subtitui, como assim substitui na população antiga?
+		distancia = euclidiana(this->populacao[individuoCrowding].getFitness(),
+				this->populacao[numeroAleatorio].getFitness());
+		if (distancia < menorDistancia) {
+			menorDistancia = distancia;
+			individuoMenorDistancia = numeroAleatorio;
+		}
 	}
+	this->populacao[individuoMenorDistancia] = this->populacao[individuoCrowding];
 	return individuoAuxiliar;
 }
 
@@ -378,11 +383,15 @@ const PopulacaoReal PopulacaoReal::rollet() {
 		newIndivuos = sendCrossover(individuoParaCross[0], individuoParaCross[1]);
 		newPop.insertIndividuo(newIndivuos.first);
 		newPop.insertIndividuo(newIndivuos.second);
+		if (this->isCrowding) {
+			crowding(individuoParaCross[0]);
+			crowding(individuoParaCross[1]);
+		}
 	}
 	for (int count = newPop.getQuantidadeIndividuos(); count < this->qtdIndividuos; ++count)
 		newPop.insertIndividuo(this->populacao[count]);
 	newPop.mutacaoPopulacao();
-	if (this->elitismo == true)
+	if (this->elitismo)
 		newPop.insertIndividuo(this->getBestIndividuo(), 1);
 	return newPop;
 }

@@ -24,7 +24,6 @@ double distanciaRealGenotipica(PopulacaoReal, int, int);
 double distanciaRealFenotipica(PopulacaoReal, int, int);
 void imprimiResultados(double, double);
 
-
 int main() {
 	ifstream texto("entrada.json");
 
@@ -59,10 +58,12 @@ int main() {
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += ind.getFitness() / execucoesEntrada;
 				vectorPlotMediaFIT.at(i) += calculoMediaIndvBinario(pop) / execucoesEntrada;
-				vectorPlotDiversidade.at(i) += distanciaBinario(pop, 1, geracoes)
+				vectorPlotDiversidade.at(i) += distanciaBinario(pop, 1, (geracoes/100)*pop.getQtdIndividuos())
 						/ execucoesEntrada;
 			}
-			imprimiResultados(desvioPadraoBinario(pop, calculoMediaIndvBinario(pop), entrada["execucoes"]),ind.getFuncaoObjetivo());
+			imprimiResultados(
+					desvioPadraoBinario(pop, calculoMediaIndvBinario(pop), entrada["execucoes"]),
+					ind.getFuncaoObjetivo());
 		}
 		if (entrada["codificacao"] == "real") {
 			vector<pair<double, double>> genes;
@@ -87,10 +88,12 @@ int main() {
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += (ind.getFitness() / execucoesEntrada);
 				vectorPlotMediaFIT.at(i) += (calculoMediaIndvReal(pop) / execucoesEntrada);
-				vectorPlotDiversidade.at(i) += (distanciaRealFenotipica(pop, 1, geracoes)
+				vectorPlotDiversidade.at(i) += (distanciaRealFenotipica(pop, 1,(geracoes/100)*pop.getQuantidadeIndividuos())
 						/ execucoesEntrada);
 			}
-			imprimiResultados(desvioPadraoReal(pop, calculoMediaIndvReal(pop), entrada["execucoes"]),ind.getFuncaoObjetivo());
+			imprimiResultados(
+					desvioPadraoReal(pop, calculoMediaIndvReal(pop), entrada["execucoes"]),
+					ind.getFuncaoObjetivo());
 		}
 	}
 	plot(vectorPlotFIT, vectorPlotMediaFIT, vectorPlotDiversidade, "Média do melhor ind",
@@ -112,10 +115,12 @@ void imprimiResultados(double desvioPadrao, double funcaoObjetivo) {
 	cout << "FO: " << funcaoObjetivo << endl;
 	cout << "Execução: " << entrada["execucoes"] << endl;
 	cout << "Elitismo: " << entrada["elitismo"] << endl;
-	cout << "Fitness Escalonado: " << entrada["escalonado"] << endl << endl;
+	cout << "Fitness Escalonado: " << entrada["escalonado"] << endl;
+	cout << "Fitness Crowding: " << entrada["crowding"] << endl;
+	cout << "Fitness Sharring: " << entrada["sharring"] << endl << endl;
 }
 
-double distanciaBinario(PopulacaoBinario pop, int tipoDistancia, int geracoes) {
+double distanciaBinario(PopulacaoBinario pop, int tipoDistancia, int divisorDasGeracoes) {
 	IndividuoBinario ind1, ind2;
 	double fitnessInd1, fitnessInd2, dist = 0;
 	for (int x = 0; x < pop.getQtdIndividuos(); ++x) {
@@ -140,10 +145,10 @@ double distanciaBinario(PopulacaoBinario pop, int tipoDistancia, int geracoes) {
 
 		}
 	}
-	return dist / (geracoes / 100);
+	return dist / divisorDasGeracoes;
 }
 
-double distanciaRealGenotipica(PopulacaoReal pop, int tipoDistancia, int geracoes) {
+double distanciaRealGenotipica(PopulacaoReal pop, int tipoDistancia, int divisorDasGeracoes) {
 	IndividuoReal ind1, ind2;
 	vector<double> genesIndividuo1, genesIndividuo2;
 	double dist = 0;
@@ -169,10 +174,10 @@ double distanciaRealGenotipica(PopulacaoReal pop, int tipoDistancia, int geracoe
 
 		}
 	}
-	return dist / (geracoes / 100);
+	return dist / divisorDasGeracoes;
 }
 
-double distanciaRealFenotipica(PopulacaoReal pop, int tipoDistancia, int geracoes) {
+double distanciaRealFenotipica(PopulacaoReal pop, int tipoDistancia, int divisorDasGeracoes) {
 	IndividuoReal ind1, ind2;
 	double fitnessInd1, fitnessInd2, dist = 0;
 	for (int x = 0; x < pop.getQuantidadeIndividuos(); ++x) {
@@ -194,7 +199,7 @@ double distanciaRealFenotipica(PopulacaoReal pop, int tipoDistancia, int geracoe
 
 		}
 	}
-	return dist / (geracoes / 100);
+	return dist / divisorDasGeracoes;
 }
 
 void escreverArquivo(vector<double> vector) {
