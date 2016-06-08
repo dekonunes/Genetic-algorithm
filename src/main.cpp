@@ -17,12 +17,13 @@ double desvioPadraoBinario(PopulacaoBinario pop, double media, int execucoes);
 double desvioPadraoReal(PopulacaoReal pop, double media, int execucoes);
 void plot(vector<double>, string);
 void plot(vector<double>, vector<double>, string, string);
-void plot(vector<double> , vector<double> , vector<double> ,
-		string , string , string );
+void plot(vector<double>, vector<double>, vector<double>, string, string, string);
 void escreverArquivo(vector<double>);
 double distanciaBinario(PopulacaoBinario, int, int);
-double distanciaRealGenotipica(PopulacaoReal , int , int);
-double distanciaRealFenotipica(PopulacaoReal , int ,int);
+double distanciaRealGenotipica(PopulacaoReal, int, int);
+double distanciaRealFenotipica(PopulacaoReal, int, int);
+void imprimiResultados(double, double);
+
 
 int main() {
 	ifstream texto("entrada.json");
@@ -58,21 +59,10 @@ int main() {
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += ind.getFitness() / execucoesEntrada;
 				vectorPlotMediaFIT.at(i) += calculoMediaIndvBinario(pop) / execucoesEntrada;
-				vectorPlotDiversidade.at(i) += distanciaBinario(pop, 1, geracoes) / execucoesEntrada;
-
+				vectorPlotDiversidade.at(i) += distanciaBinario(pop, 1, geracoes)
+						/ execucoesEntrada;
 			}
-			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
-					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
-			cout << "Quantidade de dimensões: " << entrada["qtdVariaveis"] << endl;
-			cout << "Tipo Crossover:" << entrada["crossover"] << endl;
-			cout << "Desvio: "
-					<< desvioPadraoBinario(pop, calculoMediaIndvBinario(pop), entrada["execucoes"])
-					<< endl;
-			cout << "FO: " << ind.getFuncaoObjetivo() << endl;
-			cout << "Cromossomo: " << ind.getCromossomo() << endl;
-			cout << "Execução: " << execucoes << endl;
-			cout << "Elitismo: " << entrada["elitismo"] << endl;
-			cout << "Fitness Escalonado: " << entrada["escalonado"] << endl << endl;
+			imprimiResultados(desvioPadraoBinario(pop, calculoMediaIndvBinario(pop), entrada["execucoes"]),ind.getFuncaoObjetivo());
 		}
 		if (entrada["codificacao"] == "real") {
 			vector<pair<double, double>> genes;
@@ -97,24 +87,32 @@ int main() {
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += (ind.getFitness() / execucoesEntrada);
 				vectorPlotMediaFIT.at(i) += (calculoMediaIndvReal(pop) / execucoesEntrada);
-				vectorPlotDiversidade.at(i) += (distanciaRealFenotipica(pop, 1, geracoes) / execucoesEntrada);
+				vectorPlotDiversidade.at(i) += (distanciaRealFenotipica(pop, 1, geracoes)
+						/ execucoesEntrada);
 			}
-			cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
-					<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
-			cout << "Quantidade de dimensões: " << entrada["qtdVariaveis"] << endl;
-			cout << "Tipo Crossover:" << entrada["crossover"] << endl;
-			cout << "Desvio: "
-					<< desvioPadraoReal(pop, calculoMediaIndvReal(pop), entrada["execucoes"])
-					<< endl;
-			cout << "FO: " << ind.getFuncaoObjetivo() << endl;
-			cout << "Execução: " << execucoes << endl;
-			cout << "Elitismo: " << entrada["elitismo"] << endl;
-			cout << "Fitness Escalonado: " << entrada["escalonado"] << endl << endl;
+			imprimiResultados(desvioPadraoReal(pop, calculoMediaIndvReal(pop), entrada["execucoes"]),ind.getFuncaoObjetivo());
 		}
 	}
-	plot(vectorPlotFIT, vectorPlotMediaFIT,vectorPlotDiversidade, "Média do melhor ind", "Média das médias","diversidade");
+	plot(vectorPlotFIT, vectorPlotMediaFIT, vectorPlotDiversidade, "Média do melhor ind",
+			"Média das médias", "diversidade");
 	//escreverArquivo(vectorPlotFIT);
 	return 0;
+}
+
+void imprimiResultados(double desvioPadrao, double funcaoObjetivo) {
+	ifstream texto("entrada.json");
+	stringstream buffer;
+	buffer << texto.rdbuf();
+	auto entrada = json::parse(buffer.str());
+	cout << "Individuos: " << entrada["tamPop"] << " Gerações: " << entrada["geracoes"]
+			<< " Taxa mutação: " << entrada["chanceMutacao"] << endl;
+	cout << "Quantidade de dimensões: " << entrada["qtdVariaveis"] << endl;
+	cout << "Tipo Crossover:" << entrada["crossover"] << endl;
+	cout << "Desvio: " << desvioPadrao << endl;
+	cout << "FO: " << funcaoObjetivo << endl;
+	cout << "Execução: " << entrada["execucoes"] << endl;
+	cout << "Elitismo: " << entrada["elitismo"] << endl;
+	cout << "Fitness Escalonado: " << entrada["escalonado"] << endl << endl;
 }
 
 double distanciaBinario(PopulacaoBinario pop, int tipoDistancia, int geracoes) {
@@ -142,7 +140,7 @@ double distanciaBinario(PopulacaoBinario pop, int tipoDistancia, int geracoes) {
 
 		}
 	}
-	return dist/(geracoes/100);
+	return dist / (geracoes / 100);
 }
 
 double distanciaRealGenotipica(PopulacaoReal pop, int tipoDistancia, int geracoes) {
@@ -171,7 +169,7 @@ double distanciaRealGenotipica(PopulacaoReal pop, int tipoDistancia, int geracoe
 
 		}
 	}
-	return dist / (geracoes/100);
+	return dist / (geracoes / 100);
 }
 
 double distanciaRealFenotipica(PopulacaoReal pop, int tipoDistancia, int geracoes) {
@@ -196,7 +194,7 @@ double distanciaRealFenotipica(PopulacaoReal pop, int tipoDistancia, int geracoe
 
 		}
 	}
-	return dist / (geracoes/100);
+	return dist / (geracoes / 100);
 }
 
 void escreverArquivo(vector<double> vector) {
