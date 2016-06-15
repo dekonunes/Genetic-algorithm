@@ -93,10 +93,34 @@ void IndividuoReal::mutacao() {
 	static uniform_int_distribution<int> numRandom(0, 100);
 	int numRand = numRandom(mt);
 	if (numRand < this->probMutacao) {
-		static uniform_real_distribution<double> numDelta(-delta, delta);
-		this->genes[0] = this->genes[0] + numDelta(mt);
+		for (int count = 0; count < this->genes.size(); ++count) {
+			static uniform_real_distribution<double> numDelta(-delta, delta);
+			this->genes[count] = this->genes[count] + numDelta(mt);
+		}
 	}
+}
 
+void IndividuoReal::gaussianMutation() {
+	static mt19937 mt(time(NULL));
+	static uniform_real_distribution<double> numRandon(0, 1);
+	static uniform_int_distribution<int> numRandomProbabilidade(1, 100);
+	double y1, x1, x2, sigma = 1;
+
+	if (numRandomProbabilidade(mt) < this->probMutacao) {
+		for (int count = 0; count < this->genes.size(); ++count) {
+			x1 = numRandon(mt);
+			x2 = numRandon(mt);
+
+			if (x1 == 0)
+				x1 = 1;
+			if (x2 == 0)
+				x2 = 1;
+
+			y1 = sqrt(-2.0 * log(x1)) * cos(2.0 * M_PI * x2);
+
+			this->genes[count] = y1 * sigma + this->genes[count];
+		}
+	}
 }
 
 const vector<double>& IndividuoReal::getGenes() const {

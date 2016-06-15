@@ -11,7 +11,6 @@ namespace std {
 
 PopulacaoBinario::PopulacaoBinario() {
 	openJson();
-
 	this->qtdIndividuos = this->entrada["tamPop"];
 	this->isCrowding = this->entrada["crowding"];
 	this->cCrowding = this->entrada["crowdingQuantidade"];

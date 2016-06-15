@@ -30,6 +30,7 @@ public:
 	double getFitness();
 	double getFuncaoObjetivo();
 	void mutacao();
+	void gaussianMutation();
 	const vector<double>& getGenes() const;
 	void setGenes(const vector<double>& genes);
 	void openJson();

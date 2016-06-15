@@ -334,6 +334,12 @@ double PopulacaoReal::mediaFitness() {
 	return media / this->populacao.size();
 }
 
+void PopulacaoReal::mutacaoGaussianaPopulacao() {
+	for (int var = 0; var < this->qtdIndividuos; ++var) {
+		this->populacao[var].gaussianMutation();
+	}
+}
+
 void PopulacaoReal::mutacaoPopulacao() {
 	for (int var = 0; var < this->qtdIndividuos; ++var) {
 		this->populacao[var].mutacao();
@@ -390,7 +396,7 @@ const PopulacaoReal PopulacaoReal::rollet() {
 	}
 	for (int count = newPop.getQuantidadeIndividuos(); count < this->qtdIndividuos; ++count)
 		newPop.insertIndividuo(this->populacao[count]);
-	newPop.mutacaoPopulacao();
+	newPop.mutacaoGaussianaPopulacao();
 	if (this->elitismo)
 		newPop.insertIndividuo(this->getBestIndividuo(), 1);
 	return newPop;

@@ -15,6 +15,8 @@
 #include "Populacao.hpp"
 #include "Diversidade.hpp"
 
+#define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
+
 namespace std {
 
 class PopulacaoReal: public Populacao {
@@ -41,6 +43,7 @@ public:
 	void insertIndividuo(IndividuoReal);
 	void insertIndividuo(IndividuoReal, int);
 	double mediaFitness();
+	void mutacaoGaussianaPopulacao();
 	void mutacaoPopulacao();
 	void openJson();
 	const PopulacaoReal rollet();

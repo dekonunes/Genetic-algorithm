@@ -1,5 +1,5 @@
 {
-  "codificacao": "binario",
+  "codificacao": "real",
   "tamPop": 10,
   "execucoes": 3,
   "geracoes": 100,
@@ -10,42 +10,42 @@
   "chanceMutacao": 1,
   "elitismo": true,
   "escalonado": false,
-  "gap": 0.8,
+  "gap": 1.0,
   "sharring": false,
   "sigma": 1,
   "alpha": 1,
-  "crowding": true,
+  "crowding": false,
   "crowdingQuantidade": 3,
-  "qtdVariaveis": 5,
+  "qtdVariaveis": 3,
   "variaveis": [
     {
-      "min": 0,
-      "max": 4,
+      "min": -10,
+      "max": 10,
       "precisao": 0
     },
     {
-      "min": 0,
-      "max": 4,
+      "min": -10,
+      "max": 10,
       "precisao": 0
     },
     {
-      "min": 0,
-      "max": 4,
+      "min": -10,
+      "max": 10,
       "precisao": 0
     },
     {
-      "min": 0,
-      "max": 4,
+     "min": -10,
+      "max": 10,
       "precisao": 0
     },
     {
-      "min": 0,
-      "max": 4,
+      "min": -10,
+      "max": 10,
       "precisao": 0
     },
     {
-      "min": 0,
-      "max": 4,
+      "min": -10,
+      "max": 10,
       "precisao": 0
     },
     {
