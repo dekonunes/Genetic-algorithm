@@ -131,6 +131,44 @@ void IndividuoReal::setGenes(const vector<double>& genes) {
 	this->genes = genes;
 }
 
+double IndividuoReal::schaffer() {
+	double resultado = 0;
+	for (int var = 0; var < this->genes.size() - 1; ++var)
+		resultado += pow(pow(this->genes[var], 2) + pow(this->genes[var + 1], 2), 0.25)
+				* (pow(
+						sin(
+								50.0
+										* pow(
+												pow(this->genes[var], 2)
+														+ pow(this->genes[var + 1], 2),
+												(double) 0.1)), 2)
+						* (pow(
+								sin(
+										50.0
+												* pow(
+														pow(this->genes[var], 2)
+																+ pow(this->genes[var + 1], 2),
+														(double) 0.1)), 2) + 1));
+	return resultado;
+}
+
+double IndividuoReal::ackley() {
+	double aux = 0, aux1 = 0;
+	for (int var = 0; var < this->genes.size() - 1; ++var) {
+		aux += this->genes[var] * this->genes[var];
+		aux1 += cos(2.0 * M_PI * this->genes[var]);
+	}
+	return (-20.0 * (exp(-0.2 * sqrt(1.0 / (float) this->genes.size() * aux)))
+			- exp(1.0 / (float) this->genes.size() * aux1) + 20.0 + exp(1));
+}
+
+double IndividuoReal::rastrigin() {
+	double resultado = 0;
+	for (int var = 0; var < this->genes.size() - 1; ++var)
+		resultado += (pow(this->genes[var],(double)2)-10*cos(2*M_PI*this->genes[var])+10);
+	return resultado;
+}
+
 void IndividuoReal::openJson() {
 	using json = nlohmann::json;
 	ifstream texto("entrada.json");

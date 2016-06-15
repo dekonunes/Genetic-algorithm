@@ -33,6 +33,9 @@ public:
 	void gaussianMutation();
 	const vector<double>& getGenes() const;
 	void setGenes(const vector<double>& genes);
+	double schaffer();
+	double ackley();
+	double rastrigin();
 	void openJson();
 
 private:
