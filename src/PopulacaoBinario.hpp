@@ -27,8 +27,10 @@ public:
 	double calculoFitnessSharring(int);
 	double calculoTotalFitnessSharring();
 	void incrementaC();
-	pair<double, double> calculoEscalonadoMenor();
-	pair<double, double> calculoEscalonadoMaior();
+	void calculoAlhpaBeta();
+	void calculoEscalonadoMenor();
+	void calculoEscalonadoMaior();
+	void disableGap();
 	double mediaFitness();
 	const vector<IndividuoBinario>& getPopulacao() const;
 	void setPopulacao(const vector<IndividuoBinario>& populacao);

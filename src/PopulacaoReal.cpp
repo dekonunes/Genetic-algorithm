@@ -258,6 +258,10 @@ const IndividuoReal PopulacaoReal::crowding(int individuoCrowding) {
 	return individuoAuxiliar;
 }
 
+void PopulacaoReal::disableGap() {
+	this->gap = 1.0;
+}
+
 double PopulacaoReal::distanciaRealFenotipica() {
 	IndividuoReal ind1, ind2;
 	double fitnessInd1, fitnessInd2, dist = 0;
@@ -271,6 +275,10 @@ double PopulacaoReal::distanciaRealFenotipica() {
 		}
 	}
 	return dist;
+}
+
+void PopulacaoReal::enableGap() {
+	this->gap = this->entrada["gap"];
 }
 
 IndividuoReal PopulacaoReal::getBestIndividuo() {
@@ -368,7 +376,7 @@ const PopulacaoReal PopulacaoReal::rollet() {
 		else
 			valorTotalFitness += this->populacao[var].getFitness();
 	}
-	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos * this->gap) / 2; // * (this->gap / 100)
+	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos * this->gap) / 2;
 			++loopNovosIndiv) {
 		for (int loop = 0; loop < 2; ++loop) {
 			static uniform_int_distribution<int> numeroRandom(0, 100);
@@ -397,6 +405,7 @@ const PopulacaoReal PopulacaoReal::rollet() {
 	for (int count = newPop.getQuantidadeIndividuos(); count < this->qtdIndividuos; ++count)
 		newPop.insertIndividuo(this->populacao[count]);
 	newPop.mutacaoGaussianaPopulacao();
+	newPop.testBolds();
 	if (this->elitismo)
 		newPop.insertIndividuo(this->getBestIndividuo(), 1);
 	return newPop;
@@ -461,6 +470,12 @@ double PopulacaoReal::summationDistanceGenotipica() {
 		}
 	}
 	return distancia;
+}
+
+void PopulacaoReal::testBolds(){
+	for (int count = 0; count < this->populacao.size(); ++count) {
+		this->populacao[count].testBolds();
+	}
 }
 
 const PopulacaoReal PopulacaoReal::tournament() {

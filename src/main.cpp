@@ -23,6 +23,7 @@ double distanciaBinario(PopulacaoBinario, int, int);
 double distanciaRealGenotipica(PopulacaoReal, int, int);
 double distanciaRealFenotipica(PopulacaoReal, int, int);
 void imprimiResultados(double, double);
+void mostrarDadosFinais(vector<double>, vector<double>);
 
 int main() {
 	ifstream texto("entrada.json");
@@ -37,6 +38,8 @@ int main() {
 	vector<double> vectorPlotFIT(geracoes, 0);
 	vector<double> vectorPlotMediaFIT(geracoes, 0);
 	vector<double> vectorPlotDiversidade(geracoes, 0);
+	vector<double> vectorFOCadaExecucoes;
+	vector<double> vectorDesvioPadrao;
 	for (int execucoes = 0; execucoes < entrada["execucoes"]; ++execucoes) {
 		if (entrada["codificacao"] == "binario") {
 			IndividuoBinario ind;
@@ -47,6 +50,8 @@ int main() {
 				case 1:
 					if ((i < geracoes * 0.9) && (i > geracoes * 0.1))
 						pop.incrementaC();
+					if ((i > geracoes * 0.85))
+						pop.disableGap();
 					pop = pop.rollet();
 					break;
 				case 2:
@@ -56,14 +61,18 @@ int main() {
 					break;
 				}
 				ind = pop.getBestIndividuo();
+				//cout << ind.getFuncaoObjetivo() << "  " <<i << endl;
 				vectorPlotFIT.at(i) += ind.getFitness() / execucoesEntrada;
 				vectorPlotMediaFIT.at(i) += calculoMediaIndvBinario(pop) / execucoesEntrada;
-				vectorPlotDiversidade.at(i) += distanciaBinario(pop, 1, (geracoes/100)*pop.getQtdIndividuos())
-						/ execucoesEntrada;
+				vectorPlotDiversidade.at(i) += distanciaBinario(pop, 1,
+						(geracoes / 100) * pop.getQtdIndividuos()) / execucoesEntrada;
 			}
 			imprimiResultados(
 					desvioPadraoBinario(pop, calculoMediaIndvBinario(pop), entrada["execucoes"]),
 					ind.getFuncaoObjetivo());
+			vectorFOCadaExecucoes.push_back(ind.getFuncaoObjetivo());
+			vectorDesvioPadrao.push_back(
+					desvioPadraoBinario(pop, calculoMediaIndvBinario(pop), entrada["execucoes"]));
 		}
 		if (entrada["codificacao"] == "real") {
 			vector<pair<double, double>> genes;
@@ -77,6 +86,12 @@ int main() {
 				case 1:
 					if ((i < geracoes * 0.9) && (i > geracoes * 0.1))
 						pop.incrementaC();
+					//if ((i > geracoes * 0.85))
+					if ((i < geracoes * 0.15) || (i > geracoes * 0.85))
+						pop.disableGap();
+					else
+						pop.enableGap();
+
 					pop = pop.rollet();
 					break;
 				case 2:
@@ -88,18 +103,33 @@ int main() {
 				ind = pop.getBestIndividuo();
 				vectorPlotFIT.at(i) += (ind.getFitness() / execucoesEntrada);
 				vectorPlotMediaFIT.at(i) += (calculoMediaIndvReal(pop) / execucoesEntrada);
-				vectorPlotDiversidade.at(i) += (distanciaRealFenotipica(pop, 1,(geracoes/100)*pop.getQuantidadeIndividuos())
-						/ execucoesEntrada);
+				vectorPlotDiversidade.at(i) += (distanciaRealFenotipica(pop, 1,
+						(geracoes / 100) * pop.getQuantidadeIndividuos()) / execucoesEntrada);
 			}
 			imprimiResultados(
 					desvioPadraoReal(pop, calculoMediaIndvReal(pop), entrada["execucoes"]),
 					ind.getFuncaoObjetivo());
+			vectorFOCadaExecucoes.push_back(ind.getFuncaoObjetivo());
+			vectorDesvioPadrao.push_back(
+					desvioPadraoReal(pop, calculoMediaIndvReal(pop), entrada["execucoes"]));
 		}
 	}
-	plot(vectorPlotFIT, vectorPlotMediaFIT, vectorPlotDiversidade, "Média do melhor ind",
-			"Média das médias", "diversidade");
+	plot(vectorPlotFIT, vectorPlotMediaFIT, "Média do melhor ind", "Média das médias");
+	plot(vectorPlotDiversidade, "diversidade");
+	mostrarDadosFinais(vectorFOCadaExecucoes, vectorDesvioPadrao);
 	//escreverArquivo(vectorPlotFIT);
 	return 0;
+}
+
+void mostrarDadosFinais(vector<double> vectorFO, vector<double> vectorDesvioPadrao) {
+	double mediaFO = 0, mediaDesvio = 0;
+	int execucoes = vectorFO.size();
+	for (int var = 0; var < execucoes; ++var) {
+		mediaFO += vectorFO.at(var) / execucoes;
+		mediaDesvio += vectorDesvioPadrao.at(var) / execucoes;
+	}
+	cout << "----- Resultado final -----" << endl;
+	imprimiResultados(mediaDesvio, mediaFO);
 }
 
 void imprimiResultados(double desvioPadrao, double funcaoObjetivo) {
@@ -115,6 +145,7 @@ void imprimiResultados(double desvioPadrao, double funcaoObjetivo) {
 	cout << "FO: " << funcaoObjetivo << endl;
 	cout << "Execução: " << entrada["execucoes"] << endl;
 	cout << "Elitismo: " << entrada["elitismo"] << endl;
+	cout << "GAP: " << entrada["gap"] << endl;
 	cout << "Fitness Escalonado: " << entrada["escalonado"] << endl;
 	cout << "Fitness Crowding: " << entrada["crowding"] << endl;
 	cout << "Fitness Sharring: " << entrada["sharring"] << endl << endl;

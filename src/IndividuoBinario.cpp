@@ -77,8 +77,9 @@ double IndividuoBinario::calculoFucaoObjetivo() {
 			gene = gene + this->cromossomo[var2];
 			var2++;
 		}
-		this->funcaoObjetivo += fullyDeceptiveF3(gene);
-		//this->funcaoObjetivo += deceptive(gene);
+		//this->funcaoObjetivo += fullyDeceptiveF3(gene);
+		this->funcaoObjetivo += deceptive(gene);
+
 		gene.clear();
 	}
 

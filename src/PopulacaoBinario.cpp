@@ -33,35 +33,14 @@ PopulacaoBinario::~PopulacaoBinario() {
 	// TODO Auto-generated destructor stub
 }
 
-double PopulacaoBinario::calculoFitnessEscalonado(double fitness) {
-	IndividuoBinario indMin = getWorseIndividuo();
-	IndividuoBinario indMax = getBestIndividuo();
-	double media = mediaFitness(), alpha, beta, max = indMax.getFitness(), min =
-			indMin.getFitness(), fitnessEscalonado, teste;
-	pair<double, double> pares;
-	teste = (this->C * media - max) / (this->C - 1);
-	if (teste > min)
-		pares = calculoEscalonadoMaior();
-	else
-		pares = calculoEscalonadoMenor();
-
-	alpha = pares.first;
-	beta = pares.second;
-
-	fitnessEscalonado = alpha * fitness + beta;
-	if (fitnessEscalonado < 0)
-		fitnessEscalonado = 0;
-
-	return fitnessEscalonado;
-}
-
 double PopulacaoBinario::calculoFitnessSharring(int individuo) {
 	double distanceIndividuo = 0;
 	double maxFitnessPopulacao = this->getBestIndividuo().getFitness();
 
 	for (int count = 0; count < getQtdIndividuos(); ++count)
-	distanceIndividuo += euclidiana(this->populacao[individuo].getFitness()/maxFitnessPopulacao,
-			this->populacao[count].getFitness()/maxFitnessPopulacao);
+		distanceIndividuo += euclidiana(
+				this->populacao[individuo].getFitness() / maxFitnessPopulacao,
+				this->populacao[count].getFitness() / maxFitnessPopulacao);
 
 	double somatorioS = 1 - pow(distanceIndividuo / this->sharingSigma, this->sharingAlpha);
 	return this->populacao[individuo].getFitness() / somatorioS;
@@ -71,13 +50,18 @@ double PopulacaoBinario::calculoTotalFitnessSharring() {
 	double valorTotalFitnessSharring = 0.0;
 	double maxFitnessPopulacao = this->getBestIndividuo().getFitness();
 	for (int count = 0; count < getQtdIndividuos() - 1; ++count) {
-		double distanceIndividuos = euclidiana(this->populacao[count].getFitness()/maxFitnessPopulacao,
-				this->populacao[count + 1].getFitness()/maxFitnessPopulacao);
+		double distanceIndividuos = euclidiana(
+				this->populacao[count].getFitness() / maxFitnessPopulacao,
+				this->populacao[count + 1].getFitness() / maxFitnessPopulacao);
 		double somatorioS = 1 - pow(distanceIndividuos / this->sharingSigma, this->sharingAlpha);
 		valorTotalFitnessSharring = this->populacao[count].getFitness() / somatorioS;
 	}
 	//cout << valorTotalFitnessSharring << endl;
 	return valorTotalFitnessSharring;
+}
+
+void PopulacaoBinario::disableGap() {
+	this->gap = 1.0;
 }
 
 void PopulacaoBinario::incrementaC() {
@@ -86,34 +70,41 @@ void PopulacaoBinario::incrementaC() {
 	this->C += 0.8 / geracoes;
 }
 
-pair<double, double> PopulacaoBinario::calculoEscalonadoMenor() {
-	pair<double, double> pares;
+void PopulacaoBinario::calculoAlhpaBeta() {
 	IndividuoBinario indMin = getWorseIndividuo();
 	IndividuoBinario indMax = getBestIndividuo();
-	double media = mediaFitness(), alpha, beta, max = indMax.getFitness(), min =
-			indMin.getFitness();
-
-	alpha = (media * (this->C - 1)) / (max - media);
-	beta = (media * (max - this->C * media)) / (max - media);
-
-	pares.first = alpha;
-	pares.second = beta;
-	return pares;
+	double media = mediaFitness(), max = indMax.getFitness(), min = indMin.getFitness();
+	if ((this->C * media - max) / (this->C - 1) > min)
+		calculoEscalonadoMaior();
+	else
+		calculoEscalonadoMenor();
 }
 
-pair<double, double> PopulacaoBinario::calculoEscalonadoMaior() {
-	pair<double, double> pares;
+double PopulacaoBinario::calculoFitnessEscalonado(double fitness) {
+	double fitnessEscalonado = this->alpha * fitness + this->beta;
+	if (fitnessEscalonado < 0)
+		fitnessEscalonado = 0;
+
+	return fitnessEscalonado;
+}
+
+void PopulacaoBinario::calculoEscalonadoMenor() {
 	IndividuoBinario indMin = getWorseIndividuo();
 	IndividuoBinario indMax = getBestIndividuo();
-	double media = mediaFitness(), alpha, beta, max = indMax.getFitness(), min =
+	double media = mediaFitness(), max = indMax.getFitness(), min =
 			indMin.getFitness();
 
-	alpha = media / (media - min);
-	beta = (-min * media) / (media - min);
+	this->alpha = (media * (this->C - 1)) / (max - media);
+	this->beta = (media * (max - this->C * media)) / (max - media);
+}
 
-	pares.first = alpha;
-	pares.second = beta;
-	return pares;
+void PopulacaoBinario::calculoEscalonadoMaior() {
+	IndividuoBinario indMin = getWorseIndividuo();
+	IndividuoBinario indMax = getBestIndividuo();
+	double media = mediaFitness(), max = indMax.getFitness(), min = indMin.getFitness();
+
+	this->alpha = media / (media - min);
+	this->beta = (-min * media) / (media - min);
 }
 
 double PopulacaoBinario::mediaFitness() {
@@ -247,6 +238,7 @@ const PopulacaoBinario PopulacaoBinario::rollet() {
 	newPop.populacao.clear();
 	int var, valorDaRollet = 0, individuoParaCross[1] { 0 }, auxInsertIndv = 0;
 	double valorTotalFitness = 0.0, valorAcumuladoFitness = 0.0;
+	calculoAlhpaBeta();
 	for (var = 0; var < this->qtdIndividuos; ++var) {
 		if (this->fitnessEscalonado)
 			valorTotalFitness += calculoFitnessEscalonado(this->populacao[var].getFitness());
@@ -302,7 +294,7 @@ const PopulacaoBinario PopulacaoBinario::tournament() {
 	PopulacaoBinario newPop;
 	newPop.populacao.clear();
 	int individuoParaCross[1] { 0 }, auxInsertIndv = 0, indvDoTournament;
-
+	calculoAlhpaBeta();
 	for (int loopNovosIndiv = 0; loopNovosIndiv < (this->qtdIndividuos * this->gap);
 			++loopNovosIndiv) {
 		for (int qtdIndvParaCross = 0; qtdIndvParaCross < 2; ++qtdIndvParaCross) {

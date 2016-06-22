@@ -36,6 +36,7 @@ public:
 	double schaffer();
 	double ackley();
 	double rastrigin();
+	void testBolds();
 	void openJson();
 
 private:

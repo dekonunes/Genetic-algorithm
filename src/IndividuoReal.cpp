@@ -32,7 +32,7 @@ IndividuoReal::~IndividuoReal() {
 }
 
 double IndividuoReal::calculoFitness() {
-	this->fitness = 1000 - calculoFucaoObjetivo();
+	this->fitness = 2000 - calculoFucaoObjetivo();
 	//cout << "===" << this->funcaoObjetivo << endl;
 	if (this->fitness < 0)
 		this->fitness = 0;
@@ -42,34 +42,13 @@ double IndividuoReal::calculoFitness() {
 
 double IndividuoReal::calculoFucaoObjetivo() {
 	this->funcaoObjetivo = 0.0;
-	for (int var = 0; var < this->genes.size(); ++var) {
-		this->funcaoObjetivo += (this->genes[var] * this->genes[var]);
-	}
-	/*for (int var = 0; var < this->genes.size() - 1; ++var) {
-	 this->funcaoObjetivo += pow(
-	 cos((double) (2 * this->genes[var] * this->genes[var])) - 0.11e1, 0.2e1)
-	 + pow(sin(0.5e0 * (double) this->genes[var]) - 0.12e1, 0.2e1)
-	 - pow(cos((double) (2 * this->genes[var + 1] * this->genes[var + 1])) - 0.11e1,
-	 0.2e1) + pow(sin(0.5e0 * (double) this->genes[var + 1]) - 0.12e1, 0.2e1);
+	/*for (int var = 0; var < this->genes.size(); ++var) {
+	 this->funcaoObjetivo += (this->genes[var] * this->genes[var]);
 	 }*/
-	//this->funcaoObjetivo = cos(20 * this->genes[0]) - (abs(this->genes[0]) / 2) + ((this->genes[0] * this->genes[0] * this->genes[0]) / 4);
-	/*for (int var = 0; var < this->genes.size() - 1; ++var) {
-	 this->funcaoObjetivo += pow(pow(this->genes[var], 2) + pow(this->genes[var + 1], 2), 0.25)
-	 * (pow(
-	 sin(
-	 50.0
-	 * pow(
-	 pow(this->genes[var], 2)
-	 + pow(this->genes[var + 1], 2),
-	 (double) 0.1)), 2)
-	 * (pow(
-	 sin(
-	 50.0
-	 * pow(
-	 pow(this->genes[var], 2)
-	 + pow(this->genes[var + 1], 2),
-	 (double) 0.1)), 2) + 1));
-	 }*/
+	//this->funcaoObjetivo = schaffer();
+	this->funcaoObjetivo = ackley();
+	//cout << this->genes[1] << endl;
+	//this->funcaoObjetivo = rastrigin();
 	//cout << "++" << this->funcaoObjetivo << endl;
 	return this->funcaoObjetivo;
 }
@@ -154,19 +133,31 @@ double IndividuoReal::schaffer() {
 
 double IndividuoReal::ackley() {
 	double aux = 0, aux1 = 0;
-	for (int var = 0; var < this->genes.size() - 1; ++var) {
+	for (int var = 0; var < this->genes.size(); ++var) {
 		aux += this->genes[var] * this->genes[var];
 		aux1 += cos(2.0 * M_PI * this->genes[var]);
 	}
-	return (-20.0 * (exp(-0.2 * sqrt(1.0 / (float) this->genes.size() * aux)))
-			- exp(1.0 / (float) this->genes.size() * aux1) + 20.0 + exp(1));
+	return (-20.0 * (exp(-0.2 * sqrt(1.0 / (double) this->genes.size() * aux)))
+			- exp(1.0 / (double) this->genes.size() * aux1) + 20.0 + exp(1));
 }
 
 double IndividuoReal::rastrigin() {
 	double resultado = 0;
 	for (int var = 0; var < this->genes.size() - 1; ++var)
-		resultado += (pow(this->genes[var],(double)2)-10*cos(2*M_PI*this->genes[var])+10);
+		resultado +=
+				(pow(this->genes[var], (double) 2) - 10 * cos(2 * M_PI * this->genes[var]) + 10);
 	return resultado;
+}
+
+void IndividuoReal::testBolds() {
+	for (int count = 0; count < this->genes.size(); ++count) {
+		if (this->genes[count] < this->entrada["variaveis"][0]["min"])
+			this->genes[count] = this->entrada["variaveis"][0]["min"];
+
+		if (this->genes[count] > this->entrada["variaveis"][0]["max"])
+			this->genes[count] = this->entrada["variaveis"][0]["max"];
+	}
+
 }
 
 void IndividuoReal::openJson() {

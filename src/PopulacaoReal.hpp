@@ -32,7 +32,9 @@ public:
 	const pair<IndividuoReal, IndividuoReal> crossoverBLX(int, int);
 	const pair<IndividuoReal, IndividuoReal> crossoverUniformAverage(int, int);
 	const IndividuoReal crowding(int);
+	void disableGap();
 	double distanciaRealFenotipica();
+	void enableGap();
 	IndividuoReal getBestIndividuo();
 	const IndividuoReal getIndividuo(int);
 	virtual const vector<IndividuoReal>& getPopulacao() const;
@@ -51,6 +53,7 @@ public:
 	void setPopulacao(const vector<IndividuoReal>& populacao);
 	double summationDistanceFenotipica();
 	double summationDistanceGenotipica();
+	void testBolds();
 	const PopulacaoReal tournament();
 private:
 	vector<IndividuoReal> populacao;

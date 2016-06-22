@@ -23,6 +23,8 @@ protected:
 	float sharingAlpha;
 	float sharingSigma;
 	int tipoCrossover;
+	double alpha;
+	double beta;
 };
 
 #endif /* POPULACAO_HPP_ */
